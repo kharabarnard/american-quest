@@ -3,173 +3,823 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#17150f" />
   <title>American Quest</title>
+
   <style>
     :root {
-      --ink:#252219; --parchment:#e8d4a9; --light:#f5e8c7;
-      --gold:#b58a3c; --dark-gold:#806126; --forest:#334638;
-      --brown:#211b15; --cream:#f7efd8;
+      --ink: #272218;
+      --ink-soft: #4a3e2d;
+      --parchment: #e4cfa0;
+      --parchment-light: #f6ebcd;
+      --parchment-dark: #c6a86c;
+      --gold: #b88935;
+      --gold-bright: #d3b36d;
+      --dark-gold: #74531c;
+      --forest: #31483b;
+      --forest-light: #55705d;
+      --ocean: #3e5f67;
+      --deep-brown: #211a13;
+      --cream: #f8efd7;
+      --danger: #7a3d2d;
+      --success: #405e46;
+      --shadow: rgba(0, 0, 0, 0.42);
     }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0; min-height:100vh; font-family:Georgia,"Times New Roman",serif;
-      color:var(--cream);
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--cream);
       background:
-        linear-gradient(rgba(18,16,12,.72),rgba(18,16,12,.88)),
-        radial-gradient(circle at top,#5b6250 0%,#283128 45%,#171913 100%);
-      background-attachment:fixed;
+        linear-gradient(rgba(15, 14, 10, 0.68), rgba(15, 14, 10, 0.86)),
+        radial-gradient(circle at top, #526052 0%, #283128 42%, #12140f 100%);
+      background-attachment: fixed;
     }
-    button,input{font:inherit}
-    button{touch-action:manipulation}
-    .hidden{display:none!important}
 
-    #startScreen{
-      min-height:100vh; display:grid; place-items:center; padding:24px;
-      position:relative; overflow:hidden;
+    body.modal-open {
+      overflow: hidden;
     }
-    #startScreen:before{
-      content:""; position:absolute; inset:0; pointer-events:none;
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: #d5bc83;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      font-size: 0.74rem;
+      font-weight: bold;
+    }
+
+    .eyebrow.dark {
+      color: #72562e;
+    }
+
+    .primary-button,
+    .secondary-button,
+    .ghost-button {
+      border: 1px solid #d4b46f;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      transition:
+        transform 0.2s ease,
+        filter 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .primary-button {
+      padding: 15px 26px;
+      color: #fff8e7;
+      background: linear-gradient(#a47b34, #73531d);
+      box-shadow: 0 7px 15px rgba(0, 0, 0, 0.34);
+    }
+
+    .secondary-button {
+      padding: 12px 18px;
+      color: #ead8ad;
+      background: rgba(45, 38, 27, 0.72);
+    }
+
+    .ghost-button {
+      padding: 10px 14px;
+      color: #cdbb91;
+      background: rgba(26, 23, 17, 0.56);
+      border-color: rgba(212, 180, 111, 0.42);
+      font-size: 0.75rem;
+    }
+
+    .primary-button:hover,
+    .secondary-button:hover,
+    .ghost-button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+    }
+
+    .primary-button:disabled {
+      opacity: 0.48;
+      cursor: not-allowed;
+      transform: none;
+      filter: none;
+    }
+
+    /* OPENING SCREEN */
+
+    #startScreen {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #startScreen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
       background:
-        radial-gradient(circle at center,transparent 0%,rgba(0,0,0,.35) 72%),
-        repeating-linear-gradient(0deg,rgba(255,255,255,.015),rgba(255,255,255,.015) 1px,transparent 1px,transparent 4px);
+        radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.38) 72%),
+        repeating-linear-gradient(
+          0deg,
+          rgba(255, 255, 255, 0.014),
+          rgba(255, 255, 255, 0.014) 1px,
+          transparent 1px,
+          transparent 4px
+        );
+      pointer-events: none;
     }
-    .start-card{
-      width:min(760px,100%); padding:54px 28px; text-align:center; position:relative;
-      border:1px solid rgba(220,191,126,.6);
-      background:linear-gradient(rgba(29,24,17,.84),rgba(29,24,17,.9)),radial-gradient(circle,#796742,#33291e);
-      box-shadow:0 25px 60px rgba(0,0,0,.55),inset 0 0 30px rgba(219,184,110,.1);
-    }
-    .eyebrow{
-      margin:0 0 12px; color:#d6bd84; letter-spacing:.24em;
-      text-transform:uppercase; font-size:.74rem;
-    }
-    .start-title{
-      margin:0; font-size:clamp(3rem,10vw,6.6rem); line-height:.9;
-      letter-spacing:.04em; text-transform:uppercase;
-      text-shadow:0 4px 16px rgba(0,0,0,.8);
-    }
-    .subtitle{
-      margin:22px auto 0; max-width:590px; color:#dfd3b5;
-      font-size:clamp(1rem,3vw,1.28rem); line-height:1.6;
-    }
-    .compass{
-      width:92px; height:92px; margin:28px auto; border:2px solid #c4a566;
-      border-radius:50%; display:grid; place-items:center; font-size:2.8rem;
-      color:#d6bd84; box-shadow:inset 0 0 18px rgba(214,189,132,.2);
-    }
-    .primary-button,.secondary-button{
-      border:1px solid #d4b46f; cursor:pointer; text-transform:uppercase;
-      letter-spacing:.12em; transition:transform .2s ease,background .2s ease;
-    }
-    .primary-button{
-      padding:15px 28px; color:#fff8e7;
-      background:linear-gradient(#a47b34,#73531d);
-      box-shadow:0 7px 15px rgba(0,0,0,.35);
-    }
-    .secondary-button{
-      padding:12px 18px; color:#ead8ad; background:rgba(45,38,27,.72);
-    }
-    .primary-button:hover,.secondary-button:hover{transform:translateY(-2px)}
-    .small-note{margin-top:20px;color:#bba982;font-size:.83rem;letter-spacing:.08em}
 
-    #app{min-height:100vh}
-    header{
-      position:sticky; top:0; z-index:20; display:flex; justify-content:space-between;
-      align-items:center; gap:14px; padding:14px 18px; background:rgba(25,21,16,.94);
-      border-bottom:1px solid rgba(204,173,102,.45); backdrop-filter:blur(10px);
-    }
-    .brand{font-size:1.1rem;letter-spacing:.12em;text-transform:uppercase;color:#ead7a8}
-    .status{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-    .status-pill{
-      padding:7px 10px; border:1px solid rgba(214,189,132,.4);
-      background:rgba(63,50,31,.55); color:#f2e4c1; font-size:.82rem; white-space:nowrap;
-    }
-    main{width:min(1100px,100%);margin:0 auto;padding:28px 18px 60px}
-    .hero-panel{
-      padding:30px 24px; border:1px solid rgba(209,179,109,.48);
-      background:linear-gradient(rgba(37,31,23,.82),rgba(37,31,23,.92)),radial-gradient(circle at top right,#705f3e,#2b251c);
-      box-shadow:0 18px 42px rgba(0,0,0,.35);
-    }
-    .hero-panel h2{margin:4px 0 10px;font-size:clamp(2rem,7vw,4.2rem);text-transform:uppercase;letter-spacing:.04em}
-    .hero-panel p{max-width:760px;margin:0;color:#d8c9a7;line-height:1.65}
-    .action-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
-    .section-title{margin:42px 0 17px;font-size:1.3rem;color:#e6d1a0;letter-spacing:.13em;text-transform:uppercase}
-    .quest-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
-    .quest-card{
-      min-height:218px; display:flex; flex-direction:column; justify-content:space-between;
-      padding:20px; border:1px solid rgba(210,180,111,.45);
-      background:linear-gradient(rgba(33,31,24,.82),rgba(25,23,18,.93)),radial-gradient(circle at top,#53614f,#262b24);
-      box-shadow:0 13px 28px rgba(0,0,0,.25);
-    }
-    .quest-card.locked{opacity:.58;filter:grayscale(.35)}
-    .unit-number{color:#c7ab70;font-size:.75rem;letter-spacing:.18em;text-transform:uppercase}
-    .quest-card h3{margin:9px 0;font-size:1.4rem;color:#f2e6c7}
-    .quest-card p{margin:0;color:#cfc4a8;font-size:.95rem;line-height:1.5}
-    .card-footer{margin-top:20px}
-    .locked-label{color:#b9aa8a;letter-spacing:.12em;text-transform:uppercase;font-size:.76rem}
-
-    .modal{
-      position:fixed; inset:0; z-index:50; display:grid; place-items:center;
-      padding:18px; background:rgba(0,0,0,.8);
-    }
-    .modal-card{
-      width:min(760px,100%); max-height:90vh; overflow-y:auto; padding:26px;
-      color:var(--ink);
+    .start-card {
+      width: min(760px, 100%);
+      padding: 54px 28px;
+      text-align: center;
+      position: relative;
+      border: 1px solid rgba(220, 191, 126, 0.6);
       background:
-        linear-gradient(rgba(245,232,199,.97),rgba(221,198,151,.98)),
-        repeating-linear-gradient(0deg,rgba(80,60,30,.03),rgba(80,60,30,.03) 1px,transparent 1px,transparent 4px);
-      border:4px double #74582e; box-shadow:0 24px 80px rgba(0,0,0,.62);
+        linear-gradient(rgba(29, 24, 17, 0.82), rgba(29, 24, 17, 0.9)),
+        radial-gradient(circle, #796742, #33291e);
+      box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.56),
+        inset 0 0 30px rgba(219, 184, 110, 0.1);
     }
-    .modal-card h2{margin-top:0;text-transform:uppercase;letter-spacing:.06em}
-    .modal-card p{line-height:1.6}
-    .close-button{
-      float:right; border:none; background:none; color:#4a3821;
-      font-size:1.6rem; cursor:pointer; padding:0 4px;
-    }
-    .role-grid,.choice-grid{
-      display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-      margin:20px 0;
-    }
-    .role-button,.choice-button{
-      padding:16px; text-align:left; color:#312719; background:rgba(255,248,226,.72);
-      border:1px solid #8d6e39; cursor:pointer; transition:transform .15s ease,background .15s ease;
-    }
-    .role-button:hover,.choice-button:hover{transform:translateY(-2px);background:rgba(255,252,239,.96)}
-    .role-button.selected{outline:3px solid #476048;background:#eef0dc}
-    label{display:block;margin:16px 0 6px;font-weight:bold}
-    input{width:100%;padding:12px;color:#2f2619;background:#fffaf0;border:1px solid #876b3c}
-    .story-box{margin:18px 0;padding:18px;border-left:5px solid #6e5932;background:rgba(255,250,235,.58)}
-    .progress-shell{height:12px;background:rgba(94,72,38,.2);border:1px solid #80663a;margin:14px 0 20px}
-    .progress-bar{height:100%;width:0;background:linear-gradient(90deg,#715629,#b48a42);transition:width .3s}
-    .question-meta{font-size:.82rem;text-transform:uppercase;letter-spacing:.12em;color:#715629;font-weight:bold}
-    .feedback{padding:16px;margin-top:16px;border:1px solid #80663a;background:rgba(255,250,235,.65)}
-    .feedback.correct{border-left:7px solid #4d694e}
-    .feedback.incorrect{border-left:7px solid #8a4b39}
-    .result-box{padding:18px;background:rgba(67,87,65,.14);border:1px solid #71806c}
-    .coin-earned{color:#7a571d;font-size:1.15rem;font-weight:bold}
-    .score-big{font-size:2.1rem;margin:.2rem 0;color:#4a3821}
-    .journal-entry{margin:12px 0;padding:12px;border-bottom:1px solid rgba(82,63,34,.35)}
-    .artifact{padding:15px;margin:12px 0;background:rgba(255,248,225,.62);border:1px dashed #80663a}
-    footer{padding:24px;text-align:center;color:#a99b7d;font-size:.82rem}
 
-    @media(max-width:600px){
-      .start-card{padding:40px 20px}
-      header{align-items:flex-start;flex-direction:column}
-      .status{justify-content:flex-start}
-      .modal-card{padding:20px}
-      .choice-grid,.role-grid{grid-template-columns:1fr}
+    .start-title {
+      margin: 0;
+      font-size: clamp(3rem, 10vw, 6.6rem);
+      line-height: 0.9;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-shadow: 0 4px 16px rgba(0, 0, 0, 0.8);
+    }
+
+    .subtitle {
+      margin: 22px auto 0;
+      max-width: 590px;
+      color: #dfd3b5;
+      font-size: clamp(1rem, 3vw, 1.28rem);
+      line-height: 1.6;
+    }
+
+    .compass {
+      width: 94px;
+      height: 94px;
+      margin: 28px auto;
+      border: 2px solid #c4a566;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 2.8rem;
+      color: #d6bd84;
+      box-shadow: inset 0 0 18px rgba(214, 189, 132, 0.2);
+      animation: slowTurn 16s linear infinite;
+    }
+
+    @keyframes slowTurn {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .small-note {
+      margin-top: 20px;
+      color: #bba982;
+      font-size: 0.83rem;
+      letter-spacing: 0.08em;
+    }
+
+    /* APP HEADER */
+
+    #app {
+      min-height: 100vh;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      background: rgba(24, 20, 15, 0.95);
+      border-bottom: 1px solid rgba(204, 173, 102, 0.45);
+      backdrop-filter: blur(10px);
+    }
+
+    .brand {
+      font-size: 1.1rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #ead7a8;
+    }
+
+    .status {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .status-pill {
+      padding: 7px 10px;
+      border: 1px solid rgba(214, 189, 132, 0.4);
+      background: rgba(63, 50, 31, 0.55);
+      color: #f2e4c1;
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+
+    main {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+
+    .hero-panel {
+      padding: 28px 24px;
+      border: 1px solid rgba(209, 179, 109, 0.48);
+      background:
+        linear-gradient(rgba(37, 31, 23, 0.82), rgba(37, 31, 23, 0.92)),
+        radial-gradient(circle at top right, #705f3e, #2b251c);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.35);
+    }
+
+    .hero-panel h2 {
+      margin: 4px 0 10px;
+      font-size: clamp(2rem, 7vw, 4.2rem);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .hero-panel p {
+      max-width: 760px;
+      margin: 0;
+      color: #d8c9a7;
+      line-height: 1.65;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .section-title {
+      margin: 42px 0 17px;
+      font-size: 1.3rem;
+      color: #e6d1a0;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    /* REAL QUEST MAP */
+
+    .map-shell {
+      position: relative;
+      overflow: hidden;
+      border: 3px double rgba(105, 78, 38, 0.95);
+      background:
+        linear-gradient(rgba(239, 220, 176, 0.91), rgba(202, 171, 111, 0.93)),
+        repeating-linear-gradient(
+          90deg,
+          rgba(83, 60, 27, 0.035),
+          rgba(83, 60, 27, 0.035) 2px,
+          transparent 2px,
+          transparent 9px
+        );
+      box-shadow:
+        0 20px 55px rgba(0, 0, 0, 0.45),
+        inset 0 0 60px rgba(94, 62, 27, 0.24);
+      color: var(--ink);
+      min-height: 760px;
+    }
+
+    .map-shell::before,
+    .map-shell::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(1px);
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    .map-shell::before {
+      width: 330px;
+      height: 330px;
+      right: -110px;
+      top: 55px;
+      background: #6f8f8b;
+    }
+
+    .map-shell::after {
+      width: 410px;
+      height: 410px;
+      left: -165px;
+      bottom: -160px;
+      background: #667c58;
+    }
+
+    .map-heading {
+      position: relative;
+      z-index: 3;
+      padding: 24px 24px 6px;
+    }
+
+    .map-heading h3 {
+      margin: 2px 0 7px;
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .map-heading p {
+      margin: 0;
+      max-width: 720px;
+      color: #55442e;
+      line-height: 1.55;
+    }
+
+    .map-progress {
+      margin-top: 14px;
+      height: 11px;
+      border: 1px solid #866631;
+      background: rgba(255, 250, 232, 0.55);
+      overflow: hidden;
+    }
+
+    .map-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #6d845f, #b28839);
+      transition: width 0.5s ease;
+    }
+
+    .journey-map {
+      position: relative;
+      min-height: 635px;
+      padding: 44px 28px 38px;
+      z-index: 2;
+    }
+
+    .route-line {
+      position: absolute;
+      inset: 74px 16% 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .route-line svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .route-line path {
+      fill: none;
+      stroke: rgba(91, 66, 30, 0.58);
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-dasharray: 10 11;
+    }
+
+    .map-node {
+      position: relative;
+      z-index: 2;
+      width: min(330px, 82%);
+      margin-bottom: 34px;
+      padding: 16px 18px;
+      border: 1px solid #80602d;
+      background: rgba(247, 236, 205, 0.93);
+      box-shadow: 0 8px 18px rgba(65, 45, 18, 0.22);
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .map-node:nth-of-type(odd) {
+      margin-left: 4%;
+    }
+
+    .map-node:nth-of-type(even) {
+      margin-left: auto;
+      margin-right: 4%;
+    }
+
+    .map-node.current {
+      outline: 4px solid rgba(78, 102, 74, 0.55);
+      transform: scale(1.015);
+    }
+
+    .map-node.complete {
+      background: rgba(226, 231, 205, 0.95);
+    }
+
+    .map-node.locked {
+      opacity: 0.55;
+      filter: grayscale(0.55);
+    }
+
+    .node-icon {
+      width: 42px;
+      height: 42px;
+      float: left;
+      margin-right: 12px;
+      border: 1px solid #76582a;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 252, 239, 0.7);
+      font-size: 1.25rem;
+    }
+
+    .map-node h4 {
+      margin: 0 0 5px;
+      font-size: 1.15rem;
+    }
+
+    .map-node p {
+      margin: 0;
+      color: #5a4933;
+      line-height: 1.42;
+      font-size: 0.93rem;
+    }
+
+    .node-status {
+      display: inline-block;
+      margin-top: 10px;
+      color: #6e522a;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.68rem;
+      font-weight: bold;
+    }
+
+    .ship-marker {
+      position: absolute;
+      z-index: 4;
+      font-size: 2.2rem;
+      filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.25));
+      transition: top 0.55s ease, left 0.55s ease;
+      pointer-events: none;
+    }
+
+    .map-actions {
+      position: relative;
+      z-index: 5;
+      padding: 0 24px 26px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .future-units {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .future-card {
+      padding: 18px;
+      border: 1px solid rgba(205, 175, 104, 0.35);
+      background: rgba(29, 27, 21, 0.82);
+      opacity: 0.62;
+    }
+
+    .future-card h4 {
+      margin: 6px 0;
+      color: #e8d9b7;
+    }
+
+    .future-card p {
+      margin: 0;
+      color: #c3b69c;
+      line-height: 1.45;
+      font-size: 0.91rem;
+    }
+
+    /* MODALS */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-card {
+      width: min(760px, 100%);
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 26px;
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(245, 232, 199, 0.97), rgba(221, 198, 151, 0.98)),
+        repeating-linear-gradient(
+          0deg,
+          rgba(80, 60, 30, 0.03),
+          rgba(80, 60, 30, 0.03) 1px,
+          transparent 1px,
+          transparent 4px
+        );
+      border: 4px double #74582e;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.62);
+    }
+
+    .modal-card h2 {
+      margin: 4px 0 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.055em;
+      font-size: clamp(1.8rem, 6vw, 3rem);
+    }
+
+    .modal-card p {
+      line-height: 1.6;
+    }
+
+    .close-button {
+      float: right;
+      border: none;
+      background: none;
+      color: #4a3821;
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+
+    .role-grid,
+    .choice-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      margin: 20px 0;
+    }
+
+    .role-button,
+    .choice-button {
+      padding: 16px;
+      text-align: left;
+      color: #312719;
+      background: rgba(255, 248, 226, 0.74);
+      border: 1px solid #8d6e39;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease;
+      min-height: 108px;
+    }
+
+    .role-button:hover,
+    .choice-button:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 252, 239, 0.97);
+    }
+
+    .role-button.selected {
+      outline: 3px solid #476048;
+      background: #eef0dc;
+    }
+
+    label {
+      display: block;
+      margin: 16px 0 6px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      color: #2f2619;
+      background: #fffaf0;
+      border: 1px solid #876b3c;
+    }
+
+    .quest-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 10px 0 16px;
+    }
+
+    .quest-meta span {
+      padding: 6px 9px;
+      border: 1px solid rgba(112, 84, 42, 0.36);
+      background: rgba(255, 250, 235, 0.45);
+      font-size: 0.78rem;
+      font-weight: bold;
+    }
+
+    .decision-progress {
+      height: 10px;
+      border: 1px solid #866631;
+      background: rgba(255, 250, 232, 0.62);
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .decision-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #496247, #b08437);
+      transition: width 0.35s ease;
+    }
+
+    .story-box {
+      margin: 18px 0;
+      padding: 18px;
+      border-left: 5px solid #6e5932;
+      background: rgba(255, 250, 235, 0.58);
+    }
+
+    .historian-note {
+      margin: 16px 0;
+      padding: 14px 16px;
+      background: rgba(77, 94, 71, 0.12);
+      border: 1px solid rgba(69, 88, 65, 0.42);
+    }
+
+    .result-box {
+      padding: 18px;
+      background: rgba(67, 87, 65, 0.14);
+      border: 1px solid #71806c;
+    }
+
+    .coin-earned {
+      color: #7a571d;
+      font-size: 1.15rem;
+      font-weight: bold;
+    }
+
+    .reward-line {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #684a1a;
+    }
+
+    .journal-entry {
+      margin: 12px 0;
+      padding: 14px;
+      border-bottom: 1px solid rgba(82, 63, 34, 0.35);
+      background: rgba(255, 248, 226, 0.32);
+    }
+
+    .journal-entry small {
+      display: block;
+      margin-top: 8px;
+      color: #6f5d42;
+    }
+
+    .artifact {
+      padding: 15px;
+      margin: 12px 0;
+      background: rgba(255, 248, 225, 0.62);
+      border: 1px dashed #80663a;
+    }
+
+    .artifact-badge {
+      display: inline-grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      margin-right: 9px;
+      border: 1px solid #826232;
+      border-radius: 50%;
+      background: rgba(255, 252, 239, 0.72);
+      vertical-align: middle;
+    }
+
+    .final-badge {
+      width: 150px;
+      height: 150px;
+      margin: 18px auto;
+      border: 7px double #806126;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 15px;
+      color: #583d16;
+      background:
+        radial-gradient(circle, #f8edc9 0%, #d6b36d 70%, #9b742e 100%);
+      box-shadow:
+        0 10px 28px rgba(69, 45, 13, 0.28),
+        inset 0 0 18px rgba(255, 255, 255, 0.45);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .score-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .score-summary div {
+      padding: 12px 8px;
+      text-align: center;
+      border: 1px solid rgba(104, 77, 38, 0.38);
+      background: rgba(255, 250, 235, 0.48);
+    }
+
+    .score-summary strong {
+      display: block;
+      font-size: 1.25rem;
+    }
+
+    footer {
+      padding: 24px;
+      text-align: center;
+      color: #a99b7d;
+      font-size: 0.82rem;
+    }
+
+    @media (max-width: 700px) {
+      .start-card {
+        padding: 40px 20px;
+      }
+
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .status {
+        justify-content: flex-start;
+      }
+
+      .modal-card {
+        padding: 20px;
+      }
+
+      .journey-map {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .map-node,
+      .map-node:nth-of-type(odd),
+      .map-node:nth-of-type(even) {
+        width: 88%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .route-line {
+        inset: 80px 46% 60px 46%;
+      }
+
+      .route-line path {
+        stroke-width: 4;
+      }
+
+      .ship-marker {
+        display: none;
+      }
+
+      .score-summary {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
   <section id="startScreen">
     <div class="start-card">
       <p class="eyebrow">An Interactive Journey Through U.S. History</p>
-      <h1 class="start-title">American<br>Quest</h1>
+      <h1 class="start-title">American<br />Quest</h1>
       <div class="compass">â¦</div>
-      <p class="subtitle">History was not inevitable. It was built one decision at a time. Enter the past, examine the evidence, and discover what kind of historian you will become.</p>
-      <button class="primary-button" onclick="beginJourney()">Begin Your Journey</button>
+      <p class="subtitle">
+        History was not inevitable. It was built one decision at a time.
+        Enter the past, face its choices, and discover what kind of historian
+        you will become.
+      </p>
+      <button class="primary-button" onclick="beginJourney()">
+        Begin Your Journey
+      </button>
       <div class="small-note">Volume I Â· A New World Awaits</div>
     </div>
   </section>
@@ -180,6 +830,7 @@
       <div class="status">
         <div class="status-pill">ðª Coins: <span id="coinCount">0</span></div>
         <div class="status-pill">Rank: <span id="rankName">Apprentice</span></div>
+        <div class="status-pill">Unit I: <span id="unitProgressText">0/6</span></div>
       </div>
     </header>
 
@@ -187,105 +838,225 @@
       <section class="hero-panel">
         <p class="eyebrow">The Historianâs Map</p>
         <h2>Your Journey Begins</h2>
-        <p>Every era holds a mystery. Complete each quest to collect coins, recover artifacts, and rise through the Historian ranks.</p>
+        <p>
+          Follow the expedition route across the Atlantic and through the first
+          English colonies. Each completed stop unlocks the next chapter of the
+          journey.
+        </p>
+
         <div class="action-row">
           <button class="secondary-button" onclick="openMuseum()">Museum</button>
           <button class="secondary-button" onclick="openJournal()">Field Journal</button>
-          <button class="secondary-button" onclick="resetProgress()">Reset Progress</button>
+          <button class="ghost-button" onclick="confirmReset()">Reset Progress</button>
         </div>
       </section>
 
-      <h2 class="section-title">Quest Map</h2>
-      <section class="quest-grid">
-        <article class="quest-card">
-          <div>
-            <div class="unit-number">Unit I Â· Open</div>
-            <h3>Exploration & Colonization</h3>
-            <p>Cross the Atlantic and navigate ten missions covering exploration, settlement, economics, government, regional development, and cultural encounters.</p>
+      <h2 class="section-title">Unit I Expedition Map</h2>
+
+      <section class="map-shell">
+        <div class="map-heading">
+          <p class="eyebrow dark">Exploration & Colonization</p>
+          <h3>Across the Atlantic</h3>
+          <p>
+            Begin at the royal harbor. Navigate six historical challenges to
+            establish a colony, interpret evidence, and earn the Foundersâ
+            Expedition Badge.
+          </p>
+          <div class="map-progress">
+            <div id="mapProgressFill" class="map-progress-fill"></div>
           </div>
-          <div class="card-footer">
-            <button class="primary-button" onclick="openQuest()">Enter Quest</button>
+        </div>
+
+        <div id="journeyMap" class="journey-map">
+          <div class="route-line" aria-hidden="true">
+            <svg viewBox="0 0 100 700" preserveAspectRatio="none">
+              <path d="M25,20 C88,90 10,165 75,240 C10,310 90,385 25,455 C85,520 15,605 70,680" />
+            </svg>
           </div>
+
+          <div id="shipMarker" class="ship-marker">âµ</div>
+
+          <article class="map-node" data-stage="0">
+            <div class="node-icon">â</div>
+            <h4>1. Royal Harbor</h4>
+            <p>Choose a colony name and the role you will play on the voyage.</p>
+            <span class="node-status">Ready</span>
+          </article>
+
+          <article class="map-node locked" data-stage="1">
+            <div class="node-icon">ð</div>
+            <h4>2. Atlantic Crossing</h4>
+            <p>Use maps, winds, and available evidence to survive the voyage.</p>
+            <span class="node-status">Locked</span>
+          </article>
+
+          <article class="map-node locked" data-stage="2">
+            <div class="node-icon">ðï¸</div>
+            <h4>3. Jamestown Shore</h4>
+            <p>Decide which needs must come first during the colonyâs first season.</p>
+            <span class="node-status">Locked</span>
+          </article>
+
+          <article class="map-node locked" data-stage="3">
+            <div class="node-icon">ð¤</div>
+            <h4>4. Powhatan Country</h4>
+            <p>Navigate diplomacy, conflict, trade, and cultural misunderstanding.</p>
+            <span class="node-status">Locked</span>
+          </article>
+
+          <article class="map-node locked" data-stage="4">
+            <div class="node-icon">ð§­</div>
+            <h4>5. Colonial Regions</h4>
+            <p>Match geography and resources to the New England, Middle, and Southern colonies.</p>
+            <span class="node-status">Locked</span>
+          </article>
+
+          <article class="map-node locked" data-stage="5">
+            <div class="node-icon">ð</div>
+            <h4>6. Colony Council</h4>
+            <p>Use evidence from the full expedition to create a lasting settlement.</p>
+            <span class="node-status">Locked</span>
+          </article>
+        </div>
+
+        <div class="map-actions">
+          <button id="continueButton" class="primary-button" onclick="openQuest()">
+            Begin Unit I
+          </button>
+          <button class="secondary-button" onclick="openMuseum()">View Artifacts</button>
+        </div>
+      </section>
+
+      <h2 class="section-title">Future Expeditions</h2>
+      <section class="future-units">
+        <article class="future-card">
+          <div class="eyebrow">Unit II Â· Locked</div>
+          <h4>American Revolution</h4>
+          <p>A growing conflict forces colonists to choose between loyalty, protest, and rebellion.</p>
         </article>
 
-        <article class="quest-card locked">
-          <div>
-            <div class="unit-number">Unit II Â· Locked</div>
-            <h3>American Revolution</h3>
-            <p>A growing conflict forces colonists to choose between loyalty, protest, and rebellion.</p>
-          </div>
-          <div class="card-footer"><span class="locked-label">Complete Unit I</span></div>
+        <article class="future-card">
+          <div class="eyebrow">Unit III Â· Locked</div>
+          <h4>Writing the Constitution</h4>
+          <p>Build a government strong enough to survive while protecting liberty.</p>
         </article>
 
-        <article class="quest-card locked">
-          <div>
-            <div class="unit-number">Unit III Â· Locked</div>
-            <h3>Writing the Constitution</h3>
-            <p>Build a government strong enough to survive while protecting the freedoms of its people.</p>
-          </div>
-          <div class="card-footer"><span class="locked-label">Journey Continues Soon</span></div>
-        </article>
-
-        <article class="quest-card locked">
-          <div>
-            <div class="unit-number">Unit IV Â· Locked</div>
-            <h3>U.S. Government</h3>
-            <p>Explore the branches, principles, rights, and responsibilities of the American system.</p>
-          </div>
-          <div class="card-footer"><span class="locked-label">Journey Continues Soon</span></div>
+        <article class="future-card">
+          <div class="eyebrow">Unit IV Â· Locked</div>
+          <h4>U.S. Government</h4>
+          <p>Test the branches and principles that shape the new republic.</p>
         </article>
       </section>
     </main>
-    <footer>American Quest Â· Created for the historians of Southard Middle School</footer>
+
+    <footer>
+      American Quest Â· Created for the historians of Southard Middle School
+    </footer>
   </div>
 
   <div id="questModal" class="modal hidden">
     <div class="modal-card">
-      <button class="close-button" onclick="closeModal('questModal')">Ã</button>
+      <button class="close-button" onclick="closeModal('questModal')" aria-label="Close">Ã</button>
 
       <div id="questSetup">
-        <p class="eyebrow" style="color:#765a2f">Unit I Expedition</p>
-        <h2>Prepare Your Journey</h2>
-        <p>You will face ten missions from Exploration and Colonization. Each correct answer earns historian coins. Explanations appear after every decision.</p>
+        <p class="eyebrow dark">The First Voyage</p>
+        <h2>Prepare Your Expedition</h2>
+        <p>
+          The year is 1607. European nations are competing for land, trade,
+          power, and influence. You have been chosen to help establish a new
+          English settlement across the Atlantic.
+        </p>
 
         <label for="colonyName">Name Your Colony</label>
-        <input id="colonyName" type="text" maxlength="30" placeholder="Example: New Horizon">
+        <input id="colonyName" type="text" maxlength="30" placeholder="Example: New Horizon" />
 
         <label>Select Your Role</label>
         <div class="role-grid">
-          <button class="role-button" onclick="selectRole(this,'Navigator')"><strong>Navigator</strong><br>Charts routes and studies geography.</button>
-          <button class="role-button" onclick="selectRole(this,'Builder')"><strong>Builder</strong><br>Plans settlements and solves survival problems.</button>
-          <button class="role-button" onclick="selectRole(this,'Diplomat')"><strong>Diplomat</strong><br>Handles alliances and cultural encounters.</button>
-          <button class="role-button" onclick="selectRole(this,'Chronicler')"><strong>Chronicler</strong><br>Studies evidence and records the expedition.</button>
+          <button class="role-button" onclick="selectRole(this, 'Navigator')">
+            <strong>Navigator</strong><br />
+            Reads maps, charts routes, and studies geography.
+          </button>
+
+          <button class="role-button" onclick="selectRole(this, 'Builder')">
+            <strong>Builder</strong><br />
+            Plans shelters, resources, defenses, and settlement design.
+          </button>
+
+          <button class="role-button" onclick="selectRole(this, 'Diplomat')">
+            <strong>Diplomat</strong><br />
+            Handles alliances, communication, trade, and negotiation.
+          </button>
         </div>
+
         <button class="primary-button" onclick="startQuest()">Set Sail</button>
       </div>
 
-      <div id="questPlay" class="hidden">
-        <p class="question-meta" id="questionMeta"></p>
-        <div class="progress-shell"><div class="progress-bar" id="progressBar"></div></div>
-        <h2 id="questionTitle"></h2>
-        <div class="story-box" id="questionStory"></div>
-        <p id="questionPrompt"></p>
-        <div class="choice-grid" id="answerChoices"></div>
-        <div id="feedbackBox" class="feedback hidden"></div>
-        <button id="nextButton" class="primary-button hidden" onclick="nextQuestion()">Continue Journey</button>
+      <div id="questDecision" class="hidden">
+        <p id="decisionEyebrow" class="eyebrow dark">Decision One of Six</p>
+        <h2 id="decisionTitle">Atlantic Crossing</h2>
+
+        <div class="quest-meta">
+          <span id="metaColony">Colony</span>
+          <span id="metaRole">Role</span>
+          <span id="metaCoins">Journey Coins: 0</span>
+        </div>
+
+        <div class="decision-progress">
+          <div id="decisionProgressFill" class="decision-progress-fill"></div>
+        </div>
+
+        <div class="story-box" id="decisionStory"></div>
+        <p id="decisionQuestion"></p>
+        <div id="choiceGrid" class="choice-grid"></div>
       </div>
 
-      <div id="questResult" class="hidden">
-        <p class="eyebrow" style="color:#765a2f">Unit I Quest Record</p>
-        <h2>Expedition Complete</h2>
-        <div class="result-box" id="resultText"></div>
-        <p class="coin-earned" id="rewardText"></p>
-        <button class="primary-button" onclick="finishQuest()">Return to the Map</button>
+      <div id="questFeedback" class="hidden">
+        <p id="feedbackEyebrow" class="eyebrow dark">Historianâs Record</p>
+        <h2 id="feedbackTitle">The Evidence Speaks</h2>
+        <div id="feedbackText" class="result-box"></div>
+        <div id="historianNote" class="historian-note"></div>
+        <p id="rewardText" class="coin-earned"></p>
+        <button id="nextDecisionButton" class="primary-button" onclick="continueQuest()">
+          Continue the Expedition
+        </button>
+      </div>
+
+      <div id="questComplete" class="hidden">
+        <p class="eyebrow dark">Unit I Complete</p>
+        <h2>Your Colony Endures</h2>
+
+        <div class="final-badge">
+          Foundersâ<br />Expedition<br />Badge
+        </div>
+
+        <p id="completionMessage"></p>
+
+        <div class="score-summary">
+          <div>
+            <strong id="finalCoins">0</strong>
+            Coins Earned
+          </div>
+          <div>
+            <strong id="finalArtifacts">0</strong>
+            Artifacts
+          </div>
+          <div>
+            <strong id="finalRank">Apprentice</strong>
+            Historian Rank
+          </div>
+        </div>
+
+        <button class="primary-button" onclick="finishQuest()">
+          Return to the Expedition Map
+        </button>
       </div>
     </div>
   </div>
 
   <div id="museumModal" class="modal hidden">
     <div class="modal-card">
-      <button class="close-button" onclick="closeModal('museumModal')">Ã</button>
-      <p class="eyebrow" style="color:#765a2f">Collection Hall</p>
+      <button class="close-button" onclick="closeModal('museumModal')" aria-label="Close">Ã</button>
+      <p class="eyebrow dark">Collection Hall</p>
       <h2>The Historianâs Museum</h2>
       <div id="museumContents"></div>
     </div>
@@ -293,273 +1064,1071 @@
 
   <div id="journalModal" class="modal hidden">
     <div class="modal-card">
-      <button class="close-button" onclick="closeModal('journalModal')">Ã</button>
-      <p class="eyebrow" style="color:#765a2f">Expedition Notes</p>
+      <button class="close-button" onclick="closeModal('journalModal')" aria-label="Close">Ã</button>
+      <p class="eyebrow dark">Expedition Notes</p>
       <h2>Field Journal</h2>
       <div id="journalContents"></div>
     </div>
   </div>
 
   <script>
-    const questions = [
+    const QUESTS = [
       {
-        title:"Mission 1: The Age of Exploration",
-        story:"European kingdoms are financing dangerous ocean voyages during the 1400s and 1500s.",
-        prompt:"Which combination best explains why European nations explored and colonized the Americas?",
-        choices:["Gold, glory, and the spread of Christianity","To escape industrial factory work","To create a democracy immediately","To end all trade with Asia"],
-        answer:0,
-        explanation:"European exploration was driven by economic wealth, national competition, and religious goalsâoften remembered as gold, glory, and God."
+        mapStage: 1,
+        title: "Atlantic Crossing",
+        story: {
+          Navigator:
+            "Weeks into the voyage, clouds hide the stars and the ship drifts off course. The crew looks to you for a way to confirm the expeditionâs position.",
+          Builder:
+            "Weeks into the voyage, heavy waves damage storage crates and loosen part of the deck. The crew must decide what to protect first.",
+          Diplomat:
+            "Weeks into the voyage, sailors blame one another for shrinking food supplies. Anger spreads as quickly as hunger."
+        },
+        question: {
+          Navigator: "Which evidence would best help you determine the shipâs location?",
+          Builder: "Which response best protects the survival of the expedition?",
+          Diplomat: "Which action would best restore cooperation aboard the ship?"
+        },
+        choices: {
+          Navigator: [
+            {
+              label: "Use the stars, compass, and recorded direction",
+              description: "Compare several pieces of navigational evidence.",
+              reward: 30,
+              artifact: "Brass Marinerâs Compass",
+              result:
+                "<strong>Strong historical reasoning.</strong> Navigators relied on instruments, observations, and written records rather than a single clue.",
+              note:
+                "A historian also compares several pieces of evidence before reaching a conclusion."
+            },
+            {
+              label: "Follow the largest nearby wave",
+              description: "Assume the water is moving toward land.",
+              reward: 10,
+              artifact: "Salt-Stained Deck Log",
+              result:
+                "<strong>An uncertain course.</strong> Waves can be shaped by wind and storms, so they do not reliably identify direction or location.",
+              note:
+                "One dramatic clue is rarely enough to support a strong conclusion."
+            },
+            {
+              label: "Continue sailing without checking",
+              description: "Trust that the ship will eventually reach land.",
+              reward: 5,
+              artifact: "Frayed Sailcloth",
+              result:
+                "<strong>A dangerous gamble.</strong> Ignoring available evidence wastes supplies and increases the risk of missing the intended route.",
+              note:
+                "Evidence matters only when people stop, examine it, and act on it."
+            }
+          ],
+          Builder: [
+            {
+              label: "Repair water storage and reinforce the deck",
+              description: "Protect essential supplies and the ship itself.",
+              reward: 30,
+              artifact: "Carpenterâs Measuring Rule",
+              result:
+                "<strong>Wise priorities.</strong> Safe water and a stable vessel are essential to surviving the rest of the crossing.",
+              note:
+                "Successful settlements depended on skilled labor as much as courage."
+            },
+            {
+              label: "Rebuild the captainâs cabin first",
+              description: "Restore comfort and authority aboard the ship.",
+              reward: 10,
+              artifact: "Iron Ship Nail",
+              result:
+                "<strong>Useful, but not urgent.</strong> The cabin matters less than protecting the crewâs water and the shipâs structure.",
+              note:
+                "Historical decisions often reveal whose needs leaders considered most important."
+            },
+            {
+              label: "Open every crate to inspect its contents",
+              description: "Search for anything valuable or interesting.",
+              reward: 5,
+              artifact: "Broken Cargo Seal",
+              result:
+                "<strong>Costly curiosity.</strong> Opening every crate exposes supplies to water and delays urgent repairs.",
+              note:
+                "Limited resources force leaders to distinguish wants from needs."
+            }
+          ],
+          Diplomat: [
+            {
+              label: "Create clear ration rules for everyone",
+              description: "Make supplies and expectations transparent.",
+              reward: 30,
+              artifact: "Signed Ration Ledger",
+              result:
+                "<strong>Fair and effective.</strong> Shared rules reduce suspicion and give the crew a reason to cooperate.",
+              note:
+                "Legitimacy grows when people believe rules are clear and fairly applied."
+            },
+            {
+              label: "Give officers larger portions",
+              description: "Protect the people with the most authority.",
+              reward: 10,
+              artifact: "Officerâs Brass Button",
+              result:
+                "<strong>A fragile peace.</strong> Officers remain loyal, but unequal treatment increases resentment among the crew.",
+              note:
+                "Power can enforce obedience without creating genuine cooperation."
+            },
+            {
+              label: "Punish the loudest sailor",
+              description: "Use fear to end the argument quickly.",
+              reward: 5,
+              artifact: "Splintered Discipline Baton",
+              result:
+                "<strong>Silence is not agreement.</strong> Fear ends the argument temporarily but does not solve the shortage or rebuild trust.",
+              note:
+                "A conflict can appear settled while its causes remain."
+            }
+          ]
+        }
       },
+
       {
-        title:"Mission 2: The Columbian Exchange",
-        story:"After sustained contact between the Eastern and Western Hemispheres, plants, animals, people, and diseases crossed the Atlantic.",
-        prompt:"Which was a major result of the Columbian Exchange?",
-        choices:["The continents remained culturally isolated","Crops, animals, and diseases moved between hemispheres","European nations stopped competing for colonies","Native populations became immune to European diseases"],
-        answer:1,
-        explanation:"The Columbian Exchange moved foods, animals, people, ideas, and diseases between hemispheres. European diseases caused devastating population losses among Indigenous peoples."
+        mapStage: 2,
+        title: "Jamestown Shore",
+        story: {
+          Navigator:
+            "Your expedition reaches a wide river. The location offers deep water for ships, but the nearby marshes and tides may affect drinking water.",
+          Builder:
+            "The colony has landed. Supplies are limited, sickness is spreading, and winter will arrive sooner than expected.",
+          Diplomat:
+            "The colony has landed in territory already used by Native peoples. Your choices will shape the first relationship between the groups."
+        },
+        question: {
+          Navigator: "Which site should you recommend for the settlement?",
+          Builder: "What should the colony do first?",
+          Diplomat: "What should the colonists do before expanding inland?"
+        },
+        choices: {
+          Navigator: [
+            {
+              label: "Choose higher ground near fresh water",
+              description: "Balance ship access with health and safety.",
+              reward: 30,
+              artifact: "Surveyorâs River Map",
+              result:
+                "<strong>Careful site selection.</strong> Higher ground and dependable fresh water reduce disease and flooding risks.",
+              note:
+                "Jamestownâs location helped defend the colony but contributed to serious health problems."
+            },
+            {
+              label: "Settle directly in the marsh",
+              description: "Stay as close to the ships as possible.",
+              reward: 10,
+              artifact: "Tide-Marked Shore Chart",
+              result:
+                "<strong>Defensible but unhealthy.</strong> Easy ship access does not outweigh the danger of brackish water and disease.",
+              note:
+                "Geography can create advantages and disadvantages at the same time."
+            },
+            {
+              label: "Move far inland immediately",
+              description: "Avoid the coast and all contact with ships.",
+              reward: 5,
+              artifact: "Unfinished Inland Sketch",
+              result:
+                "<strong>Too far, too soon.</strong> The colony loses access to supplies and communication before learning the land.",
+              note:
+                "Good decisions must consider both immediate needs and long-term goals."
+            }
+          ],
+          Builder: [
+            {
+              label: "Secure fresh water and shelter",
+              description: "Meet the colonyâs most basic survival needs.",
+              reward: 30,
+              artifact: "Weathered Settlement Plan",
+              result:
+                "<strong>Wise planning.</strong> Clean water and shelter give the colony its strongest chance of surviving the first season.",
+              note:
+                "Disease and hunger killed more early colonists than warfare."
+            },
+            {
+              label: "Build a large fort first",
+              description: "Focus the colonyâs labor on walls and defenses.",
+              reward: 20,
+              artifact: "Fort Palisade Fragment",
+              result:
+                "<strong>Partly effective.</strong> Defenses provide security, but sickness grows while water and shelter remain uncertain.",
+              note:
+                "Colonies needed protection, but survival depended on more than military strength."
+            },
+            {
+              label: "Search for gold immediately",
+              description: "Satisfy investors and prove the colonyâs value.",
+              reward: 5,
+              artifact: "Unrefined Mineral Sample",
+              result:
+                "<strong>A dangerous gamble.</strong> The search for wealth uses time and energy while food, shelter, and health decline.",
+              note:
+                "Economic motives often competed with the practical needs of colonists."
+            }
+          ],
+          Diplomat: [
+            {
+              label: "Request a meeting and offer trade",
+              description: "Learn local expectations before expanding.",
+              reward: 30,
+              artifact: "Wampum Trade Record",
+              result:
+                "<strong>A stronger beginning.</strong> Communication and trade create opportunities for knowledge, food, and reduced conflict.",
+              note:
+                "Native nations had their own governments, alliances, and territorial interests."
+            },
+            {
+              label: "Avoid all communication",
+              description: "Remain inside the settlement until the colony grows.",
+              reward: 10,
+              artifact: "Sealed Council Letter",
+              result:
+                "<strong>Temporary safety.</strong> Avoiding contact reduces immediate risk but also prevents trade and understanding.",
+              note:
+                "Isolation can protect people briefly while creating larger problems later."
+            },
+            {
+              label: "Claim all nearby land immediately",
+              description: "Announce that the English king now controls it.",
+              reward: 5,
+              artifact: "Royal Land Claim",
+              result:
+                "<strong>A path toward conflict.</strong> A European claim does not erase the presence, power, or rights of Native peoples.",
+              note:
+                "Different cultures held different ideas about land use and ownership."
+            }
+          ]
+        }
       },
+
       {
-        title:"Mission 3: Competing Empires",
-        story:"Spain, France, and England are building different kinds of colonies in North America.",
-        prompt:"Which description correctly matches a European nation with a major colonial goal?",
-        choices:["Franceâlarge plantation colonies based mainly on tobacco","Spainâmissions and the search for wealth","Englandâonly fur trading posts with few settlers","Spainâreligious freedom for Puritans"],
-        answer:1,
-        explanation:"Spain sought wealth and territory while using missions to spread Catholicism. France emphasized trade and alliances, while England established larger permanent settlements."
+        mapStage: 3,
+        title: "Powhatan Country",
+        story: {
+          Navigator:
+            "The colony needs food. Scouts have identified several routes toward Powhatan communities, but each route carries different risks.",
+          Builder:
+            "The settlement is growing, but colonists still depend on trade. Leaders debate whether to build farms, expand defenses, or rely on outside supplies.",
+          Diplomat:
+            "A trading meeting begins well, but a misunderstanding over land and food threatens the fragile relationship."
+        },
+        question: {
+          Navigator: "Which route offers the strongest chance of safe trade?",
+          Builder: "Which plan gives the colony the best long-term chance of survival?",
+          Diplomat: "Which response is most likely to prevent the misunderstanding from becoming violence?"
+        },
+        choices: {
+          Navigator: [
+            {
+              label: "Use the known river route with guides",
+              description: "Follow established travel knowledge and local guidance.",
+              reward: 30,
+              artifact: "Powhatan River Route Map",
+              result:
+                "<strong>Evidence-based travel.</strong> Known routes and experienced guides reduce risk and support communication.",
+              note:
+                "European survival often depended on Native geographic knowledge."
+            },
+            {
+              label: "Cut a new route through unknown forest",
+              description: "Avoid relying on anyone outside the colony.",
+              reward: 10,
+              artifact: "Blazed Trail Marker",
+              result:
+                "<strong>Independent but risky.</strong> The route takes longer, consumes supplies, and increases the chance of getting lost.",
+              note:
+                "Independence can be valuable, but refusing useful knowledge has costs."
+            },
+            {
+              label: "Travel only at night",
+              description: "Hide the trading group from everyone nearby.",
+              reward: 5,
+              artifact: "Smoked Lantern Hood",
+              result:
+                "<strong>Suspicion grows.</strong> Secretive movement makes peaceful intentions harder to communicate.",
+              note:
+                "How an action appears to others can matter as much as its intended purpose."
+            }
+          ],
+          Builder: [
+            {
+              label: "Build farms while maintaining trade",
+              description: "Combine self-sufficiency with cooperation.",
+              reward: 30,
+              artifact: "Iron Farming Hoe",
+              result:
+                "<strong>A balanced strategy.</strong> Farming reduces dependence while trade provides help during difficult seasons.",
+              note:
+                "Successful communities use more than one strategy to manage risk."
+            },
+            {
+              label: "Expand the fort and delay farming",
+              description: "Prepare for the possibility of conflict.",
+              reward: 15,
+              artifact: "Reinforced Gate Hinge",
+              result:
+                "<strong>Security without stability.</strong> Stronger walls cannot replace food production.",
+              note:
+                "Military solutions often fail when the deeper problem is economic or environmental."
+            },
+            {
+              label: "Rely entirely on imported supplies",
+              description: "Let ships from England provide what the colony needs.",
+              reward: 5,
+              artifact: "Empty Supply Barrel",
+              result:
+                "<strong>A dangerous dependence.</strong> Storms, distance, and delays make imported supplies unreliable.",
+              note:
+                "Distance made colonial supply lines slow and uncertain."
+            }
+          ],
+          Diplomat: [
+            {
+              label: "Pause, clarify terms, and use interpreters",
+              description: "Make sure both sides understand the agreement.",
+              reward: 30,
+              artifact: "Interpreterâs Trade Token",
+              result:
+                "<strong>Diplomacy prevents escalation.</strong> Clarifying language and expectations creates room for agreement.",
+              note:
+                "Many conflicts grow from unequal power, mistrust, and different cultural assumptions."
+            },
+            {
+              label: "End the meeting immediately",
+              description: "Avoid making the disagreement worse.",
+              reward: 15,
+              artifact: "Folded Council Cloth",
+              result:
+                "<strong>Conflict is delayed, not resolved.</strong> Leaving prevents immediate violence but allows mistrust to grow.",
+              note:
+                "Avoiding a difficult conversation can preserve peace briefly without solving the problem."
+            },
+            {
+              label: "Demand compliance with English rules",
+              description: "Use the colonyâs weapons to force agreement.",
+              reward: 5,
+              artifact: "Stamped English Decree",
+              result:
+                "<strong>Power replaces persuasion.</strong> The demand may win a temporary advantage but increases resistance and danger.",
+              note:
+                "Coercion can produce obedience while destroying long-term relationships."
+            }
+          ]
+        }
       },
+
       {
-        title:"Mission 4: Jamestown",
-        story:"It is 1607. Jamestownâs settlers face disease, hunger, unsafe water, and conflict.",
-        prompt:"What should the colony secure first to improve its chance of survival?",
-        choices:["A dependable source of fresh water and food","Gold to send immediately to investors","A theater for entertainment","A new royal palace"],
-        answer:0,
-        explanation:"Jamestown struggled because settlers lacked reliable food and clean water and initially focused too heavily on wealth. Survival needs had to come first."
+        mapStage: 4,
+        title: "Colonial Regions",
+        story: {
+          Navigator:
+            "The Crown asks you to compare three colonial regions before sending the next group of settlers.",
+          Builder:
+            "New settlements will be built in three different regions. Their designs must match the geography and economy of each place.",
+          Diplomat:
+            "Settlers from different religious, national, and economic backgrounds are arriving in the colonies."
+        },
+        question: {
+          Navigator: "Which regional match is most accurate?",
+          Builder: "Which plan best matches each regionâs environment and economy?",
+          Diplomat: "Which region became especially known for ethnic and religious diversity?"
+        },
+        choices: {
+          Navigator: [
+            {
+              label: "New Englandârocky soil; Middleâgrain; Southernâcash crops",
+              description: "Match geography to regional economic patterns.",
+              reward: 30,
+              artifact: "Three-Region Colonial Map",
+              result:
+                "<strong>Accurate regional analysis.</strong> Geography influenced agriculture, settlement patterns, trade, and labor systems.",
+              note:
+                "Regions developed differently because people adapted to different environments and economic opportunities."
+            },
+            {
+              label: "New Englandârice; Middleâshipbuilding only; Southernâwheat",
+              description: "Reverse several major regional patterns.",
+              reward: 5,
+              artifact: "Corrected Colonial Chart",
+              result:
+                "<strong>The evidence does not fit.</strong> Rice grew in the South, while wheat and other grains were important in the Middle Colonies.",
+              note:
+                "A strong geographic claim must match climate, soil, and available resources."
+            },
+            {
+              label: "All three regions developed the same economy",
+              description: "Assume geography had little effect.",
+              reward: 5,
+              artifact: "Blank Regional Ledger",
+              result:
+                "<strong>Too broad.</strong> The colonies shared some features, but regional economies developed in distinct ways.",
+              note:
+                "Historical patterns often contain both similarities and meaningful differences."
+            }
+          ],
+          Builder: [
+            {
+              label: "Ports in New England, grain towns in the Middle, plantations in the South",
+              description: "Design communities around regional resources.",
+              reward: 30,
+              artifact: "Colonial Settlement Blueprint",
+              result:
+                "<strong>Strong geographic planning.</strong> Settlement forms reflected trade, farming, labor, and access to waterways.",
+              note:
+                "Built environments are evidence of how people lived and worked."
+            },
+            {
+              label: "Large rice plantations in every region",
+              description: "Use the same plan regardless of climate.",
+              reward: 5,
+              artifact: "Rejected Plantation Plan",
+              result:
+                "<strong>The environment resists the plan.</strong> Climate and soil made plantation agriculture unsuitable in much of the North.",
+              note:
+                "People shape environments, but environments also limit human choices."
+            },
+            {
+              label: "Avoid all rivers and harbors",
+              description: "Keep settlements protected far inland.",
+              reward: 10,
+              artifact: "Inland Road Survey",
+              result:
+                "<strong>Safer from ships, but isolated.</strong> Colonies depended heavily on waterways for trade, travel, and communication.",
+              note:
+                "Transportation technology influences where communities grow."
+            }
+          ],
+          Diplomat: [
+            {
+              label: "The Middle Colonies",
+              description: "Places such as Pennsylvania and New York drew diverse populations.",
+              reward: 30,
+              artifact: "Pennsylvania Toleration Broadside",
+              result:
+                "<strong>Correct.</strong> The Middle Colonies became known for greater ethnic and religious diversity than many neighboring regions.",
+              note:
+                "Tolerance was imperfect, but diversity became a defining feature of the region."
+            },
+            {
+              label: "Only the New England Colonies",
+              description: "Assume Puritan settlements welcomed all groups equally.",
+              reward: 10,
+              artifact: "Massachusetts Meetinghouse Record",
+              result:
+                "<strong>Not quite.</strong> New England included dissenters, but several colonies enforced strict religious expectations.",
+              note:
+                "Groups seeking religious freedom did not always extend the same freedom to others."
+            },
+            {
+              label: "No colonial region was diverse",
+              description: "Assume every colony had the same population.",
+              reward: 5,
+              artifact: "Passenger List Fragment",
+              result:
+                "<strong>The records show otherwise.</strong> Immigration, forced migration, trade, and settlement produced varied populations.",
+              note:
+                "Population records reveal diversity that broad labels can hide."
+            }
+          ]
+        }
       },
+
       {
-        title:"Mission 5: Representative Government",
-        story:"Virginia colonists want a voice in local laws while remaining under English rule.",
-        prompt:"Which institution became an early example of representative government in the English colonies?",
-        choices:["The House of Burgesses","The Spanish mission system","The Navigation Acts","The Mayflower ship"],
-        answer:0,
-        explanation:"Created in 1619, the Virginia House of Burgesses allowed elected representatives to help make local laws."
-      },
-      {
-        title:"Mission 6: Self-Government",
-        story:"Passengers aboard the Mayflower agree to form a government and obey laws made for the good of the colony.",
-        prompt:"What important principle was demonstrated by the Mayflower Compact?",
-        choices:["Self-government through an agreed set of rules","Rule by the Spanish king","Complete separation from England in 1620","The end of religious influence in government"],
-        answer:0,
-        explanation:"The Mayflower Compact was an agreement for self-government and majority rule, helping establish a tradition of colonial political participation."
-      },
-      {
-        title:"Mission 7: Colonial Regions",
-        story:"A family is choosing where to settle. They want fertile soil, a long growing season, and plantation agriculture.",
-        prompt:"Which colonial region best fits those conditions?",
-        choices:["New England Colonies","Middle Colonies","Southern Colonies","French Canada"],
-        answer:2,
-        explanation:"The Southern Colonies had a long growing season and fertile land that supported cash crops such as tobacco, rice, and indigo."
-      },
-      {
-        title:"Mission 8: Colonial Economy",
-        story:"England expects colonial trade to strengthen the mother country and regulates which goods may be bought and sold.",
-        prompt:"What economic system is being described?",
-        choices:["Mercantilism","Communism","Subsistence only","Free trade without regulation"],
-        answer:0,
-        explanation:"Under mercantilism, colonies supplied raw materials and served as markets so the mother country could gain wealth and power."
-      },
-      {
-        title:"Mission 9: Labor Systems",
-        story:"Plantation agriculture expands rapidly, creating a growing demand for labor in the English colonies.",
-        prompt:"Which statement best explains the long-term development of colonial labor?",
-        choices:["Indentured servitude and enslaved African labor both existed, but hereditary racial slavery became increasingly dominant","All colonial workers were paid equal wages","Slavery disappeared by the late 1600s","Plantations depended only on family members"],
-        answer:0,
-        explanation:"Colonies used indentured servants and enslaved labor. Over time, laws made slavery permanent and hereditary, creating a brutal racial system that expanded with plantation agriculture."
-      },
-      {
-        title:"Mission 10: Cultural Encounters",
-        story:"European settlement brings trade, alliances, conflict, disease, and competition for land with Indigenous nations.",
-        prompt:"Which conclusion is best supported by the history of EuropeanâIndigenous relations?",
-        choices:["Relations were always peaceful","Relations included cooperation and conflict and changed over time","Indigenous peoples had no influence on colonial survival","European settlement had little effect on Native lands"],
-        answer:1,
-        explanation:"Relations varied by time and place. Indigenous peoples traded, negotiated, resisted, and sometimes allied with Europeans, while colonization also caused disease, warfare, displacement, and loss of land."
+        mapStage: 5,
+        title: "Colony Council",
+        story: {
+          Navigator:
+            "Years have passed. Your maps now show farms, roads, waterways, Native territories, and neighboring colonies. The council asks what should guide future expansion.",
+          Builder:
+            "The colony has survived. The council now wants a plan for roads, farms, public buildings, defense, and future growth.",
+          Diplomat:
+            "The colony has survived, but future peace depends on laws, representation, trade agreements, and relationships with neighboring peoples."
+        },
+        question: {
+          Navigator: "Which principle should guide the colonyâs expansion?",
+          Builder: "Which council plan creates the strongest lasting settlement?",
+          Diplomat: "Which policy gives the colony the strongest foundation for stable government?"
+        },
+        choices: {
+          Navigator: [
+            {
+              label: "Use geography and existing land use as evidence",
+              description: "Plan roads and settlement while recognizing who already uses the land.",
+              reward: 40,
+              artifact: "Completed Colonial Atlas",
+              result:
+                "<strong>Masterful historical thinking.</strong> Maps are not empty spaces; they show environments, power, movement, and human claims.",
+              note:
+                "Every map reflects choices about what to include, exclude, and emphasize."
+            },
+            {
+              label: "Expand wherever the map looks empty",
+              description: "Treat unmarked areas as unused land.",
+              reward: 10,
+              artifact: "Incomplete Boundary Map",
+              result:
+                "<strong>A misleading assumption.</strong> An English map may omit Native communities, seasonal land use, and contested boundaries.",
+              note:
+                "Absence from a source is not proof that something did not exist."
+            },
+            {
+              label: "Ignore rivers and terrain",
+              description: "Draw straight borders and roads for simplicity.",
+              reward: 5,
+              artifact: "Broken Survey Chain",
+              result:
+                "<strong>The land refuses simple lines.</strong> Terrain and waterways strongly shape travel, settlement, and conflict.",
+              note:
+                "Political plans often collide with physical geography."
+            }
+          ],
+          Builder: [
+            {
+              label: "Balance farms, roads, public spaces, defense, and water",
+              description: "Create a settlement that meets several connected needs.",
+              reward: 40,
+              artifact: "Master Settlement Blueprint",
+              result:
+                "<strong>A durable design.</strong> The plan supports food, movement, government, security, and public health.",
+              note:
+                "Strong communities are systems: changing one part affects the others."
+            },
+            {
+              label: "Spend everything on a larger fort",
+              description: "Make military strength the colonyâs main priority.",
+              reward: 10,
+              artifact: "Oversized Fort Model",
+              result:
+                "<strong>Impressive but unbalanced.</strong> Defense matters, but a fort cannot replace roads, farms, clean water, or civic life.",
+              note:
+                "A visible symbol of strength can distract from less dramatic needs."
+            },
+            {
+              label: "Let each family build without a shared plan",
+              description: "Avoid rules and allow complete freedom.",
+              reward: 5,
+              artifact: "Scattered Property Stakes",
+              result:
+                "<strong>Freedom creates disorder without coordination.</strong> Roads, water access, defense, and public spaces become difficult to manage.",
+              note:
+                "Communities constantly negotiate between individual freedom and shared responsibility."
+            }
+          ],
+          Diplomat: [
+            {
+              label: "Create representative rules and honor negotiated agreements",
+              description: "Give colonists a voice while treating agreements as binding.",
+              reward: 40,
+              artifact: "Colony Council Charter",
+              result:
+                "<strong>A strong civic foundation.</strong> Representation and reliable agreements build legitimacy, trust, and stability.",
+              note:
+                "Colonial self-government expanded for some people while excluding many others."
+            },
+            {
+              label: "Let the governor decide everything alone",
+              description: "Use one clear authority to prevent disagreement.",
+              reward: 10,
+              artifact: "Governorâs Wax Seal",
+              result:
+                "<strong>Efficient but fragile.</strong> Decisions may be faster, but people have little reason to trust or support the government.",
+              note:
+                "Authority and legitimacy are related, but they are not the same."
+            },
+            {
+              label: "Change agreements whenever the colony benefits",
+              description: "Keep maximum flexibility in future conflicts.",
+              reward: 5,
+              artifact: "Torn Trade Agreement",
+              result:
+                "<strong>Trust collapses.</strong> Agreements have little value when one side abandons them whenever convenient.",
+              note:
+                "A governmentâs reputation is built through repeated choices over time."
+            }
+          ]
+        }
       }
     ];
 
     let coins = Number(localStorage.getItem("aqCoins")) || 0;
+    let selectedRole = localStorage.getItem("aqRole") || "";
+    let colonyName = localStorage.getItem("aqColonyName") || "";
     let journal = JSON.parse(localStorage.getItem("aqJournal") || "[]");
     let artifacts = JSON.parse(localStorage.getItem("aqArtifacts") || "[]");
-    let selectedRole = "";
-    let currentQuestion = 0;
-    let correctAnswers = 0;
-    let answered = false;
+    let completedStages = Number(localStorage.getItem("aqCompletedStages")) || 0;
+    let questIndex = Math.max(0, Math.min(completedStages, QUESTS.length));
+    let questRunCoins = 0;
+    let chosenThisStage = false;
 
     updateStatus();
+    renderMap();
 
-    function beginJourney(){
+    function beginJourney() {
       document.getElementById("startScreen").classList.add("hidden");
       document.getElementById("app").classList.remove("hidden");
+      renderMap();
     }
 
-    function openQuest(){
-      resetQuest();
-      document.getElementById("questModal").classList.remove("hidden");
-    }
+    function openQuest() {
+      chosenThisStage = false;
+      showModal("questModal");
 
-    function closeModal(id){document.getElementById(id).classList.add("hidden")}
+      if (completedStages === 0 || !selectedRole || !colonyName) {
+        showQuestScreen("questSetup");
 
-    function selectRole(button,role){
-      document.querySelectorAll(".role-button").forEach(b=>b.classList.remove("selected"));
-      button.classList.add("selected");
-      selectedRole=role;
-    }
+        document.getElementById("colonyName").value = colonyName;
 
-    function resetQuest(){
-      currentQuestion=0; correctAnswers=0; answered=false; selectedRole="";
-      document.getElementById("questSetup").classList.remove("hidden");
-      document.getElementById("questPlay").classList.add("hidden");
-      document.getElementById("questResult").classList.add("hidden");
-      document.querySelectorAll(".role-button").forEach(b=>b.classList.remove("selected"));
-    }
+        document.querySelectorAll(".role-button").forEach(button => {
+          button.classList.remove("selected");
+          const role = button.textContent.trim().split(/\s+/)[0];
+          if (role === selectedRole) button.classList.add("selected");
+        });
 
-    function startQuest(){
-      if(!selectedRole){alert("Choose a role before setting sail.");return}
-      document.getElementById("questSetup").classList.add("hidden");
-      document.getElementById("questPlay").classList.remove("hidden");
-      showQuestion();
-    }
-
-    function showQuestion(){
-      answered=false;
-      const q=questions[currentQuestion];
-      document.getElementById("questionMeta").textContent=`Mission ${currentQuestion+1} of ${questions.length} Â· ${selectedRole}`;
-      document.getElementById("progressBar").style.width=`${(currentQuestion/questions.length)*100}%`;
-      document.getElementById("questionTitle").textContent=q.title;
-      document.getElementById("questionStory").textContent=q.story;
-      document.getElementById("questionPrompt").textContent=q.prompt;
-      document.getElementById("feedbackBox").className="feedback hidden";
-      document.getElementById("feedbackBox").innerHTML="";
-      document.getElementById("nextButton").classList.add("hidden");
-
-      const choices=document.getElementById("answerChoices");
-      choices.innerHTML="";
-      q.choices.forEach((choice,index)=>{
-        const btn=document.createElement("button");
-        btn.className="choice-button";
-        btn.textContent=choice;
-        btn.onclick=()=>chooseAnswer(index);
-        choices.appendChild(btn);
-      });
-    }
-
-    function chooseAnswer(index){
-      if(answered)return;
-      answered=true;
-      const q=questions[currentQuestion];
-      const correct=index===q.answer;
-      if(correct)correctAnswers++;
-
-      document.querySelectorAll("#answerChoices .choice-button").forEach((btn,i)=>{
-        btn.disabled=true;
-        if(i===q.answer)btn.style.outline="3px solid #4d694e";
-        if(i===index && !correct)btn.style.outline="3px solid #8a4b39";
-      });
-
-      const box=document.getElementById("feedbackBox");
-      box.className=`feedback ${correct?"correct":"incorrect"}`;
-      box.innerHTML=`<strong>${correct?"Correct!":"Not quite."}</strong><br>${q.explanation}`;
-      const next=document.getElementById("nextButton");
-      next.textContent=currentQuestion===questions.length-1?"Complete Unit I":"Continue Journey";
-      next.classList.remove("hidden");
-      document.getElementById("progressBar").style.width=`${((currentQuestion+1)/questions.length)*100}%`;
-    }
-
-    function nextQuestion(){
-      currentQuestion++;
-      if(currentQuestion<questions.length){showQuestion()}else{completeQuest()}
-    }
-
-    function completeQuest(){
-      const colonyName=document.getElementById("colonyName").value.trim()||"New Horizon";
-      const reward=correctAnswers*10;
-      coins+=reward;
-
-      let level,artifact;
-      if(correctAnswers===10){
-        level="Mastery Expedition";
-        artifact="Golden Compass of the Atlantic";
-      }else if(correctAnswers>=8){
-        level="Skilled Historian";
-        artifact="Captainâs Colonial Map";
-      }else if(correctAnswers>=6){
-        level="Developing Historian";
-        artifact="Weathered Explorerâs Journal";
-      }else{
-        level="Historian in Training";
-        artifact="Colonial Evidence Packet";
+        return;
       }
 
-      const entry=`${colonyName}: ${selectedRole} completed Unit I with ${correctAnswers} of ${questions.length} correct and earned the rank â${level}.â`;
-      journal.unshift(entry);
-      if(!artifacts.includes(artifact))artifacts.unshift(artifact);
+      if (completedStages >= QUESTS.length) {
+        renderCompletion();
+        showQuestScreen("questComplete");
+        return;
+      }
 
-      localStorage.setItem("aqCoins",String(coins));
-      localStorage.setItem("aqJournal",JSON.stringify(journal));
-      localStorage.setItem("aqArtifacts",JSON.stringify(artifacts));
+      questIndex = completedStages;
+      renderDecision();
+      showQuestScreen("questDecision");
+    }
 
-      document.getElementById("questPlay").classList.add("hidden");
-      document.getElementById("questResult").classList.remove("hidden");
-      document.getElementById("resultText").innerHTML=
-        `<p class="score-big"><strong>${correctAnswers} / ${questions.length}</strong></p>
-         <p><strong>${level}</strong></p>
-         <p>You recovered the <strong>${artifact}</strong>.</p>`;
-      document.getElementById("rewardText").textContent=`You earned ${reward} historian coins.`;
+    function selectRole(button, role) {
+      document.querySelectorAll(".role-button").forEach(item => {
+        item.classList.remove("selected");
+      });
+
+      button.classList.add("selected");
+      selectedRole = role;
+    }
+
+    function startQuest() {
+      colonyName =
+        document.getElementById("colonyName").value.trim() || "New Horizon";
+
+      if (!selectedRole) {
+        alert("Choose a role before setting sail.");
+        return;
+      }
+
+      localStorage.setItem("aqRole", selectedRole);
+      localStorage.setItem("aqColonyName", colonyName);
+
+      completedStages = Math.max(completedStages, 1);
+      localStorage.setItem("aqCompletedStages", completedStages);
+
+      addJournalEntry({
+        title: "Royal Harbor",
+        text:
+          colonyName +
+          " departed England with a " +
+          selectedRole +
+          " helping guide the expedition.",
+        role: selectedRole
+      });
+
+      questIndex = 0;
+      renderMap();
+      renderDecision();
+      showQuestScreen("questDecision");
+    }
+
+    function renderDecision() {
+      const quest = QUESTS[questIndex];
+      chosenThisStage = false;
+
+      document.getElementById("decisionEyebrow").textContent =
+        "Decision " + (questIndex + 1) + " of " + QUESTS.length;
+
+      document.getElementById("decisionTitle").textContent = quest.title;
+      document.getElementById("metaColony").textContent = "Colony: " + colonyName;
+      document.getElementById("metaRole").textContent = "Role: " + selectedRole;
+      document.getElementById("metaCoins").textContent =
+        "Journey Coins: " + questRunCoins;
+
+      document.getElementById("decisionProgressFill").style.width =
+        ((questIndex + 1) / QUESTS.length) * 100 + "%";
+
+      document.getElementById("decisionStory").innerHTML =
+        "<strong>" +
+        colonyName +
+        "</strong>: " +
+        quest.story[selectedRole];
+
+      document.getElementById("decisionQuestion").textContent =
+        quest.question[selectedRole];
+
+      const choiceGrid = document.getElementById("choiceGrid");
+      choiceGrid.innerHTML = "";
+
+      quest.choices[selectedRole].forEach((choice, choiceIndex) => {
+        const button = document.createElement("button");
+        button.className = "choice-button";
+        button.innerHTML =
+          "<strong>" +
+          choice.label +
+          "</strong><br />" +
+          choice.description;
+        button.onclick = () => makeChoice(choiceIndex);
+        choiceGrid.appendChild(button);
+      });
+    }
+
+    function makeChoice(choiceIndex) {
+      if (chosenThisStage) return;
+      chosenThisStage = true;
+
+      const quest = QUESTS[questIndex];
+      const choice = quest.choices[selectedRole][choiceIndex];
+
+      coins += choice.reward;
+      questRunCoins += choice.reward;
+
+      if (!artifacts.includes(choice.artifact)) {
+        artifacts.unshift(choice.artifact);
+      }
+
+      addJournalEntry({
+        title: quest.title,
+        text:
+          colonyName +
+          " chose: â" +
+          choice.label +
+          ".â " +
+          stripHtml(choice.result),
+        role: selectedRole
+      });
+
+      completedStages = Math.max(completedStages, quest.mapStage + 1);
+
+      localStorage.setItem("aqCoins", coins);
+      localStorage.setItem("aqArtifacts", JSON.stringify(artifacts));
+      localStorage.setItem("aqCompletedStages", completedStages);
+
+      document.getElementById("feedbackEyebrow").textContent =
+        "Decision " + (questIndex + 1) + " Recorded";
+
+      document.getElementById("feedbackTitle").textContent =
+        quest.title + ": Consequences";
+
+      document.getElementById("feedbackText").innerHTML = choice.result;
+      document.getElementById("historianNote").innerHTML =
+        "<strong>Historianâs Note:</strong> " + choice.note;
+
+      document.getElementById("rewardText").textContent =
+        "You earned " +
+        choice.reward +
+        " historian coins and recovered: " +
+        choice.artifact +
+        ".";
+
+      const isFinalDecision = questIndex === QUESTS.length - 1;
+      document.getElementById("nextDecisionButton").textContent =
+        isFinalDecision ? "Claim the Unit Badge" : "Continue the Expedition";
+
       updateStatus();
+      renderMap();
+      showQuestScreen("questFeedback");
     }
 
-    function finishQuest(){closeModal("questModal");updateStatus()}
+    function continueQuest() {
+      if (questIndex >= QUESTS.length - 1) {
+        completedStages = 6;
+        localStorage.setItem("aqCompletedStages", completedStages);
+        localStorage.setItem("aqUnit1Complete", "true");
 
-    function updateStatus(){
-      document.getElementById("coinCount").textContent=coins;
-      let rank="Apprentice";
-      if(coins>=50)rank="Archive Scout";
-      if(coins>=100)rank="Evidence Keeper";
-      if(coins>=200)rank="Historical Investigator";
-      if(coins>=350)rank="Master Historian";
-      document.getElementById("rankName").textContent=rank;
+        if (!artifacts.includes("Foundersâ Expedition Badge")) {
+          artifacts.unshift("Foundersâ Expedition Badge");
+          localStorage.setItem("aqArtifacts", JSON.stringify(artifacts));
+        }
+
+        addJournalEntry({
+          title: "Unit I Complete",
+          text:
+            colonyName +
+            " completed the Exploration & Colonization expedition and earned the Foundersâ Expedition Badge.",
+          role: selectedRole
+        });
+
+        renderCompletion();
+        updateStatus();
+        renderMap();
+        showQuestScreen("questComplete");
+        return;
+      }
+
+      questIndex += 1;
+      renderDecision();
+      showQuestScreen("questDecision");
     }
 
-    function openMuseum(){
+    function renderCompletion() {
+      const rank = getRank(coins);
+
+      document.getElementById("completionMessage").innerHTML =
+        "<strong>" +
+        colonyName +
+        "</strong> survived the expedition. As the colonyâs <strong>" +
+        selectedRole +
+        "</strong>, you used evidence to navigate geography, survival, diplomacy, regional development, and government.";
+
+      document.getElementById("finalCoins").textContent = questRunCoins;
+      document.getElementById("finalArtifacts").textContent = artifacts.length;
+      document.getElementById("finalRank").textContent = rank;
+    }
+
+    function finishQuest() {
+      closeModal("questModal");
+      renderMap();
+      updateStatus();
+      document.querySelector(".map-shell").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function showQuestScreen(id) {
+      ["questSetup", "questDecision", "questFeedback", "questComplete"].forEach(screenId => {
+        document.getElementById(screenId).classList.toggle("hidden", screenId !== id);
+      });
+    }
+
+    function showModal(id) {
+      document.getElementById(id).classList.remove("hidden");
+      document.body.classList.add("modal-open");
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add("hidden");
+
+      const anyModalOpen = [...document.querySelectorAll(".modal")].some(
+        modal => !modal.classList.contains("hidden")
+      );
+
+      if (!anyModalOpen) {
+        document.body.classList.remove("modal-open");
+      }
+    }
+
+    function openMuseum() {
       renderMuseum();
-      document.getElementById("museumModal").classList.remove("hidden");
+      showModal("museumModal");
     }
 
-    function openJournal(){
+    function openJournal() {
       renderJournal();
-      document.getElementById("journalModal").classList.remove("hidden");
+      showModal("journalModal");
     }
 
-    function renderMuseum(){
-      const c=document.getElementById("museumContents");
-      c.innerHTML=artifacts.length
-        ? artifacts.map(a=>`<div class="artifact"><strong>Recovered Artifact</strong><br>${a}</div>`).join("")
-        : `<div class="artifact">No artifacts recovered yet. Complete a quest to add evidence to your collection.</div>`;
+    function renderMap() {
+      const nodes = [...document.querySelectorAll(".map-node")];
+
+      nodes.forEach(node => {
+        const stage = Number(node.dataset.stage);
+        const status = node.querySelector(".node-status");
+
+        node.classList.remove("locked", "current", "complete");
+
+        if (stage < completedStages) {
+          node.classList.add("complete");
+          status.textContent = "Complete";
+        } else if (stage === completedStages && completedStages < 6) {
+          node.classList.add("current");
+          status.textContent = "Current Stop";
+        } else if (completedStages >= 6 && stage === 5) {
+          node.classList.add("complete");
+          status.textContent = "Unit Complete";
+        } else {
+          node.classList.add("locked");
+          status.textContent = "Locked";
+        }
+      });
+
+      const progressPercent = Math.min((completedStages / 6) * 100, 100);
+      document.getElementById("mapProgressFill").style.width = progressPercent + "%";
+
+      const progressText =
+        completedStages >= 6 ? "Complete" : completedStages + "/6";
+
+      document.getElementById("unitProgressText").textContent = progressText;
+
+      const button = document.getElementById("continueButton");
+
+      if (completedStages === 0) {
+        button.textContent = "Begin Unit I";
+      } else if (completedStages < 6) {
+        button.textContent = "Continue at Stop " + (completedStages + 1);
+      } else {
+        button.textContent = "View Completed Expedition";
+      }
+
+      positionShip();
     }
 
-    function renderJournal(){
-      const c=document.getElementById("journalContents");
-      c.innerHTML=journal.length
-        ? journal.map(e=>`<div class="journal-entry">${e}</div>`).join("")
-        : `<div class="journal-entry">Your journal is empty. Your choices will be recorded here.</div>`;
+    function positionShip() {
+      const marker = document.getElementById("shipMarker");
+      const stage = Math.min(completedStages, 5);
+
+      const positions = [
+        { top: "95px", left: "43%" },
+        { top: "205px", left: "67%" },
+        { top: "318px", left: "31%" },
+        { top: "432px", left: "66%" },
+        { top: "545px", left: "32%" },
+        { top: "655px", left: "62%" }
+      ];
+
+      marker.style.top = positions[stage].top;
+      marker.style.left = positions[stage].left;
     }
 
-    function resetProgress(){
-      if(!confirm("Reset all American Quest coins, artifacts, and journal entries?"))return;
-      localStorage.removeItem("aqCoins");
-      localStorage.removeItem("aqJournal");
-      localStorage.removeItem("aqArtifacts");
-      coins=0; journal=[]; artifacts=[];
+    function updateStatus() {
+      document.getElementById("coinCount").textContent = coins;
+      document.getElementById("rankName").textContent = getRank(coins);
+    }
+
+    function getRank(value) {
+      if (value >= 300) return "Master Historian";
+      if (value >= 220) return "Expedition Scholar";
+      if (value >= 150) return "Evidence Keeper";
+      if (value >= 75) return "Archive Scout";
+      return "Apprentice";
+    }
+
+    function addJournalEntry(entry) {
+      const duplicate = journal.some(
+        item => item.title === entry.title && item.text === entry.text
+      );
+
+      if (!duplicate) {
+        journal.unshift({
+          title: entry.title,
+          text: entry.text,
+          role: entry.role,
+          date: new Date().toLocaleDateString()
+        });
+
+        localStorage.setItem("aqJournal", JSON.stringify(journal));
+      }
+    }
+
+    function renderJournal() {
+      const container = document.getElementById("journalContents");
+
+      if (journal.length === 0) {
+        container.innerHTML =
+          '<div class="journal-entry">Your journal is empty. Your choices will be recorded here.</div>';
+        return;
+      }
+
+      container.innerHTML = journal
+        .map(entry => {
+          if (typeof entry === "string") {
+            return '<div class="journal-entry">' + escapeHtml(entry) + "</div>";
+          }
+
+          return (
+            '<div class="journal-entry">' +
+            "<strong>" +
+            escapeHtml(entry.title) +
+            "</strong><br />" +
+            escapeHtml(entry.text) +
+            "<small>" +
+            escapeHtml(entry.role || "Historian") +
+            " Â· " +
+            escapeHtml(entry.date || "") +
+            "</small></div>"
+          );
+        })
+        .join("");
+    }
+
+    function renderMuseum() {
+      const container = document.getElementById("museumContents");
+
+      if (artifacts.length === 0) {
+        container.innerHTML =
+          '<div class="artifact">No artifacts recovered yet. Complete a map stop to add evidence to your collection.</div>';
+        return;
+      }
+
+      const icons = ["ð§­", "ð", "ðºï¸", "â", "ðº", "ð", "ð"];
+
+      container.innerHTML = artifacts
+        .map((artifact, index) => {
+          return (
+            '<div class="artifact">' +
+            '<span class="artifact-badge">' +
+            icons[index % icons.length] +
+            "</span>" +
+            "<strong>Recovered Artifact:</strong> " +
+            escapeHtml(artifact) +
+            "</div>"
+          );
+        })
+        .join("");
+    }
+
+    function confirmReset() {
+      const reset = confirm(
+        "Reset all American Quest coins, artifacts, journal entries, and Unit I progress?"
+      );
+
+      if (!reset) return;
+
+      [
+        "aqCoins",
+        "aqRole",
+        "aqColonyName",
+        "aqJournal",
+        "aqArtifacts",
+        "aqCompletedStages",
+        "aqUnit1Complete"
+      ].forEach(key => localStorage.removeItem(key));
+
+      coins = 0;
+      selectedRole = "";
+      colonyName = "";
+      journal = [];
+      artifacts = [];
+      completedStages = 0;
+      questIndex = 0;
+      questRunCoins = 0;
+
       updateStatus();
-      alert("Progress has been reset.");
+      renderMap();
+      alert("American Quest progress has been reset.");
     }
+
+    function stripHtml(value) {
+      const temp = document.createElement("div");
+      temp.innerHTML = value;
+      return temp.textContent || temp.innerText || "";
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        document.querySelectorAll(".modal").forEach(modal => {
+          modal.classList.add("hidden");
+        });
+        document.body.classList.remove("modal-open");
+      }
+    });
   </script>
 </body>
 </html>
