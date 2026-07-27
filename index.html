@@ -2130,5 +2130,71 @@
       }
     });
   </script>
+  <script>
+  // Repairs punctuation and symbols that were corrupted during copying/saving.
+  const characterRepairs = {
+    "â": "’",
+    "â": "‘",
+    "â": "“",
+    "â": "”",
+    "â": "—",
+    "â": "–",
+    "â¦": "…",
+    "â¦": "✦",
+    "Â·": "·",
+    "Ã": "×",
+    "ðª": "🪙"
+  };
+
+  function repairText(text) {
+    let repaired = text;
+
+    Object.entries(characterRepairs).forEach(([broken, correct]) => {
+      repaired = repaired.split(broken).join(correct);
+    });
+
+    return repaired;
+  }
+
+  function repairPageCharacters(root = document.body) {
+    const walker = document.createTreeWalker(
+      root,
+      NodeFilter.SHOW_TEXT
+    );
+
+    const textNodes = [];
+
+    while (walker.nextNode()) {
+      textNodes.push(walker.currentNode);
+    }
+
+    textNodes.forEach(node => {
+      const repaired = repairText(node.nodeValue);
+
+      if (repaired !== node.nodeValue) {
+        node.nodeValue = repaired;
+      }
+    });
+
+    root.querySelectorAll("input").forEach(input => {
+      if (input.placeholder) {
+        input.placeholder = repairText(input.placeholder);
+      }
+    });
+  }
+
+  repairPageCharacters();
+
+  // Also repairs new question text as the game changes screens.
+  const characterObserver = new MutationObserver(() => {
+    repairPageCharacters();
+  });
+
+  characterObserver.observe(document.body, {
+    childList: true,
+    subtree: true,
+    characterData: true
+  });
+</script>
 </body>
 </html>
