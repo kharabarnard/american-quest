@@ -4,19 +4,1525 @@
 
 <head>
 
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>American Quest</title>
+
+  <style>
+
+    :root {
+
+      --ink: #252219;
+
+      --parchment: #e8d4a9;
+
+      --parchment-light: #f5e8c7;
+
+      --gold: #b58a3c;
+
+      --dark-gold: #806126;
+
+      --forest: #334638;
+
+      --deep-brown: #211b15;
+
+      --cream: #f7efd8;
+
+    }
+
+    * {
+
+      box-sizing: border-box;
+
+    }
+
+    html {
+
+      scroll-behavior: smooth;
+
+    }
+
+    body {
+
+      margin: 0;
+
+      min-height: 100vh;
+
+      font-family: Georgia, "Times New Roman", serif;
+
+      color: var(--cream);
+
+      background:
+
+        linear-gradient(rgba(18, 16, 12, 0.7), rgba(18, 16, 12, 0.86)),
+
+        radial-gradient(circle at top, #5b6250 0%, #283128 45%, #171913 100%);
+
+      background-attachment: fixed;
+
+    }
+
+    button {
+
+      font: inherit;
+
+    }
+
+    .hidden {
+
+      display: none !important;
+
+    }
+
+    /* START SCREEN */
+
+    #startScreen {
+
+      min-height: 100vh;
+
+      display: grid;
+
+      place-items: center;
+
+      padding: 24px;
+
+      position: relative;
+
+      overflow: hidden;
+
+    }
+
+    #startScreen::before {
+
+      content: "";
+
+      position: absolute;
+
+      inset: 0;
+
+      background:
+
+        radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.32) 70%),
+
+        repeating-linear-gradient(
+
+          0deg,
+
+          rgba(255, 255, 255, 0.015),
+
+          rgba(255, 255, 255, 0.015) 1px,
+
+          transparent 1px,
+
+          transparent 4px
+
+        );
+
+      pointer-events: none;
+
+    }
+
+    .start-card {
+
+      width: min(760px, 100%);
+
+      padding: 54px 28px;
+
+      text-align: center;
+
+      position: relative;
+
+      border: 1px solid rgba(220, 191, 126, 0.6);
+
+      background:
+
+        linear-gradient(rgba(29, 24, 17, 0.82), rgba(29, 24, 17, 0.88)),
+
+        radial-gradient(circle, #796742, #33291e);
+
+      box-shadow:
+
+        0 25px 60px rgba(0, 0, 0, 0.55),
+
+        inset 0 0 30px rgba(219, 184, 110, 0.1);
+
+    }
+
+    .eyebrow {
+
+      margin: 0 0 12px;
+
+      color: #d6bd84;
+
+      letter-spacing: 0.28em;
+
+      text-transform: uppercase;
+
+      font-size: 0.74rem;
+
+    }
+
+    .start-title {
+
+      margin: 0;
+
+      font-size: clamp(3rem, 10vw, 6.6rem);
+
+      line-height: 0.9;
+
+      letter-spacing: 0.04em;
+
+      text-transform: uppercase;
+
+      text-shadow: 0 4px 16px rgba(0, 0, 0, 0.8);
+
+    }
+
+    .subtitle {
+
+      margin: 22px auto 0;
+
+      max-width: 590px;
+
+      color: #dfd3b5;
+
+      font-size: clamp(1rem, 3vw, 1.28rem);
+
+      line-height: 1.6;
+
+    }
+
+    .compass {
+
+      width: 92px;
+
+      height: 92px;
+
+      margin: 28px auto;
+
+      border: 2px solid #c4a566;
+
+      border-radius: 50%;
+
+      display: grid;
+
+      place-items: center;
+
+      font-size: 2.8rem;
+
+      color: #d6bd84;
+
+      box-shadow: inset 0 0 18px rgba(214, 189, 132, 0.2);
+
+    }
+
+    .primary-button,
+
+    .secondary-button {
+
+      border: 1px solid #d4b46f;
+
+      cursor: pointer;
+
+      text-transform: uppercase;
+
+      letter-spacing: 0.14em;
+
+      transition: transform 0.2s ease, background 0.2s ease;
+
+    }
+
+    .primary-button {
+
+      padding: 15px 28px;
+
+      color: #fff8e7;
+
+      background: linear-gradient(#a47b34, #73531d);
+
+      box-shadow: 0 7px 15px rgba(0, 0, 0, 0.35);
+
+    }
+
+    .secondary-button {
+
+      padding: 12px 18px;
+
+      color: #ead8ad;
+
+      background: rgba(45, 38, 27, 0.72);
+
+    }
+
+    .primary-button:hover,
+
+    .secondary-button:hover {
+
+      transform: translateY(-2px);
+
+    }
+
+    .small-note {
+
+      margin-top: 20px;
+
+      color: #bba982;
+
+      font-size: 0.83rem;
+
+      letter-spacing: 0.08em;
+
+    }
+
+    /* MAIN APP */
+
+    #app {
+
+      min-height: 100vh;
+
+    }
+
+    header {
+
+      position: sticky;
+
+      top: 0;
+
+      z-index: 20;
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      gap: 14px;
+
+      padding: 14px 18px;
+
+      background: rgba(25, 21, 16, 0.94);
+
+      border-bottom: 1px solid rgba(204, 173, 102, 0.45);
+
+      backdrop-filter: blur(10px);
+
+    }
+
+    .brand {
+
+      font-size: 1.1rem;
+
+      letter-spacing: 0.12em;
+
+      text-transform: uppercase;
+
+      color: #ead7a8;
+
+    }
+
+    .status {
+
+      display: flex;
+
+      gap: 10px;
+
+      flex-wrap: wrap;
+
+      justify-content: flex-end;
+
+    }
+
+    .status-pill {
+
+      padding: 7px 10px;
+
+      border: 1px solid rgba(214, 189, 132, 0.4);
+
+      background: rgba(63, 50, 31, 0.55);
+
+      color: #f2e4c1;
+
+      font-size: 0.82rem;
+
+      white-space: nowrap;
+
+    }
+
+    main {
+
+      width: min(1100px, 100%);
+
+      margin: 0 auto;
+
+      padding: 28px 18px 60px;
+
+    }
+
+    .hero-panel {
+
+      padding: 30px 24px;
+
+      border: 1px solid rgba(209, 179, 109, 0.48);
+
+      background:
+
+        linear-gradient(rgba(37, 31, 23, 0.82), rgba(37, 31, 23, 0.92)),
+
+        radial-gradient(circle at top right, #705f3e, #2b251c);
+
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.35);
+
+    }
+
+    .hero-panel h2 {
+
+      margin: 4px 0 10px;
+
+      font-size: clamp(2rem, 7vw, 4.2rem);
+
+      text-transform: uppercase;
+
+      letter-spacing: 0.04em;
+
+    }
+
+    .hero-panel p {
+
+      max-width: 740px;
+
+      margin: 0;
+
+      color: #d8c9a7;
+
+      line-height: 1.65;
+
+    }
+
+    .action-row {
+
+      display: flex;
+
+      gap: 10px;
+
+      flex-wrap: wrap;
+
+      margin-top: 22px;
+
+    }
+
+    .section-title {
+
+      margin: 42px 0 17px;
+
+      font-size: 1.3rem;
+
+      color: #e6d1a0;
+
+      letter-spacing: 0.13em;
+
+      text-transform: uppercase;
+
+    }
+
+    .quest-grid {
+
+      display: grid;
+
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+
+      gap: 16px;
+
+    }
+
+    .quest-card {
+
+      min-height: 218px;
+
+      display: flex;
+
+      flex-direction: column;
+
+      justify-content: space-between;
+
+      padding: 20px;
+
+      border: 1px solid rgba(210, 180, 111, 0.45);
+
+      background:
+
+        linear-gradient(rgba(33, 31, 24, 0.82), rgba(25, 23, 18, 0.93)),
+
+        radial-gradient(circle at top, #53614f, #262b24);
+
+      box-shadow: 0 13px 28px rgba(0, 0, 0, 0.25);
+
+    }
+
+    .quest-card.locked {
+
+      opacity: 0.58;
+
+      filter: grayscale(0.35);
+
+    }
+
+    .unit-number {
+
+      color: #c7ab70;
+
+      font-size: 0.75rem;
+
+      letter-spacing: 0.18em;
+
+      text-transform: uppercase;
+
+    }
+
+    .quest-card h3 {
+
+      margin: 9px 0;
+
+      font-size: 1.4rem;
+
+      color: #f2e6c7;
+
+    }
+
+    .quest-card p {
+
+      margin: 0;
+
+      color: #cfc4a8;
+
+      font-size: 0.95rem;
+
+      line-height: 1.5;
+
+    }
+
+    .card-footer {
+
+      margin-top: 20px;
+
+    }
+
+    .locked-label {
+
+      color: #b9aa8a;
+
+      letter-spacing: 0.12em;
+
+      text-transform: uppercase;
+
+      font-size: 0.76rem;
+
+    }
+
+    /* MODALS */
+
+    .modal {
+
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 50;
+
+      display: grid;
+
+      place-items: center;
+
+      padding: 18px;
+
+      background: rgba(0, 0, 0, 0.78);
+
+    }
+
+    .modal-card {
+
+      width: min(720px, 100%);
+
+      max-height: 88vh;
+
+      overflow-y: auto;
+
+      padding: 26px;
+
+      color: var(--ink);
+
+      background:
+
+        linear-gradient(rgba(245, 232, 199, 0.96), rgba(221, 198, 151, 0.97)),
+
+        repeating-linear-gradient(
+
+          0deg,
+
+          rgba(80, 60, 30, 0.03),
+
+          rgba(80, 60, 30, 0.03) 1px,
+
+          transparent 1px,
+
+          transparent 4px
+
+        );
+
+      border: 4px double #74582e;
+
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.62);
+
+    }
+
+    .modal-card h2 {
+
+      margin-top: 0;
+
+      text-transform: uppercase;
+
+      letter-spacing: 0.06em;
+
+    }
+
+    .modal-card p {
+
+      line-height: 1.6;
+
+    }
+
+    .close-button {
+
+      float: right;
+
+      border: none;
+
+      background: none;
+
+      color: #4a3821;
+
+      font-size: 1.5rem;
+
+      cursor: pointer;
+
+    }
+
+    .role-grid,
+
+    .choice-grid {
+
+      display: grid;
+
+      gap: 12px;
+
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+
+      margin: 20px 0;
+
+    }
+
+    .role-button,
+
+    .choice-button {
+
+      padding: 16px;
+
+      text-align: left;
+
+      color: #312719;
+
+      background: rgba(255, 248, 226, 0.7);
+
+      border: 1px solid #8d6e39;
+
+      cursor: pointer;
+
+      transition: transform 0.15s ease, background 0.15s ease;
+
+    }
+
+    .role-button:hover,
+
+    .choice-button:hover {
+
+      transform: translateY(-2px);
+
+      background: rgba(255, 252, 239, 0.95);
+
+    }
+
+    .role-button.selected {
+
+      outline: 3px solid #476048;
+
+      background: #eef0dc;
+
+    }
+
+    label {
+
+      display: block;
+
+      margin: 16px 0 6px;
+
+      font-weight: bold;
+
+    }
+
+    input {
+
+      width: 100%;
+
+      padding: 12px;
+
+      font: inherit;
+
+      color: #2f2619;
+
+      background: #fffaf0;
+
+      border: 1px solid #876b3c;
+
+    }
+
+    .story-box {
+
+      margin: 18px 0;
+
+      padding: 18px;
+
+      border-left: 5px solid #6e5932;
+
+      background: rgba(255, 250, 235, 0.55);
+
+    }
+
+    .result-box {
+
+      padding: 18px;
+
+      background: rgba(67, 87, 65, 0.14);
+
+      border: 1px solid #71806c;
+
+    }
+
+    .coin-earned {
+
+      color: #7a571d;
+
+      font-size: 1.15rem;
+
+      font-weight: bold;
+
+    }
+
+    .journal-entry {
+
+      margin: 12px 0;
+
+      padding: 12px;
+
+      border-bottom: 1px solid rgba(82, 63, 34, 0.35);
+
+    }
+
+    .artifact {
+
+      padding: 15px;
+
+      margin: 12px 0;
+
+      background: rgba(255, 248, 225, 0.62);
+
+      border: 1px dashed #80663a;
+
+    }
+
+    footer {
+
+      padding: 24px;
+
+      text-align: center;
+
+      color: #a99b7d;
+
+      font-size: 0.82rem;
+
+    }
+
+    @media (max-width: 600px) {
+
+      .start-card {
+
+        padding: 40px 20px;
+
+      }
+
+      header {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+      }
+
+      .status {
+
+        justify-content: flex-start;
+
+      }
+
+      .modal-card {
+
+        padding: 20px;
+
+      }
+
+    }
+
+  </style>
 
 </head>
 
 <body>
 
-  <h1>American Quest</h1>
+  <!-- CINEMATIC OPENING SCREEN -->
 
-  <p>An interactive 8th Grade U.S. History game collection</p>
+  <section id="startScreen">
+
+    <div class="start-card">
+
+      <p class="eyebrow">An Interactive Journey Through U.S. History</p>
+
+      <h1 class="start-title">American<br />Quest</h1>
+
+      <div class="compass">✦</div>
+
+      <p class="subtitle">
+
+        History was not inevitable. It was built one decision at a time.
+
+        Enter the past, face its choices, and discover what kind of historian
+
+        you will become.
+
+      </p>
+
+      <button class="primary-button" onclick="beginJourney()">
+
+        Begin Your Journey
+
+      </button>
+
+      <div class="small-note">Volume I · A New World Awaits</div>
+
+    </div>
+
+  </section>
+
+  <!-- MAIN HOMEPAGE -->
+
+  <div id="app" class="hidden">
+
+    <header>
+
+      <div class="brand">American Quest</div>
+
+      <div class="status">
+
+        <div class="status-pill">🪙 Coins: <span id="coinCount">0</span></div>
+
+        <div class="status-pill">Rank: <span id="rankName">Apprentice</span></div>
+
+      </div>
+
+    </header>
+
+    <main>
+
+      <section class="hero-panel">
+
+        <p class="eyebrow">The Historian’s Map</p>
+
+        <h2>Your Journey Begins</h2>
+
+        <p>
+
+          Every era holds a mystery. Every decision leaves evidence.
+
+          Complete each quest to collect coins, recover artifacts, and rise
+
+          through the Historian ranks.
+
+        </p>
+
+        <div class="action-row">
+
+          <button class="secondary-button" onclick="openMuseum()">
+
+            Museum
+
+          </button>
+
+          <button class="secondary-button" onclick="openJournal()">
+
+            Field Journal
+
+          </button>
+
+        </div>
+
+      </section>
+
+      <h2 class="section-title">Quest Map</h2>
+
+      <section class="quest-grid">
+
+        <article class="quest-card">
+
+          <div>
+
+            <div class="unit-number">Unit I · Open</div>
+
+            <h3>Exploration & Colonization</h3>
+
+            <p>
+
+              Cross the Atlantic, establish a colony, and make choices that
+
+              could determine whether your settlement survives.
+
+            </p>
+
+          </div>
+
+          <div class="card-footer">
+
+            <button class="primary-button" onclick="openQuest()">
+
+              Enter Quest
+
+            </button>
+
+          </div>
+
+        </article>
+
+        <article class="quest-card locked">
+
+          <div>
+
+            <div class="unit-number">Unit II · Locked</div>
+
+            <h3>American Revolution</h3>
+
+            <p>
+
+              A growing conflict forces colonists to choose between loyalty,
+
+              protest, and rebellion.
+
+            </p>
+
+          </div>
+
+          <div class="card-footer">
+
+            <span class="locked-label">Complete Unit I</span>
+
+          </div>
+
+        </article>
+
+        <article class="quest-card locked">
+
+          <div>
+
+            <div class="unit-number">Unit III · Locked</div>
+
+            <h3>Writing the Constitution</h3>
+
+            <p>
+
+              Build a government strong enough to survive while protecting
+
+              the freedoms of its people.
+
+            </p>
+
+          </div>
+
+          <div class="card-footer">
+
+            <span class="locked-label">Journey Continues Soon</span>
+
+          </div>
+
+        </article>
+
+        <article class="quest-card locked">
+
+          <div>
+
+            <div class="unit-number">Unit IV · Locked</div>
+
+            <h3>The New Republic</h3>
+
+            <p>
+
+              Test the limits of a new nation as presidents confront crises
+
+              at home and abroad.
+
+            </p>
+
+          </div>
+
+          <div class="card-footer">
+
+            <span class="locked-label">Journey Continues Soon</span>
+
+          </div>
+
+        </article>
+
+      </section>
+
+    </main>
+
+    <footer>
+
+      American Quest · Created for the historians of Southard Middle School
+
+    </footer>
+
+  </div>
+
+  <!-- QUEST MODAL -->
+
+  <div id="questModal" class="modal hidden">
+
+    <div class="modal-card">
+
+      <button class="close-button" onclick="closeModal('questModal')">×</button>
+
+      <div id="questSetup">
+
+        <p class="eyebrow" style="color:#765a2f;">The First Voyage</p>
+
+        <h2>Prepare Your Expedition</h2>
+
+        <p>
+
+          The year is 1607. Powerful European nations are competing for land,
+
+          trade, and influence. You have been chosen to help establish a new
+
+          settlement across the Atlantic.
+
+        </p>
+
+        <label for="colonyName">Name Your Colony</label>
+
+        <input
+
+          id="colonyName"
+
+          type="text"
+
+          maxlength="30"
+
+          placeholder="Example: New Horizon"
+
+        />
+
+        <label>Select Your Role</label>
+
+        <div class="role-grid">
+
+          <button class="role-button" onclick="selectRole(this, 'Navigator')">
+
+            <strong>Navigator</strong><br />
+
+            Reads maps, charts routes, and searches for safe passage.
+
+          </button>
+
+          <button class="role-button" onclick="selectRole(this, 'Builder')">
+
+            <strong>Builder</strong><br />
+
+            Plans shelters, defenses, and the layout of the settlement.
+
+          </button>
+
+          <button class="role-button" onclick="selectRole(this, 'Diplomat')">
+
+            <strong>Diplomat</strong><br />
+
+            Handles alliances, communication, and difficult negotiations.
+
+          </button>
+
+        </div>
+
+        <button class="primary-button" onclick="startQuest()">
+
+          Set Sail
+
+        </button>
+
+      </div>
+
+      <div id="questDecision" class="hidden">
+
+        <p class="eyebrow" style="color:#765a2f;">Decision One</p>
+
+        <h2>Landfall</h2>
+
+        <div class="story-box" id="arrivalStory"></div>
+
+        <p>
+
+          Your supplies are limited, and winter will arrive sooner than
+
+          expected. What should your colony do first?
+
+        </p>
+
+        <div class="choice-grid">
+
+          <button class="choice-button" onclick="makeChoice('water')">
+
+            <strong>Secure Fresh Water</strong><br />
+
+            Search inland and protect a reliable water source.
+
+          </button>
+
+          <button class="choice-button" onclick="makeChoice('fort')">
+
+            <strong>Build a Fort</strong><br />
+
+            Focus first on walls and defenses against possible attack.
+
+          </button>
+
+          <button class="choice-button" onclick="makeChoice('gold')">
+
+            <strong>Search for Wealth</strong><br />
+
+            Send colonists to look for gold and valuable resources.
+
+          </button>
+
+        </div>
+
+      </div>
+
+      <div id="questResult" class="hidden">
+
+        <p class="eyebrow" style="color:#765a2f;">Quest Record</p>
+
+        <h2>Your Decision Has Consequences</h2>
+
+        <div class="result-box" id="resultText"></div>
+
+        <p class="coin-earned" id="rewardText"></p>
+
+        <button class="primary-button" onclick="finishQuest()">
+
+          Return to the Map
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- MUSEUM MODAL -->
+
+  <div id="museumModal" class="modal hidden">
+
+    <div class="modal-card">
+
+      <button class="close-button" onclick="closeModal('museumModal')">×</button>
+
+      <p class="eyebrow" style="color:#765a2f;">Collection Hall</p>
+
+      <h2>The Historian’s Museum</h2>
+
+      <div id="museumContents">
+
+        <div class="artifact">
+
+          No artifacts recovered yet. Complete a quest to add evidence to
+
+          your collection.
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- JOURNAL MODAL -->
+
+  <div id="journalModal" class="modal hidden">
+
+    <div class="modal-card">
+
+      <button class="close-button" onclick="closeModal('journalModal')">×</button>
+
+      <p class="eyebrow" style="color:#765a2f;">Expedition Notes</p>
+
+      <h2>Field Journal</h2>
+
+      <div id="journalContents">
+
+        <div class="journal-entry">
+
+          Your journal is empty. Your choices will be recorded here.
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    let coins = Number(localStorage.getItem("aqCoins")) || 0;
+
+    let selectedRole = "";
+
+    let journal = JSON.parse(localStorage.getItem("aqJournal") || "[]");
+
+    let artifacts = JSON.parse(localStorage.getItem("aqArtifacts") || "[]");
+
+    updateStatus();
+
+    function beginJourney() {
+
+      document.getElementById("startScreen").classList.add("hidden");
+
+      document.getElementById("app").classList.remove("hidden");
+
+    }
+
+    function openQuest() {
+
+      resetQuestScreens();
+
+      document.getElementById("questModal").classList.remove("hidden");
+
+    }
+
+    function openMuseum() {
+
+      renderMuseum();
+
+      document.getElementById("museumModal").classList.remove("hidden");
+
+    }
+
+    function openJournal() {
+
+      renderJournal();
+
+      document.getElementById("journalModal").classList.remove("hidden");
+
+    }
+
+    function closeModal(id) {
+
+      document.getElementById(id).classList.add("hidden");
+
+    }
+
+    function resetQuestScreens() {
+
+      document.getElementById("questSetup").classList.remove("hidden");
+
+      document.getElementById("questDecision").classList.add("hidden");
+
+      document.getElementById("questResult").classList.add("hidden");
+
+      document.querySelectorAll(".role-button").forEach(button => {
+
+        button.classList.remove("selected");
+
+      });
+
+      selectedRole = "";
+
+    }
+
+    function selectRole(button, role) {
+
+      document.querySelectorAll(".role-button").forEach(item => {
+
+        item.classList.remove("selected");
+
+      });
+
+      button.classList.add("selected");
+
+      selectedRole = role;
+
+    }
+
+    function startQuest() {
+
+      const colonyName =
+
+        document.getElementById("colonyName").value.trim() || "New Horizon";
+
+      if (!selectedRole) {
+
+        alert("Choose a role before setting sail.");
+
+        return;
+
+      }
+
+      document.getElementById("questSetup").classList.add("hidden");
+
+      document.getElementById("questDecision").classList.remove("hidden");
+
+      document.getElementById("arrivalStory").innerHTML =
+
+        "<strong>" + colonyName + "</strong> has reached the coast. " +
+
+        "As the colony's <strong>" + selectedRole + "</strong>, your advice " +
+
+        "may determine whether the settlement survives.";
+
+    }
+
+    function makeChoice(choice) {
+
+      const colonyName =
+
+        document.getElementById("colonyName").value.trim() || "New Horizon";
+
+      let result = "";
+
+      let reward = 0;
+
+      let artifact = "";
+
+      let journalText = "";
+
+      if (choice === "water") {
+
+        result =
+
+          "<strong>Wise planning.</strong> Your colonists locate a cleaner " +
+
+          "water source and reduce the spread of disease. The settlement has " +
+
+          "a stronger chance of surviving its first season.";
+
+        reward = 30;
+
+        artifact = "Brass Navigator’s Compass";
+
+        journalText =
+
+          colonyName +
+
+          " secured fresh water before expanding. Survival required careful " +
+
+          "planning, not simply courage.";
+
+      }
+
+      if (choice === "fort") {
+
+        result =
+
+          "<strong>A cautious beginning.</strong> The walls provide protection, " +
+
+          "but illness spreads while the colony searches for a dependable water " +
+
+          "source. Your decision creates security but delays other urgent work.";
+
+        reward = 20;
+
+        artifact = "Weathered Fort Blueprint";
+
+        journalText =
+
+          colonyName +
+
+          " built defenses first. The colony became safer from attack, but " +
+
+          "limited resources made the decision costly.";
+
+      }
+
+      if (choice === "gold") {
+
+        result =
+
+          "<strong>A dangerous gamble.</strong> The search for wealth uses " +
+
+          "precious time and energy. Food runs low, and the colony struggles. " +
+
+          "Profit may attract investors, but survival must come first.";
+
+        reward = 10;
+
+        artifact = "Unrefined Mineral Sample";
+
+        journalText =
+
+          colonyName +
+
+          " searched for wealth before meeting basic needs. The choice showed " +
+
+          "how economic motives could place colonists in danger.";
+
+      }
+
+      coins += reward;
+
+      journal.unshift(journalText);
+
+      if (!artifacts.includes(artifact)) {
+
+        artifacts.unshift(artifact);
+
+      }
+
+      localStorage.setItem("aqCoins", coins);
+
+      localStorage.setItem("aqJournal", JSON.stringify(journal));
+
+      localStorage.setItem("aqArtifacts", JSON.stringify(artifacts));
+
+      document.getElementById("questDecision").classList.add("hidden");
+
+      document.getElementById("questResult").classList.remove("hidden");
+
+      document.getElementById("resultText").innerHTML = result;
+
+      document.getElementById("rewardText").textContent =
+
+        "You earned " + reward + " historian coins and recovered an artifact.";
+
+      updateStatus();
+
+    }
+
+    function finishQuest() {
+
+      closeModal("questModal");
+
+      updateStatus();
+
+    }
+
+    function updateStatus() {
+
+      document.getElementById("coinCount").textContent = coins;
+
+      let rank = "Apprentice";
+
+      if (coins >= 25) rank = "Archive Scout";
+
+      if (coins >= 50) rank = "Evidence Keeper";
+
+      if (coins >= 100) rank = "Master Historian";
+
+      document.getElementById("rankName").textContent = rank;
+
+    }
+
+    function renderJournal() {
+
+      const container = document.getElementById("journalContents");
+
+      if (journal.length === 0) {
+
+        container.innerHTML =
+
+          '<div class="journal-entry">' +
+
+          "Your journal is empty. Your choices will be recorded here." +
+
+          "</div>";
+
+        return;
+
+      }
+
+      container.innerHTML = journal
+
+        .map(
+
+          entry =>
+
+            '<div class="journal-entry">' +
+
+            entry +
+
+            "</div>"
+
+        )
+
+        .join("");
+
+    }
+
+    function renderMuseum() {
+
+      const container = document.getElementById("museumContents");
+
+      if (artifacts.length === 0) {
+
+        container.innerHTML =
+
+          '<div class="artifact">' +
+
+          "No artifacts recovered yet. Complete a quest to add evidence to " +
+
+          "your collection." +
+
+          "</div>";
+
+        return;
+
+      }
+
+      container.innerHTML = artifacts
+
+        .map(
+
+          artifact =>
+
+            '<div class="artifact"><strong>Recovered Artifact:</strong><br />' +
+
+            artifact +
+
+            "</div>"
+
+        )
+
+        .join("");
+
+    }
+
+  </script>
 
 </body>
 
