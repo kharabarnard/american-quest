@@ -2196,5 +2196,70 @@
     characterData: true
   });
 </script>
+  <script>
+  function repairAmericanQuestText(root = document.body) {
+    const walker = document.createTreeWalker(
+      root,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode(node) {
+          const parent = node.parentElement;
+
+          if (
+            !parent ||
+            parent.tagName === "SCRIPT" ||
+            parent.tagName === "STYLE"
+          ) {
+            return NodeFilter.FILTER_REJECT;
+          }
+
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      }
+    );
+
+    const textNodes = [];
+    let node;
+
+    while ((node = walker.nextNode())) {
+      textNodes.push(node);
+    }
+
+    textNodes.forEach(textNode => {
+      const original = textNode.nodeValue;
+
+      if (!/[ÃÂâð]/.test(original)) return;
+
+      try {
+        const repaired = decodeURIComponent(escape(original));
+
+        if (repaired && repaired !== original) {
+          textNode.nodeValue = repaired;
+        }
+      } catch (error) {
+        console.log("American Quest text repair skipped.");
+      }
+    });
+  }
+
+  repairAmericanQuestText();
+
+  const americanQuestTextObserver = new MutationObserver(() => {
+    americanQuestTextObserver.disconnect();
+    repairAmericanQuestText();
+
+    americanQuestTextObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
+  });
+
+  americanQuestTextObserver.observe(document.body, {
+    childList: true,
+    subtree: true,
+    characterData: true
+  });
+</script>
 </body>
 </html>
