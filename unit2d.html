@@ -9,16 +9,19 @@
 :root{--cream:#f7edcf;--paper:#ead6ac;--gold:#d7b45d;--ink:#251d13;--red:#7f302d;--green:#33493d;--shadow:rgba(0,0,0,.55)}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--cream);font-family:Georgia,"Times New Roman",serif;background:#11130f;overflow-x:hidden}
 button,a{font:inherit}.hidden{display:none!important}.grain{position:fixed;inset:0;pointer-events:none;z-index:90;opacity:.12;background-image:repeating-linear-gradient(0deg,#fff1 0 1px,transparent 1px 4px),repeating-linear-gradient(90deg,#0002 0 1px,transparent 1px 5px)}
-.start{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:20px;background:linear-gradient(#05060488,#050604e8),url("https://commons.wikimedia.org/wiki/Special:FilePath/Washington%20Crossing%20the%20Delaware.png?width=1800") center/cover}
+.start{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:20px;background:linear-gradient(#05060488,#050604e8),url("https://upload.wikimedia.org/wikipedia/commons/9/95/Washington_Crossing_the_Delaware_by_Emanuel_Leutze%2C_MMA-NYC%2C_1851.jpg") center/cover}
 .start-card{width:min(760px,94vw);text-align:center;padding:30px 22px;border:1px solid #e4c87777;border-radius:24px;background:#151611dd;box-shadow:0 30px 90px #000;backdrop-filter:blur(5px)}
 .seal{width:100px;height:100px;border-radius:50%;display:grid;place-items:center;margin:auto;background:radial-gradient(circle,#ecd68e 0 22%,#bd8d35 23% 58%,#543a16 59%);border:4px double #f4e2a7;font-size:2.8rem;box-shadow:0 10px 35px #000;animation:pulse 2.2s infinite}
 @keyframes pulse{50%{transform:scale(1.05);filter:brightness(1.15)}}.eyebrow{text-transform:uppercase;letter-spacing:.2em;color:#e0c879;font-size:.75rem}.start h1{font-size:clamp(2.7rem,11vw,6.5rem);line-height:.9;margin:14px 0 6px;text-shadow:0 5px 25px #000}.start h2{font-weight:normal;color:#ead6a0}.start p{line-height:1.6}
 .primary,.secondary,.answer,.mission,.person{border:0;border-radius:14px;cursor:pointer;transition:.2s}.primary{padding:15px 23px;background:linear-gradient(#ebcf75,#a77728);color:#241707;font-weight:bold;box-shadow:0 6px 0 #604315,0 14px 30px #0008}.primary:active{transform:translateY(4px);box-shadow:0 2px 0 #604315}
 header{position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;background:#12140fee;border-bottom:1px solid #ddc17244;backdrop-filter:blur(9px)}.brand{display:flex;align-items:center;gap:9px}.brandmark{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#b48331;color:#1b1309;font-weight:bold}.brand small{display:block;color:#c9ba94}.actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.secondary{padding:10px 12px;background:#2d342d;color:#f7edcf;border:1px solid #73806d}.secondary:hover{filter:brightness(1.14)}
 .progress{position:sticky;top:61px;z-index:45;background:#0d0f0c;padding:7px 12px 9px;border-bottom:1px solid #fff1}.bar{height:9px;border-radius:99px;background:#34372f;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,#8c6325,#e7cf7f);transition:.45s}.progress-copy{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:5px;color:#cfc29e;font-size:.74rem}
-.hero{min-height:75vh;display:grid;align-items:end;padding:48px max(4vw,20px);background:linear-gradient(90deg,#080907e8 0%,#080907aa 55%,#08090733),url("https://commons.wikimedia.org/wiki/Special:FilePath/Washington%20Crossing%20the%20Delaware.png?width=1800") center/cover fixed;border-bottom:1px solid #e0c47744}.hero-copy{max-width:690px}.hero h1{font-size:clamp(2.8rem,8vw,6rem);line-height:.9;margin:8px 0}.hero p{font-size:1.05rem;line-height:1.7;text-shadow:0 2px 8px #000}.sound-panel{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.volume{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;background:#111b;border:1px solid #fff2}.volume input{width:130px}
+.hero{min-height:75vh;display:grid;align-items:end;padding:48px max(4vw,20px);background:linear-gradient(90deg,#080907e8 0%,#080907aa 55%,#08090733),url("https://upload.wikimedia.org/wikipedia/commons/9/95/Washington_Crossing_the_Delaware_by_Emanuel_Leutze%2C_MMA-NYC%2C_1851.jpg") center/cover fixed;border-bottom:1px solid #e0c47744}.hero-copy{max-width:690px}.hero h1{font-size:clamp(2.8rem,8vw,6rem);line-height:.9;margin:8px 0}.hero p{font-size:1.05rem;line-height:1.7;text-shadow:0 2px 8px #000}.sound-panel{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.volume{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;background:#111b;border:1px solid #fff2}.volume input{width:130px}
 main{width:min(1180px,94vw);margin:auto;padding:26px 0 70px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 28px}.stat{text-align:center;padding:14px;background:#20241de6;border:1px solid #d9bc6b33;border-radius:14px}.stat strong{display:block;font-size:1.45rem;color:#e0c574}.section-title{margin:34px 0 14px}.section-title h2{font-size:clamp(1.9rem,5vw,3rem);margin:0}.section-title p{color:#d1c5a8;line-height:1.5}
-.missions{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.mission{position:relative;min-height:300px;overflow:hidden;text-align:left;color:#fff;padding:0;background:#24271f;border:1px solid #dbc16b55;box-shadow:0 12px 30px #0006}.mission:hover{transform:translateY(-5px);border-color:#efd98e}.mission img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:.5s}.mission:hover img{transform:scale(1.06)}.mission .shade{position:absolute;inset:0;background:linear-gradient(transparent 10%,#050605dd 80%)}.mission .copy{position:absolute;inset:auto 16px 16px}.mission .num{font-size:.72rem;letter-spacing:.16em;color:#ecd27a;text-transform:uppercase}.mission h3{font-size:1.35rem;margin:6px 0}.mission p{margin:0;color:#e6dec8;line-height:1.4}.mission.done{outline:3px solid #5a9a68}
+.missions{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.mission{position:relative;min-height:300px;overflow:hidden;text-align:left;color:#fff;padding:0;background:#24271f;border:1px solid #dbc16b55;box-shadow:0 12px 30px #0006}.mission:hover{transform:translateY(-5px);border-color:#efd98e}.mission img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:.5s;opacity:0}.mission img.loaded{opacity:1}.mission:hover img{transform:scale(1.06)}.mission .shade{position:absolute;inset:0;background:linear-gradient(transparent 10%,#050605dd 80%)}.mission .copy{position:absolute;inset:auto 16px 16px}.mission .num{font-size:.72rem;letter-spacing:.16em;color:#ecd27a;text-transform:uppercase}.mission h3{font-size:1.35rem;margin:6px 0}.mission p{margin:0;color:#e6dec8;line-height:1.4}.mission.done{outline:3px solid #5a9a68}
+.mission-fallback{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(circle at 50% 28%,#b9944d88,transparent 35%),linear-gradient(145deg,#4b3d28,#1b241d 55%,#10130f)}
+.mission-fallback span{font-size:5.5rem;filter:drop-shadow(0 12px 14px #000);animation:missionFloat 3s ease-in-out infinite}
+@keyframes missionFloat{50%{transform:translateY(-8px) scale(1.04)}}
 .panel{margin-top:18px;padding:20px;border-radius:20px;background:linear-gradient(#f5e8c5,#d7b779);color:var(--ink);box-shadow:0 18px 60px #0008}.panel-top{display:flex;justify-content:space-between;gap:12px}.close{border:0;border-radius:10px;background:#3f2d1d;color:#fff0d2;padding:9px 12px}.lesson{padding:16px;background:#fff8e1aa;border-left:5px solid #725024;border-radius:10px;line-height:1.55}.lesson ul{padding-left:20px}.question{margin-top:14px;padding:15px;border-radius:14px;background:#fff9e9c9;border:1px solid #80633755}.question h4{margin:0 0 10px}.answers{display:grid;gap:8px}.answer{text-align:left;padding:11px 12px;background:#f7edcf;color:#271d12;border:1px solid #a9884c}.answer:hover{transform:translateX(3px);background:#fff}.answer.correct{background:#cce4cd;border-color:#3e7447}.answer.wrong{background:#f0c8bd;border-color:#8f3a32}.answer:disabled{cursor:default}.feedback{min-height:1.2em;margin-top:8px;font-weight:bold}
 .people{display:grid;grid-template-columns:repeat(5,1fr);gap:13px}.person{overflow:hidden;text-align:left;color:#fff;background:#252920;border:1px solid #d9bd6a44;padding:0;box-shadow:0 10px 25px #0005}.person:hover{transform:translateY(-4px);border-color:#ead17c}.portrait{height:220px;background:linear-gradient(145deg,#c5aa70,#3d493d);position:relative;overflow:hidden}.portrait img{width:100%;height:100%;object-fit:cover;display:block}.portrait .fallback{position:absolute;inset:0;display:grid;place-items:center;font-size:3rem;background:radial-gradient(circle,#d9c58c,#5d4d32);color:#251b10}.personcopy{padding:12px}.person h3{margin:0 0 5px;font-size:1rem}.person p{margin:0;color:#d9d1ba;font-size:.79rem;line-height:1.4}.tag{display:inline-block;margin-top:9px;padding:4px 7px;border-radius:99px;background:#7d302d;font-size:.67rem}
 .artifacts{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}.artifact{text-align:center;min-height:115px;padding:12px;border-radius:13px;background:#1d211b;border:1px solid #d7ba6533;display:grid;place-items:center}.artifact.locked{opacity:.42;filter:grayscale(1)}.artifact b{display:block;font-size:2rem}.artifact span{font-size:.73rem;color:#d8ca9f}.finale{text-align:center;margin-top:34px;padding:28px;border-radius:22px;background:linear-gradient(135deg,#79302c,#28392f);border:1px solid #e1c57155}.badge{width:125px;height:125px;border-radius:50%;margin:auto;display:grid;place-items:center;font-size:3rem;background:radial-gradient(circle,#ead68d 0 24%,#b58734 25% 58%,#5d421b 59%);border:4px double #f3e2a8}
@@ -29,88 +32,31 @@ main{width:min(1180px,94vw);margin:auto;padding:26px 0 70px}.stats{display:grid;
 </head>
 <body>
 <div class="grain"></div>
-
-<section class="start" id="start">
-  <div class="start-card">
-    <div class="seal">⚔</div>
-    <div class="eyebrow">American Quest · Unit II</div>
-    <h1>REVOLUTION</h1>
-    <h2>From Protest to Independence</h2>
-    <p>Enter a cinematic journey through rebellion, battle, ideas, sacrifice, and the birth of a nation.</p>
-    <button class="primary" id="begin">Begin the Revolution + Start Sound</button>
-  </div>
-</section>
-
-<header>
-  <div class="brand"><div class="brandmark">AQ</div><div><strong>American Quest</strong><small>Unit II · American Revolution</small></div></div>
-  <div class="actions">
-    <button class="secondary" id="soundBtn">🔊 Sound On</button>
-    <button class="secondary" id="testBtn">Test Sound</button>
-    <a class="secondary" href="index.html">Main Map</a>
-    <button class="secondary" onclick="resetProgress()">Reset</button>
-  </div>
-</header>
-
-<div class="progress">
-  <div class="bar"><div class="fill" id="fill"></div></div>
-  <div class="progress-copy"><span id="rank">Rank: Witness</span><span id="pct">0% complete</span><span id="heroCount">Hall of Heroes: 0/12</span></div>
-</div>
-
-<section class="hero">
-  <div class="hero-copy">
-    <div class="eyebrow">1775–1783</div>
-    <h1>A Nation Is Forged</h1>
-    <p>Six missions. Twenty-five revolutionary figures. Forty-two challenges. Real public-domain historical art, dramatic sound, animated effects, and a final Liberty Historian badge.</p>
-    <div class="sound-panel">
-      <button class="primary" onclick="document.getElementById('missionMap').scrollIntoView()">Enter Mission Map</button>
-      <label class="volume">Volume <input id="volume" type="range" min="0" max="100" value="75"></label>
-    </div>
-  </div>
-</section>
-
+<section class="start" id="start"><div class="start-card"><div class="seal">⚔</div><div class="eyebrow">American Quest · Unit II</div><h1>REVOLUTION</h1><h2>From Protest to Independence</h2><p>Enter a cinematic journey through rebellion, battle, ideas, sacrifice, and the birth of a nation.</p><button class="primary" id="begin">Begin the Revolution + Start Sound</button></div></section>
+<header><div class="brand"><div class="brandmark">AQ</div><div><strong>American Quest</strong><small>Unit II · American Revolution</small></div></div><div class="actions"><button class="secondary" id="soundBtn">🔊 Sound On</button><button class="secondary" id="testBtn">Test Sound</button><a class="secondary" href="index.html">Main Map</a><button class="secondary" onclick="resetProgress()">Reset</button></div></header>
+<div class="progress"><div class="bar"><div class="fill" id="fill"></div></div><div class="progress-copy"><span id="rank">Rank: Witness</span><span id="pct">0% complete</span><span id="heroCount">Hall of Heroes: 0/12</span></div></div>
+<section class="hero"><div class="hero-copy"><div class="eyebrow">1775–1783</div><h1>A Nation Is Forged</h1><p>Six missions. Twenty-five revolutionary figures. Forty-two challenges. Real public-domain historical art, dramatic sound, animated effects, and a final Liberty Historian badge.</p><div class="sound-panel"><button class="primary" onclick="document.getElementById('missionMap').scrollIntoView()">Enter Mission Map</button><label class="volume">Volume <input id="volume" type="range" min="0" max="100" value="75"></label></div></div></section>
 <main>
-<section class="stats">
-  <div class="stat"><strong>6</strong><span>Major Missions</span></div>
-  <div class="stat"><strong>25</strong><span>Important People</span></div>
-  <div class="stat"><strong>42</strong><span>Challenges</span></div>
-  <div class="stat"><strong>1</strong><span>Historian Badge</span></div>
-</section>
-
+<section class="stats"><div class="stat"><strong>6</strong><span>Major Missions</span></div><div class="stat"><strong>25</strong><span>Important People</span></div><div class="stat"><strong>42</strong><span>Challenges</span></div><div class="stat"><strong>1</strong><span>Historian Badge</span></div></section>
 <div class="section-title" id="missionMap"><h2>Mission Map</h2><p>Open each scene, read the intelligence report, and answer all five challenges.</p></div>
-<section class="missions" id="missions"></section>
-<section class="panel hidden" id="missionPanel"></section>
-
+<section class="missions" id="missions"></section><section class="panel hidden" id="missionPanel"></section>
 <div class="section-title" id="hall"><h2>Hall of Heroes</h2><p>Real historical portraits load from Wikimedia Commons. Tap each person to study their role.</p></div>
-<section class="people" id="people"></section>
-<section class="panel hidden" id="personPanel"></section>
-
-<section class="panel">
-  <div class="eyebrow" style="color:#6c4c22">Portrait Challenge</div>
-  <h2>Hall of Heroes Questions</h2>
-  <div id="heroQuiz"></div>
-</section>
-
-<div class="section-title"><h2>Historian’s Museum</h2><p>Artifacts unlock as each mission is completed.</p></div>
-<section class="artifacts" id="artifacts"></section>
-
-<section class="finale">
-  <div class="badge" id="badge">🔒</div>
-  <h2 id="finalTitle">Liberty Historian Badge Locked</h2>
-  <p id="finalCopy">Complete all six missions and the Hall of Heroes challenge.</p>
-</section>
+<section class="people" id="people"></section><section class="panel hidden" id="personPanel"></section>
+<section class="panel"><div class="eyebrow" style="color:#6c4c22">Portrait Challenge</div><h2>Hall of Heroes Questions</h2><div id="heroQuiz"></div></section>
+<div class="section-title"><h2>Historian’s Museum</h2><p>Artifacts unlock as each mission is completed.</p></div><section class="artifacts" id="artifacts"></section>
+<section class="finale"><div class="badge" id="badge">🔒</div><h2 id="finalTitle">Liberty Historian Badge Locked</h2><p id="finalCopy">Complete all six missions and the Hall of Heroes challenge.</p></section>
 </main>
-<footer>American Quest · Unit II · Revolution</footer>
-<div class="toast" id="toast"></div>
-
+<footer>American Quest · Unit II · Revolution</footer><div class="toast" id="toast"></div>
 <script>
-const missionImages=[
-"https://commons.wikimedia.org/wiki/Special:FilePath/The%20Boston%20Tea%20Party%2C%20December%201773.jpg?width=1000",
-"https://commons.wikimedia.org/wiki/Special:FilePath/Boston%20Tea%20Party-Currier.jpg?width=1000",
-"https://commons.wikimedia.org/wiki/Special:FilePath/The%20battle%20of%20Lexington%20LCCN2004669976.jpg?width=1000",
-"https://commons.wikimedia.org/wiki/Special:FilePath/Declaration%20independence.jpg?width=1000",
-"https://commons.wikimedia.org/wiki/Special:FilePath/Washington%20Crossing%20the%20Delaware.png?width=1000",
-"https://commons.wikimedia.org/wiki/Special:FilePath/Surrender%20of%20Lord%20Cornwallis.jpg?width=1000"
+const missionImageQueries=[
+"Boston Tea Party historical painting",
+"Boston Massacre Paul Revere engraving",
+"Battle of Lexington and Concord historical painting",
+"Declaration of Independence signing painting",
+"Washington Crossing the Delaware painting",
+"Surrender of Cornwallis Yorktown painting"
 ];
+const missionFallbacks=["🫖","🔥","⚔️","📜","🇺🇸","🕊️"];
 
 const missions=[
 {title:"The Road to Rebellion",sub:"War debt, taxation, and colonial protest",artifact:["📜","Protest Broadside"],lesson:`<h3>Intelligence Report</h3><p>The French and Indian War expanded British territory but left Britain deeply in debt. Parliament expected colonists to help pay imperial costs, challenging traditions of self-government.</p><ul><li><b>Proclamation of 1763:</b> restricted settlement west of the Appalachians.</li><li><b>Stamp Act:</b> taxed printed materials.</li><li><b>Townshend Acts:</b> taxed imported goods.</li><li><b>Colonial response:</b> petitions, boycotts, and organized protest.</li></ul>`,q:[
@@ -196,7 +142,6 @@ const heroQuestions=[
 
 let state=JSON.parse(localStorage.getItem("aqUnit2d")||'{"done":[],"answers":{}}');
 let ctx,master,musicOn=false,loopTimer;
-
 function save(){localStorage.setItem("aqUnit2d",JSON.stringify(state));update()}
 function toast(s){const t=document.getElementById("toast");t.textContent=s;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2100)}
 function tone(f,d,t,type="triangle",v=.12){if(!ctx)return;const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g).connect(master);o.start(t);o.stop(t+d+.03)}
@@ -214,7 +159,37 @@ document.getElementById("testBtn").onclick=flourish;
 document.getElementById("begin").onclick=async()=>{document.getElementById("start").style.display="none";await startMusic();flourish()};
 
 function qHTML(key,q){const ans=state.answers[key];return `<div class="question"><h4>${q[0]}</h4><div class="answers">${q[1].map((x,i)=>`<button class="answer ${ans!==undefined?(i===q[2]?"correct":i===ans?"wrong":""):""}" ${ans!==undefined?"disabled":""} onclick="answer('${key}',${i},${q[2]})">${x}</button>`).join("")}</div><div class="feedback">${ans!==undefined?(ans===q[2]?"Correct — evidence secured.":"Reviewed — study the evidence and keep going."):""}</div></div>`}
-function renderMissions(){document.getElementById("missions").innerHTML=missions.map((m,i)=>`<button class="mission ${state.done.includes(i+1)?"done":""}" onclick="openMission(${i})"><img src="${missionImages[i]}" alt=""><div class="shade"></div><div class="copy"><div class="num">Mission ${i+1}</div><h3>${m.title}</h3><p>${m.sub}</p></div></button>`).join("")}
+
+async function fetchCommonsImage(query,width=1200){
+  const url="https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch="+encodeURIComponent(query)+"&gsrnamespace=6&gsrlimit=10&prop=imageinfo&iiprop=url|mime&iiurlwidth="+width+"&format=json&origin=*";
+  const r=await fetch(url);
+  if(!r.ok)throw new Error("search failed");
+  const j=await r.json(),pages=j.query&&j.query.pages;
+  if(!pages)throw new Error("no image");
+  const choice=Object.values(pages).find(page=>{
+    const info=page.imageinfo&&page.imageinfo[0];
+    return info&&info.mime&&info.mime.startsWith("image/")&&!info.mime.includes("svg")&&(info.thumburl||info.url);
+  });
+  if(!choice)throw new Error("no usable image");
+  const info=choice.imageinfo[0];
+  return info.thumburl||info.url;
+}
+
+async function loadMissionImage(img,fallback,query){
+  try{
+    const src=await fetchCommonsImage(query,1200);
+    img.onload=()=>{img.classList.add("loaded");fallback.style.display="none"};
+    img.onerror=()=>{img.style.display="none";fallback.style.display="grid"};
+    img.src=src;
+  }catch(e){img.style.display="none";fallback.style.display="grid"}
+}
+
+function renderMissions(){
+  const wrap=document.getElementById("missions");
+  wrap.innerHTML=missions.map((m,i)=>`<button class="mission ${state.done.includes(i+1)?"done":""}" onclick="openMission(${i})"><div class="mission-fallback" id="mission-fallback-${i}"><span>${missionFallbacks[i]}</span></div><img id="mission-image-${i}" alt="${m.title} historical scene"><div class="shade"></div><div class="copy"><div class="num">Mission ${i+1}</div><h3>${m.title}</h3><p>${m.sub}</p></div></button>`).join("");
+  missionImageQueries.forEach((q,i)=>loadMissionImage(document.getElementById(`mission-image-${i}`),document.getElementById(`mission-fallback-${i}`),q));
+}
+
 function openMission(i){const m=missions[i],p=document.getElementById("missionPanel");p.classList.remove("hidden");p.innerHTML=`<div class="panel-top"><div><div class="eyebrow" style="color:#6c4c22">Mission ${i+1}</div><h2>${m.title}</h2></div><button class="close" onclick="this.closest('.panel').classList.add('hidden')">Close</button></div><div class="lesson">${m.lesson}</div><div id="mq">${m.q.map((q,j)=>qHTML(`m${i+1}-${j}`,q)).join("")}</div>`;p.scrollIntoView({behavior:"smooth",block:"start"})}
 function answer(key,sel,correct){if(state.answers[key]!==undefined)return;state.answers[key]=sel;if(sel===correct)flourish();else wrongSound();if(key[0]==="m"){const id=Number(key.split("-")[0].slice(1)),m=missions[id-1];if(m.q.every((_,i)=>state.answers[`m${id}-${i}`]!==undefined)&&!state.done.includes(id)){state.done.push(id);toast(`Mission ${id} complete!`)}document.getElementById("mq").innerHTML=m.q.map((q,j)=>qHTML(`m${id}-${j}`,q)).join("")}else{if(heroQuestions.every((_,i)=>state.answers[`h-${i}`]!==undefined)&&!state.done.includes("heroes")){state.done.push("heroes");toast("Hall of Heroes complete!")}renderHeroQuiz()}save()}
 function renderHeroQuiz(){document.getElementById("heroQuiz").innerHTML=heroQuestions.map((q,i)=>qHTML(`h-${i}`,q)).join("")}
@@ -222,11 +197,9 @@ function renderHeroQuiz(){document.getElementById("heroQuiz").innerHTML=heroQues
 async function loadPortrait(img,query){
   const fallback=img.previousElementSibling;
   try{
-    const url="https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch="+encodeURIComponent("File:"+query)+"&gsrnamespace=6&gsrlimit=1&prop=imageinfo&iiprop=url&iiurlwidth=500&format=json&origin=*";
-    const r=await fetch(url),j=await r.json(),pages=j.query&&j.query.pages;
-    if(!pages)throw 0;
-    const page=Object.values(pages)[0],info=page.imageinfo&&page.imageinfo[0],src=info.thumburl||info.url;
+    const src=await fetchCommonsImage(query,500);
     img.onload=()=>fallback.style.display="none";
+    img.onerror=()=>img.style.display="none";
     img.src=src;
   }catch(e){img.style.display="none"}
 }
