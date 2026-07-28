@@ -191,7 +191,54 @@ function renderMissions(){
 }
 
 function openMission(i){const m=missions[i],p=document.getElementById("missionPanel");p.classList.remove("hidden");p.innerHTML=`<div class="panel-top"><div><div class="eyebrow" style="color:#6c4c22">Mission ${i+1}</div><h2>${m.title}</h2></div><button class="close" onclick="this.closest('.panel').classList.add('hidden')">Close</button></div><div class="lesson">${m.lesson}</div><div id="mq">${m.q.map((q,j)=>qHTML(`m${i+1}-${j}`,q)).join("")}</div>`;p.scrollIntoView({behavior:"smooth",block:"start"})}
-function answer(key,sel,correct){if(state.answers[key]!==undefined)return;state.answers[key]=sel;if(sel===correct)flourish();else wrongSound();if(key[0]==="m"){const id=Number(key.split("-")[0].slice(1)),m=missions[id-1];if(m.q.every((_,i)=>state.answers[`m${id}-${i}`]!==undefined)&&!state.done.includes(id)){state.done.push(id);toast(`Mission ${id} complete!`)}document.getElementById("mq").innerHTML=m.q.map((q,j)=>qHTML(`m${id}-${j}`,q)).join("")}else{if(heroQuestions.every((_,i)=>state.answers[`h-${i}`]!==undefined)&&!state.done.includes("heroes")){state.done.push("heroes");toast("Hall of Heroes complete!")}renderHeroQuiz()}save()}
+function answer(key,sel,correct){
+  if(state.answers[key]!==undefined)return;
+
+  state.answers[key]=sel;
+
+  if(sel===correct)flourish();
+  else wrongSound();
+
+  if(key[0]==="m"){
+    const id=Number(key.split("-")[0].slice(1));
+    const m=missions[id-1];
+    const missionJustFinished=
+      m.q.every((_,i)=>state.answers[`m${id}-${i}`]!==undefined) &&
+      !state.done.includes(id);
+
+    if(missionJustFinished){
+      state.done.push(id);
+      toast(`Mission ${id} complete!`);
+
+      setTimeout(()=>{
+        if(id<missions.length){
+          openMission(id);
+        }else{
+          document.getElementById("missionPanel").classList.add("hidden");
+          document.getElementById("hall").scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+          });
+          toast("All missions complete — enter the Hall of Heroes!");
+        }
+      },900);
+    }
+
+    document.getElementById("mq").innerHTML=
+      m.q.map((q,j)=>qHTML(`m${id}-${j}`,q)).join("");
+  }else{
+    if(
+      heroQuestions.every((_,i)=>state.answers[`h-${i}`]!==undefined) &&
+      !state.done.includes("heroes")
+    ){
+      state.done.push("heroes");
+      toast("Hall of Heroes complete!");
+    }
+    renderHeroQuiz();
+  }
+
+  save();
+}
 function renderHeroQuiz(){document.getElementById("heroQuiz").innerHTML=heroQuestions.map((q,i)=>qHTML(`h-${i}`,q)).join("")}
 
 async function loadPortrait(img,query){
