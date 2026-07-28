@@ -1,487 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#17150f">
-  <title>American Quest — Unit I</title>
-  <style>
-    :root{
-      --cream:#f7ecd0;--ink:#2a2116;--paper:#ead4a4;--paper2:#f8ebca;
-      --gold:#b88b38;--gold2:#d7bb79;--forest:#31483b;--ocean:#385d68;
-      --brown:#1c1711;--shadow:rgba(0,0,0,.5);--success:#3f6548;--danger:#854434;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;min-height:100vh;color:var(--cream);
-      font-family:Georgia,"Times New Roman",serif;
-      background:
-        linear-gradient(rgba(11,12,9,.67),rgba(11,12,9,.9)),
-        radial-gradient(circle at top,#586457 0,#283129 43%,#11130f 100%);
-      background-attachment:fixed;
-    }
-    body.locked{overflow:hidden}
-    button,input{font:inherit}
-    button{-webkit-tap-highlight-color:transparent}
-    .hidden{display:none!important}
-    .eyebrow{margin:0 0 10px;color:#d8be83;letter-spacing:.23em;text-transform:uppercase;font-size:.72rem;font-weight:700}
-    .eyebrow.dark{color:#725528}
-    .btn{
-      border:1px solid #d2b36d;padding:13px 20px;cursor:pointer;color:#fff8e6;
-      background:linear-gradient(#a97f36,#73511a);text-transform:uppercase;
-      letter-spacing:.11em;box-shadow:0 7px 16px rgba(0,0,0,.32);
-      transition:transform .18s,filter .18s;min-height:44px
-    }
-    .btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
-    .btn.alt{background:rgba(40,33,24,.84);color:#ecd9ab}
-    .btn.ghost{background:rgba(22,20,16,.5);color:#cdbb91;border-color:rgba(210,179,109,.38);font-size:.75rem}
-    .btn:disabled{opacity:.5;cursor:not-allowed;transform:none;filter:none}
-    #startScreen{min-height:100vh;display:grid;place-items:center;padding:22px;position:relative;overflow:hidden}
-    #startScreen:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at center,transparent 0,rgba(0,0,0,.47) 74%)}
-    .start-card{
-      width:min(780px,100%);padding:48px 24px;text-align:center;position:relative;
-      border:1px solid rgba(218,188,120,.62);
-      background:linear-gradient(rgba(30,25,18,.85),rgba(25,21,16,.95)),radial-gradient(circle,#77643f,#30261b);
-      box-shadow:0 28px 70px rgba(0,0,0,.58),inset 0 0 38px rgba(218,184,108,.1)
-    }
-    .start-title{margin:0;font-size:clamp(3rem,11vw,6.5rem);line-height:.88;letter-spacing:.035em;text-transform:uppercase;text-shadow:0 5px 18px #000}
-    .compass{width:94px;height:94px;margin:26px auto;border:2px solid #c9aa67;border-radius:50%;display:grid;place-items:center;font-size:2.7rem;color:#d7bf84;animation:turn 18s linear infinite}
-    @keyframes turn{to{transform:rotate(360deg)}}
-    .subtitle{max-width:620px;margin:0 auto 24px;color:#dfd2b4;font-size:clamp(1rem,3vw,1.24rem);line-height:1.6}
-    .small-note{margin-top:18px;color:#bbaa84;letter-spacing:.08em;font-size:.84rem}
-    header{
-      position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;gap:12px;
-      padding:13px 16px;background:rgba(24,20,15,.95);border-bottom:1px solid rgba(204,173,102,.45);backdrop-filter:blur(10px)
-    }
-    .brand{font-size:1.03rem;letter-spacing:.13em;text-transform:uppercase;color:#ead7a8}
-    .status{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
-    .pill{padding:7px 9px;border:1px solid rgba(214,189,132,.38);background:rgba(63,50,31,.56);font-size:.8rem}
-    main{width:min(1140px,100%);margin:auto;padding:26px 16px 60px}
-    .hero{padding:27px 22px;border:1px solid rgba(209,179,109,.48);background:linear-gradient(rgba(37,31,23,.82),rgba(37,31,23,.94)),radial-gradient(circle at top right,#705f3e,#2b251c);box-shadow:0 18px 42px rgba(0,0,0,.35)}
-    .hero h2{margin:3px 0 10px;font-size:clamp(2rem,7vw,4rem);text-transform:uppercase}
-    .hero p{max-width:800px;margin:0;color:#d8c9a7;line-height:1.65}
-    .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}
-    .section-title{margin:40px 0 16px;color:#e6d1a0;letter-spacing:.13em;text-transform:uppercase;font-size:1.25rem}
-    .map{
-      color:var(--ink);position:relative;overflow:hidden;min-height:790px;border:3px double #765824;
-      background:linear-gradient(rgba(240,221,177,.94),rgba(202,171,111,.95)),
-      repeating-linear-gradient(90deg,rgba(83,60,27,.035),rgba(83,60,27,.035) 2px,transparent 2px,transparent 9px);
-      box-shadow:0 20px 55px rgba(0,0,0,.45),inset 0 0 65px rgba(94,62,27,.24)
-    }
-    .map:before{content:"";position:absolute;width:380px;height:380px;right:-140px;top:62px;border-radius:50%;background:#6f8f8b;opacity:.2}
-    .map-heading{position:relative;z-index:2;padding:23px 22px 6px}
-    .map-heading h3{margin:2px 0 7px;font-size:clamp(1.8rem,5vw,3.1rem);text-transform:uppercase}
-    .map-heading p{margin:0;max-width:760px;color:#55442e;line-height:1.52}
-    .progress{height:11px;margin-top:14px;border:1px solid #866631;background:rgba(255,250,232,.58);overflow:hidden}
-    .progress>div{height:100%;width:0;background:linear-gradient(90deg,#6d845f,#b28839);transition:width .4s}
-    .journey{position:relative;z-index:2;padding:34px 20px 20px}
-    .journey:before{content:"";position:absolute;top:45px;bottom:35px;left:50%;width:4px;transform:translateX(-50%);background:repeating-linear-gradient(to bottom,rgba(91,66,30,.58) 0 10px,transparent 10px 20px)}
-    .node{
-      position:relative;width:min(355px,44%);margin:0 0 27px;padding:15px 16px;border:1px solid #80602d;
-      background:rgba(247,236,205,.96);box-shadow:0 8px 18px rgba(65,45,18,.22);transition:.2s;cursor:pointer
-    }
-    .node:nth-child(odd){margin-left:3%}.node:nth-child(even){margin-left:auto;margin-right:3%}
-    .node.current{outline:4px solid rgba(78,102,74,.5);transform:scale(1.02)}
-    .node.complete{background:rgba(226,231,205,.97)}
-    .node.locked{opacity:.5;filter:grayscale(.55);cursor:not-allowed}
-    .node:hover:not(.locked){transform:translateY(-2px)}
-    .icon{float:left;width:42px;height:42px;margin-right:11px;border:1px solid #76582a;border-radius:50%;display:grid;place-items:center;background:#fff9e4;font-size:1.2rem}
-    .node h4{margin:0 0 5px}.node p{margin:0;color:#5a4933;line-height:1.4;font-size:.92rem}
-    .node-status{display:inline-block;margin-top:9px;color:#6e522a;letter-spacing:.1em;text-transform:uppercase;font-size:.67rem;font-weight:bold}
-    .node-count{float:right;font-size:.72rem;color:#725528;font-weight:bold}
-    .map-actions{position:relative;z-index:3;padding:0 22px 24px;display:flex;gap:9px;flex-wrap:wrap}
-    .future{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:13px}
-    .future article{padding:17px;border:1px solid rgba(205,175,104,.35);background:rgba(29,27,21,.82);opacity:.65}
-    .future h4{margin:5px 0;color:#e8d9b7}.future p{margin:0;color:#c3b69c;line-height:1.45;font-size:.9rem}
-    .modal{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:15px;background:rgba(0,0,0,.83)}
-    .card{width:min(820px,100%);max-height:92vh;overflow:auto;padding:24px;color:var(--ink);background:linear-gradient(rgba(247,235,203,.99),rgba(220,197,150,.99));border:4px double #74582e;box-shadow:0 24px 80px rgba(0,0,0,.62)}
-    .card h2{margin:3px 0 12px;text-transform:uppercase;font-size:clamp(1.7rem,6vw,3rem)}
-    .card p{line-height:1.55}.close{float:right;border:0;background:none;color:#4a3821;font-size:1.9rem;cursor:pointer}
-    label{display:block;margin:15px 0 6px;font-weight:bold}
-    input{width:100%;padding:12px;background:#fffaf0;border:1px solid #876b3c}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px;margin:18px 0}
-    .choice{padding:15px;text-align:left;color:#312719;background:rgba(255,248,226,.8);border:1px solid #8d6e39;cursor:pointer;min-height:102px;transition:.15s}
-    .choice:hover{transform:translateY(-2px);background:#fffcef}.choice.selected{outline:3px solid #476048;background:#eef0dc}
-    .choice.correct{outline:3px solid var(--success);background:#e5f0df}.choice.incorrect{outline:3px solid var(--danger);background:#f2ddd3}
-    .choice:disabled{cursor:default;transform:none}
-    .meta{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 15px}.meta span{padding:6px 8px;border:1px solid rgba(112,84,42,.36);background:rgba(255,250,235,.45);font-size:.77rem;font-weight:bold}
-    .story,.result,.note,.artifact,.journal-entry{padding:15px;margin:14px 0;background:rgba(255,250,235,.56);border:1px solid rgba(92,70,37,.36)}
-    .story{border-left:5px solid #6e5932}.note{background:rgba(77,94,71,.12);border-color:rgba(69,88,65,.42)}
-    .question-number{font-weight:bold;color:#6a4d23}
-    .reward{font-weight:bold;color:#6b4b18}
-    .chapter-complete{text-align:center}
-    .chapter-seal{width:120px;height:120px;margin:15px auto;border:6px double #806126;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#f8edc9,#d6b36d 70%,#9b742e);font-size:2.2rem}
-    .badge{width:155px;height:155px;margin:18px auto;border:7px double #806126;border-radius:50%;display:grid;place-items:center;text-align:center;padding:14px;color:#583d16;background:radial-gradient(circle,#f8edc9,#d6b36d 70%,#9b742e);font-weight:bold;text-transform:uppercase;letter-spacing:.07em}
-    .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:17px 0}.summary div{padding:12px 7px;text-align:center;border:1px solid rgba(104,77,38,.38);background:rgba(255,250,235,.48)}.summary strong{display:block;font-size:1.2rem}
-    footer{text-align:center;padding:24px;color:#a99b7d;font-size:.82rem}
-    @media(max-width:700px){
-      header{align-items:flex-start;flex-direction:column}.status{justify-content:flex-start}
-      .start-card{padding:38px 18px}.journey{padding:25px 12px}.journey:before{left:18px}
-      .node,.node:nth-child(odd),.node:nth-child(even){width:calc(100% - 32px);margin-left:32px;margin-right:0}
-      .summary{grid-template-columns:1fr}.card{padding:18px}.grid{grid-template-columns:1fr}
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17150f">
+<title>American Quest — Units I & II</title>
+<style>
+:root{--cream:#f7ecd0;--ink:#2a2116;--paper:#ead4a4;--paper2:#f8ebca;--gold:#b88b38;--gold2:#d7bb79;--forest:#31483b;--ocean:#385d68;--brown:#1c1711;--success:#3f6548;--danger:#854434}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--cream);font-family:Georgia,"Times New Roman",serif;background:linear-gradient(rgba(11,12,9,.67),rgba(11,12,9,.9)),radial-gradient(circle at top,#586457 0,#283129 43%,#11130f 100%);background-attachment:fixed}
+body.locked{overflow:hidden} button,input{font:inherit} button{-webkit-tap-highlight-color:transparent} .hidden{display:none!important}
+.eyebrow{margin:0 0 10px;color:#d8be83;letter-spacing:.23em;text-transform:uppercase;font-size:.72rem;font-weight:700} .eyebrow.dark{color:#725528}
+.btn{border:1px solid #d2b36d;padding:13px 20px;cursor:pointer;color:#fff8e6;background:linear-gradient(#a97f36,#73511a);text-transform:uppercase;letter-spacing:.11em;box-shadow:0 7px 16px rgba(0,0,0,.32);transition:.18s;min-height:44px}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.08)} .btn.alt{background:rgba(40,33,24,.84);color:#ecd9ab} .btn.ghost{background:rgba(22,20,16,.5);color:#cdbb91;border-color:rgba(210,179,109,.38);font-size:.75rem}
+#startScreen{min-height:100vh;display:grid;place-items:center;padding:22px;position:relative;overflow:hidden}
+#startScreen:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at center,transparent 0,rgba(0,0,0,.47) 74%)}
+.start-card{width:min(780px,100%);padding:48px 24px;text-align:center;position:relative;border:1px solid rgba(218,188,120,.62);background:linear-gradient(rgba(30,25,18,.85),rgba(25,21,16,.95)),radial-gradient(circle,#77643f,#30261b);box-shadow:0 28px 70px rgba(0,0,0,.58),inset 0 0 38px rgba(218,184,108,.1)}
+.start-title{margin:0;font-size:clamp(3rem,11vw,6.5rem);line-height:.88;letter-spacing:.035em;text-transform:uppercase;text-shadow:0 5px 18px #000}
+.compass{width:94px;height:94px;margin:26px auto;border:2px solid #c9aa67;border-radius:50%;display:grid;place-items:center;font-size:2.7rem;color:#d7bf84;animation:turn 18s linear infinite} @keyframes turn{to{transform:rotate(360deg)}}
+.subtitle{max-width:620px;margin:0 auto 24px;color:#dfd2b4;font-size:clamp(1rem,3vw,1.24rem);line-height:1.6} .small-note{margin-top:18px;color:#bbaa84;letter-spacing:.08em;font-size:.84rem}
+header{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 16px;background:rgba(24,20,15,.95);border-bottom:1px solid rgba(204,173,102,.45);backdrop-filter:blur(10px)}
+.brand{font-size:1.03rem;letter-spacing:.13em;text-transform:uppercase;color:#ead7a8} .status{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end} .pill{padding:7px 9px;border:1px solid rgba(214,189,132,.38);background:rgba(63,50,31,.56);font-size:.8rem}
+main{width:min(1140px,100%);margin:auto;padding:26px 16px 60px}
+.hero{padding:27px 22px;border:1px solid rgba(209,179,109,.48);background:linear-gradient(rgba(37,31,23,.82),rgba(37,31,23,.94)),radial-gradient(circle at top right,#705f3e,#2b251c);box-shadow:0 18px 42px rgba(0,0,0,.35)}
+.hero h2{margin:3px 0 10px;font-size:clamp(2rem,7vw,4rem);text-transform:uppercase} .hero p{max-width:800px;margin:0;color:#d8c9a7;line-height:1.65} .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}
+.section-title{margin:40px 0 16px;color:#e6d1a0;letter-spacing:.13em;text-transform:uppercase;font-size:1.25rem}
+.unit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px}
+.unit-card{padding:22px;border:1px solid rgba(209,179,109,.42);background:linear-gradient(rgba(37,31,23,.88),rgba(25,21,16,.96));box-shadow:0 16px 34px rgba(0,0,0,.3);position:relative;overflow:hidden}
+.unit-card:after{content:"";position:absolute;width:160px;height:160px;border-radius:50%;right:-80px;bottom:-90px;background:rgba(215,187,121,.08)}
+.unit-card h3{margin:5px 0 8px;font-size:1.65rem} .unit-card p{color:#d1c2a2;line-height:1.5} .unit-card.open{border-color:rgba(215,187,121,.72)}
+.map{color:var(--ink);position:relative;overflow:hidden;min-height:790px;border:3px double #765824;background:linear-gradient(rgba(240,221,177,.94),rgba(202,171,111,.95)),repeating-linear-gradient(90deg,rgba(83,60,27,.035),rgba(83,60,27,.035) 2px,transparent 2px,transparent 9px);box-shadow:0 20px 55px rgba(0,0,0,.45),inset 0 0 65px rgba(94,62,27,.24)}
+.map:before{content:"";position:absolute;width:380px;height:380px;right:-140px;top:62px;border-radius:50%;background:#6f8f8b;opacity:.2}
+.map-heading{position:relative;z-index:2;padding:23px 22px 6px} .map-heading h3{margin:2px 0 7px;font-size:clamp(1.8rem,5vw,3.1rem);text-transform:uppercase} .map-heading p{margin:0;max-width:760px;color:#55442e;line-height:1.52}
+.progress{height:11px;margin-top:14px;border:1px solid #866631;background:rgba(255,250,232,.58);overflow:hidden} .progress>div{height:100%;width:0;background:linear-gradient(90deg,#6d845f,#b28839);transition:width .4s}
+.journey{position:relative;z-index:2;padding:34px 20px 20px} .journey:before{content:"";position:absolute;top:45px;bottom:35px;left:50%;width:4px;transform:translateX(-50%);background:repeating-linear-gradient(to bottom,rgba(91,66,30,.58) 0 10px,transparent 10px 20px)}
+.node{position:relative;width:min(355px,44%);margin:0 0 27px;padding:15px 16px;border:1px solid #80602d;background:rgba(247,236,205,.96);box-shadow:0 8px 18px rgba(65,45,18,.22);transition:.2s;cursor:pointer}
+.node:nth-child(odd){margin-left:3%} .node:nth-child(even){margin-left:auto;margin-right:3%} .node.current{outline:4px solid rgba(78,102,74,.5);transform:scale(1.02)} .node.complete{background:rgba(226,231,205,.97)} .node.locked{opacity:.5;filter:grayscale(.55);cursor:not-allowed}
+.icon{float:left;width:42px;height:42px;margin-right:11px;border:1px solid #76582a;border-radius:50%;display:grid;place-items:center;background:#fff9e4;font-size:1.2rem} .node h4{margin:0 0 5px} .node p{margin:0;color:#5a4933;line-height:1.4;font-size:.92rem}
+.node-status{display:inline-block;margin-top:9px;color:#6e522a;letter-spacing:.1em;text-transform:uppercase;font-size:.67rem;font-weight:bold} .node-count{float:right;font-size:.72rem;color:#725528;font-weight:bold} .map-actions{position:relative;z-index:3;padding:0 22px 24px;display:flex;gap:9px;flex-wrap:wrap}
+.modal{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:15px;background:rgba(0,0,0,.83)} .card{width:min(820px,100%);max-height:92vh;overflow:auto;padding:24px;color:var(--ink);background:linear-gradient(rgba(247,235,203,.99),rgba(220,197,150,.99));border:4px double #74582e;box-shadow:0 24px 80px rgba(0,0,0,.62)}
+.card h2{margin:3px 0 12px;text-transform:uppercase;font-size:clamp(1.7rem,6vw,3rem)} .card p{line-height:1.55} .close{float:right;border:0;background:none;color:#4a3821;font-size:1.9rem;cursor:pointer}
+label{display:block;margin:15px 0 6px;font-weight:bold} input{width:100%;padding:12px;background:#fffaf0;border:1px solid #876b3c} .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px;margin:18px 0}
+.choice{padding:15px;text-align:left;color:#312719;background:rgba(255,248,226,.8);border:1px solid #8d6e39;cursor:pointer;min-height:102px;transition:.15s} .choice:hover{transform:translateY(-2px);background:#fffcef} .choice.selected{outline:3px solid #476048;background:#eef0dc} .choice.correct{outline:3px solid var(--success);background:#e5f0df} .choice.incorrect{outline:3px solid var(--danger);background:#f2ddd3}
+.meta{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 15px} .meta span{padding:6px 8px;border:1px solid rgba(112,84,42,.36);background:rgba(255,250,235,.45);font-size:.77rem;font-weight:bold}
+.story,.result,.note,.artifact,.journal-entry{padding:15px;margin:14px 0;background:rgba(255,250,235,.56);border:1px solid rgba(92,70,37,.36)} .story{border-left:5px solid #6e5932} .note{background:rgba(77,94,71,.12)} .question-number{font-weight:bold;color:#6a4d23}
+.chapter-complete{text-align:center} .chapter-seal{width:120px;height:120px;margin:15px auto;border:6px double #806126;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#f8edc9,#d6b36d 70%,#9b742e);font-size:2.2rem}
+.badge{width:155px;height:155px;margin:18px auto;border:7px double #806126;border-radius:50%;display:grid;place-items:center;text-align:center;padding:14px;color:#583d16;background:radial-gradient(circle,#f8edc9,#d6b36d 70%,#9b742e);font-weight:bold;text-transform:uppercase;letter-spacing:.07em}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:17px 0} .summary div{padding:12px 7px;text-align:center;border:1px solid rgba(104,77,38,.38);background:rgba(255,250,235,.48)} .summary strong{display:block;font-size:1.2rem}
+#unit2Screen{position:fixed;inset:0;z-index:80;background:#111} #unit2Frame{width:100%;height:100%;border:0} .back-float{position:fixed;z-index:90;top:10px;left:10px;border-radius:999px}
+footer{text-align:center;padding:24px;color:#a99b7d;font-size:.82rem}
+@media(max-width:700px){header{align-items:flex-start;flex-direction:column}.status{justify-content:flex-start}.start-card{padding:38px 18px}.journey{padding:25px 12px}.journey:before{left:18px}.node,.node:nth-child(odd),.node:nth-child(even){width:calc(100% - 32px);margin-left:32px;margin-right:0}.summary{grid-template-columns:1fr}.card{padding:18px}.grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 <section id="startScreen">
-  <div class="start-card">
-    <p class="eyebrow">An Interactive Journey Through U.S. History</p>
-    <h1 class="start-title">American<br>Quest</h1>
-    <div class="compass">✦</div>
-    <p class="subtitle">History was built one decision at a time. Enter the past, investigate the evidence, and complete six full expedition chapters.</p>
-    <button class="btn" onclick="beginJourney()">Begin Your Journey</button>
-    <div class="small-note">Volume I · Exploration &amp; Colonization · 38 Challenges</div>
-  </div>
+<div class="start-card">
+<p class="eyebrow">An Interactive Journey Through U.S. History</p>
+<h1 class="start-title">American<br>Quest</h1>
+<div class="compass">✦</div>
+<p class="subtitle">History was built one decision at a time. Enter the past, investigate the evidence, and choose your expedition.</p>
+<button class="btn" onclick="beginJourney()">Begin Your Journey</button>
+<div class="small-note">Volumes I & II · 75+ Historical Challenges</div>
+</div>
 </section>
 
-<div id="app" class="hidden">
-<header>
-  <div class="brand">American Quest</div>
-  <div class="status">
-    <div class="pill">🪙 Coins: <span id="coinCount">0</span></div>
-    <div class="pill">Rank: <span id="rankName">Apprentice</span></div>
-    <div class="pill">Unit I: <span id="unitProgress">0/6</span></div>
-  </div>
-</header>
-
+<div id="hub" class="hidden">
+<header><div class="brand">American Quest</div><div class="status"><div class="pill">Choose an Expedition</div></div></header>
 <main>
-  <section class="hero">
-    <p class="eyebrow">The Historian’s Map</p>
-    <h2>Across the Atlantic</h2>
-    <p>Each map stop is now a full mini-mission. Complete all 38 challenges to earn artifacts, rise through the Historian ranks, and claim the Founders’ Expedition Badge.</p>
-    <div class="actions">
-      <button class="btn alt" onclick="openMuseum()">Museum</button>
-      <button class="btn alt" onclick="openJournal()">Field Journal</button>
-      <button id="musicButton" class="btn ghost" onclick="toggleMusic()">♫ Music: Off</button>
-      <button class="btn ghost" onclick="resetProgress()">Reset Progress</button>
-    </div>
-  </section>
-
-  <h2 class="section-title">Unit I Expedition Map</h2>
-  <section class="map">
-    <div class="map-heading">
-      <p class="eyebrow dark">Exploration &amp; Colonization</p>
-      <h3>Six Expedition Chapters</h3>
-      <p>Royal motives, Atlantic exchange, Jamestown, Native-English relations, colonial regions, labor systems, and representative government.</p>
-      <div class="progress"><div id="mapFill"></div></div>
-    </div>
-    <div id="journey" class="journey"></div>
-    <div class="map-actions">
-      <button id="continueButton" class="btn" onclick="continueFromMap()">Begin Unit I</button>
-      <button class="btn alt" onclick="openMuseum()">View Artifacts</button>
-    </div>
-  </section>
-
-  <h2 class="section-title">Future Expeditions</h2>
-  <section class="future">
-    <article><p class="eyebrow">Unit II · Locked</p><h4>American Revolution</h4><p>Loyalty, protest, war, and independence.</p></article>
-    <article><p class="eyebrow">Unit III · Locked</p><h4>Writing the Constitution</h4><p>Build a government strong enough to survive while protecting liberty.</p></article>
-    <article><p class="eyebrow">Unit IV · Locked</p><h4>U.S. Government</h4><p>Test the branches and principles of the new republic.</p></article>
-  </section>
+<section class="hero"><p class="eyebrow">The Historian’s Map</p><h2>Your Journey Continues</h2><p>Unit I remains exactly where you left it. Unit II is now open as a separate expedition with its own progress, music, pictures, animation, artifacts, and important-people mission.</p></section>
+<h2 class="section-title">Available Expeditions</h2>
+<section class="unit-grid">
+<article class="unit-card open"><p class="eyebrow">Unit I</p><h3>Exploration & Colonization</h3><p>Six chapters and 38 challenges covering exploration, Atlantic exchange, Jamestown, Native-English relations, colonial regions, labor, religion, and representative government.</p><button class="btn" onclick="openUnit1()">Enter Unit I</button></article>
+<article class="unit-card open"><p class="eyebrow">Unit II · New</p><h3>Road to Revolution</h3><p>Seven animated missions with TEKS-based content, built-in music, illustrated scenes, and a gallery of 22 important people.</p><button class="btn" onclick="openUnit2()">Enter Unit II</button></article>
+<article class="unit-card"><p class="eyebrow">Unit III · Locked</p><h3>Writing the Constitution</h3><p>The next expedition will open here later.</p></article>
+</section>
 </main>
 <footer>American Quest · Created for the historians of Southard Middle School</footer>
 </div>
 
-<div id="setupModal" class="modal hidden"><div class="card">
-  <button class="close" onclick="closeModal('setupModal')">×</button>
-  <p class="eyebrow dark">Prepare the Expedition</p>
-  <h2>Create Your Colony</h2>
-  <p>Your role changes the story flavor, but every historian completes the same required Unit I content.</p>
-  <label for="colonyInput">Name Your Colony</label>
-  <input id="colonyInput" maxlength="30" placeholder="Example: New Horizon">
-  <label>Select Your Role</label>
-  <div class="grid">
-    <button class="choice role" data-role="Navigator" onclick="selectRole(this)">🧭 <strong>Navigator</strong><br>Maps, geography, and routes.</button>
-    <button class="choice role" data-role="Builder" onclick="selectRole(this)">🔨 <strong>Builder</strong><br>Resources, labor, and settlement design.</button>
-    <button class="choice role" data-role="Diplomat" onclick="selectRole(this)">🤝 <strong>Diplomat</strong><br>Trade, government, and relationships.</button>
-  </div>
-  <button class="btn" onclick="saveSetup()">Enter Royal Harbor</button>
-</div></div>
+<div id="unit1App" class="hidden">
+<header><div class="brand">American Quest</div><div class="status"><button class="btn ghost" onclick="backToHub()">← Units</button><div class="pill">🪙 Coins: <span id="coinCount">0</span></div><div class="pill">Rank: <span id="rankName">Apprentice</span></div><div class="pill">Unit I: <span id="unitProgress">0/6</span></div></div></header>
+<main>
+<section class="hero"><p class="eyebrow">The Historian’s Map</p><h2>Across the Atlantic</h2><p>Each map stop is a full mini-mission. Complete all 38 challenges to earn artifacts, rise through the Historian ranks, and claim the Founders’ Expedition Badge.</p><div class="actions"><button class="btn alt" onclick="openMuseum()">Museum</button><button class="btn alt" onclick="openJournal()">Field Journal</button><button id="musicButton" class="btn ghost" onclick="toggleMusic()">♫ Music: Off</button><button class="btn ghost" onclick="resetProgress()">Reset Unit I</button></div></section>
+<h2 class="section-title">Unit I Expedition Map</h2>
+<section class="map"><div class="map-heading"><p class="eyebrow dark">Exploration & Colonization</p><h3>Six Expedition Chapters</h3><p>Royal motives, Atlantic exchange, Jamestown, Native-English relations, colonial regions, labor systems, and representative government.</p><div class="progress"><div id="mapFill"></div></div></div><div id="journey" class="journey"></div><div class="map-actions"><button id="continueButton" class="btn" onclick="continueFromMap()">Begin Unit I</button><button class="btn alt" onclick="openMuseum()">View Artifacts</button></div></section>
+</main><footer>American Quest · Unit I</footer>
+</div>
 
-<div id="questModal" class="modal hidden"><div class="card">
-  <button class="close" onclick="closeModal('questModal')">×</button>
-  <div id="questionScreen">
-    <p id="chapterEyebrow" class="eyebrow dark"></p>
-    <h2 id="chapterTitle"></h2>
-    <div class="meta">
-      <span id="metaColony"></span><span id="metaRole"></span><span id="metaScore"></span>
-    </div>
-    <div class="progress"><div id="questionFill"></div></div>
-    <div id="chapterIntro" class="story"></div>
-    <p class="question-number" id="questionNumber"></p>
-    <p id="questionPrompt"></p>
-    <div id="answerChoices" class="grid"></div>
-    <div id="answerFeedback" class="hidden">
-      <div id="answerResult" class="result"></div>
-      <div id="historianNote" class="note"></div>
-      <button id="nextQuestionButton" class="btn" onclick="nextQuestion()">Next Challenge</button>
-    </div>
-  </div>
-  <div id="chapterCompleteScreen" class="hidden chapter-complete">
-    <p class="eyebrow dark">Expedition Stop Complete</p>
-    <h2 id="chapterCompleteTitle"></h2>
-    <div id="chapterSeal" class="chapter-seal">🏅</div>
-    <p id="chapterCompleteText"></p>
-    <div class="summary">
-      <div><strong id="chapterCorrect"></strong>Correct</div>
-      <div><strong id="chapterCoins"></strong>Coins Earned</div>
-      <div><strong id="chapterArtifact"></strong>Artifact</div>
-    </div>
-    <button class="btn" onclick="finishChapter()">Return to the Map</button>
-  </div>
-  <div id="unitCompleteScreen" class="hidden chapter-complete">
-    <p class="eyebrow dark">Unit I Complete</p>
-    <h2>The Expedition Endures</h2>
-    <div class="badge">Founders’<br>Expedition<br>Badge</div>
-    <p id="unitCompleteText"></p>
-    <div class="summary">
-      <div><strong id="finalCoins"></strong>Total Coins</div>
-      <div><strong id="finalArtifacts"></strong>Artifacts</div>
-      <div><strong id="finalRank"></strong>Historian Rank</div>
-    </div>
-    <button class="btn" onclick="finishUnit()">Return to the Map</button>
-  </div>
-</div></div>
+<div id="setupModal" class="modal hidden"><div class="card"><button class="close" onclick="closeModal('setupModal')">×</button><p class="eyebrow dark">Prepare the Expedition</p><h2>Create Your Colony</h2><p>Your role changes the story flavor, but every historian completes the same required Unit I content.</p><label for="colonyInput">Name Your Colony</label><input id="colonyInput" maxlength="30" placeholder="Example: New Horizon"><label>Select Your Role</label><div class="grid"><button class="choice role" data-role="Navigator" onclick="selectRole(this)">🧭 <strong>Navigator</strong><br>Maps, geography, and routes.</button><button class="choice role" data-role="Builder" onclick="selectRole(this)">🔨 <strong>Builder</strong><br>Resources, labor, and settlement design.</button><button class="choice role" data-role="Diplomat" onclick="selectRole(this)">🤝 <strong>Diplomat</strong><br>Trade, government, and relationships.</button></div><button class="btn" onclick="saveSetup()">Enter Royal Harbor</button></div></div>
 
-<div id="museumModal" class="modal hidden"><div class="card">
-  <button class="close" onclick="closeModal('museumModal')">×</button>
-  <p class="eyebrow dark">Collection Hall</p><h2>The Historian’s Museum</h2><div id="museumContents"></div>
+<div id="questModal" class="modal hidden"><div class="card"><button class="close" onclick="closeModal('questModal')">×</button>
+<div id="questionScreen"><p id="chapterEyebrow" class="eyebrow dark"></p><h2 id="chapterTitle"></h2><div class="meta"><span id="metaColony"></span><span id="metaRole"></span><span id="metaScore"></span></div><div class="progress"><div id="questionFill"></div></div><div id="chapterIntro" class="story"></div><p class="question-number" id="questionNumber"></p><p id="questionPrompt"></p><div id="answerChoices" class="grid"></div><div id="answerFeedback" class="hidden"><div id="answerResult" class="result"></div><div id="historianNote" class="note"></div><button id="nextQuestionButton" class="btn" onclick="nextQuestion()">Next Challenge</button></div></div>
+<div id="chapterCompleteScreen" class="hidden chapter-complete"><p class="eyebrow dark">Expedition Stop Complete</p><h2 id="chapterCompleteTitle"></h2><div id="chapterSeal" class="chapter-seal">🏅</div><p id="chapterCompleteText"></p><div class="summary"><div><strong id="chapterCorrect"></strong>Correct</div><div><strong id="chapterCoins"></strong>Coins Earned</div><div><strong id="chapterArtifact"></strong>Artifact</div></div><button class="btn" onclick="finishChapter()">Return to Map</button></div>
+<div id="unitCompleteScreen" class="hidden chapter-complete"><p class="eyebrow dark">Unit I Complete</p><h2>The Expedition Endures</h2><div class="badge">Founders’<br>Expedition<br>Badge</div><p id="unitCompleteText"></p><div class="summary"><div><strong id="finalCoins"></strong>Total Coins</div><div><strong id="finalArtifacts"></strong>Artifacts</div><div><strong id="finalRank"></strong>Historian Rank</div></div><button class="btn" onclick="finishUnit()">Return to Map</button></div>
 </div></div>
+<div id="museumModal" class="modal hidden"><div class="card"><button class="close" onclick="closeModal('museumModal')">×</button><p class="eyebrow dark">Collection Hall</p><h2>The Historian’s Museum</h2><div id="museumContents"></div></div></div>
+<div id="journalModal" class="modal hidden"><div class="card"><button class="close" onclick="closeModal('journalModal')">×</button><p class="eyebrow dark">Expedition Notes</p><h2>Field Journal</h2><div id="journalContents"></div></div></div>
 
-<div id="journalModal" class="modal hidden"><div class="card">
-  <button class="close" onclick="closeModal('journalModal')">×</button>
-  <p class="eyebrow dark">Expedition Notes</p><h2>Field Journal</h2><div id="journalContents"></div>
-</div></div>
+<div id="unit2Screen" class="hidden"><button class="btn back-float" onclick="closeUnit2()">← Back to Units</button><iframe id="unit2Frame" title="American Quest Unit II"></iframe></div>
 
 <script>
-const CHAPTERS=[
-{
- title:"Royal Harbor",icon:"⚓",artifact:"Royal Charter Fragment",
- intro:"The Crown prepares an expedition. Before anyone sails, the council must understand why European nations explored and colonized.",
- questions:[
-  ["Which three motives are commonly summarized as the main reasons for European exploration?",["Gold, God, and Glory","Food, Farming, and Freedom","Peace, Prosperity, and Privacy","Weather, Water, and Work"],0,"European powers sought wealth, spread Christianity, and competed for national power.","Motives often overlap; one voyage could serve economic, religious, and political goals."],
-  ["Which nation sponsored Christopher Columbus’s 1492 voyage?",["England","Spain","France","Portugal"],1,"Spain sponsored Columbus’s westward voyage across the Atlantic.","Sponsorship linked exploration to royal competition."],
-  ["Why did European nations search for new sea routes to Asia?",["To avoid all trade","To gain direct access to valuable goods","To escape cold weather","To end shipbuilding"],1,"Direct sea routes promised access to spices, silk, and other valuable goods.","Economic competition encouraged investment in exploration."],
-  ["Which statement best describes mercantilism?",["Colonies existed partly to benefit the mother country","Colonies were fully independent","Governments avoided trade","Native nations controlled European kings"],0,"Mercantilism treated colonies as sources of raw materials and markets.","Economic rules tied colonial development to European power."],
-  ["Which European nation established St. Augustine in 1565?",["France","Spain","England","Netherlands"],1,"Spain established St. Augustine in present-day Florida.","Spanish colonization began before Jamestown and Plymouth."]
- ]
-},
-{
- title:"Atlantic Crossing",icon:"🌊",artifact:"Mariner’s Compass",
- intro:"The ship leaves Europe. Maps, winds, exchange, and disease reshape both sides of the Atlantic.",
- questions:[
-  ["What was the Columbian Exchange?",["The exchange of plants, animals, diseases, and ideas between hemispheres","A peace treaty between England and France","A colonial tax law","A route used only by Spain"],0,"The Columbian Exchange connected the Eastern and Western Hemispheres.","Exchange brought opportunity and devastating consequences."],
-  ["Which item traveled from the Americas to Europe?",["Horses","Wheat","Potatoes","Smallpox"],2,"Potatoes originated in the Americas and spread to Europe.","American crops changed diets and population patterns."],
-  ["Which item traveled from Europe to the Americas?",["Corn","Tomatoes","Horses","Cacao"],2,"Horses were brought by Europeans to the Americas.","Introduced animals changed transportation, warfare, and daily life."],
-  ["Why were Native populations especially vulnerable to European diseases?",["They had no prior exposure or immunity to many diseases","They lived only in cities","They refused all medicine","They had stronger immune systems"],0,"Many Native communities lacked immunity to diseases such as smallpox.","Disease caused catastrophic population loss."],
-  ["Which tool most directly helped sailors determine direction?",["Compass","Printing press","Plow","Musket"],0,"The compass helped sailors maintain direction at sea.","Navigation combined instruments, observation, and written records."],
-  ["What was one major effect of improved navigation technology?",["Long-distance ocean voyages became more reliable","European nations stopped competing","Colonies became independent immediately","Trade ended"],0,"Improved ships, maps, and instruments made long-distance voyages more practical.","Technology can change the scale of human movement."]
- ]
-},
-{
- title:"Jamestown Shore",icon:"🏕️",artifact:"Jamestown Settlement Plan",
- intro:"It is 1607. The first permanent English settlement must survive disease, hunger, poor planning, and conflict.",
- questions:[
-  ["Why is Jamestown historically significant?",["It was the first permanent English settlement in North America","It was the first Spanish mission","It ended the Revolution","It wrote the Constitution"],0,"Jamestown became the first permanent English settlement in 1607.","Permanent does not mean successful from the beginning."],
-  ["What was a major problem with Jamestown’s location?",["Brackish water and disease","No access to ships","Frozen soil year-round","No nearby rivers"],0,"The marshy location and brackish water contributed to disease.","A defensible site can still be unhealthy."],
-  ["Which crop helped Jamestown become profitable?",["Tobacco","Rice","Cotton","Wheat"],0,"Tobacco became Virginia’s major cash crop.","Profit encouraged expansion and increased demand for labor."],
-  ["Who helped make tobacco profitable in Virginia?",["John Rolfe","Roger Williams","William Penn","James Oglethorpe"],0,"John Rolfe developed a profitable tobacco crop.","Individual actions can reshape an entire economy."],
-  ["What was the House of Burgesses?",["An elected representative assembly in Virginia","A Spanish fort","A Puritan church","A French trading company"],0,"The House of Burgesses was an early representative assembly.","Colonial self-government developed gradually and unevenly."],
-  ["What was an indentured servant?",["A person who worked for a set number of years in exchange for passage","An elected governor","A Native diplomat","A wealthy plantation owner"],0,"Indentured servants traded years of labor for passage and opportunity.","Indentured servitude was harsh but legally different from racial slavery."],
-  ["What did the “Starving Time” reveal?",["The colony was poorly prepared for survival","The colony had too much food","Spain supplied Jamestown","Tobacco had ended"],0,"The winter of 1609–1610 exposed severe weaknesses in food, leadership, and planning.","Colonies could fail when economic goals outweighed basic needs."]
- ]
-},
-{
- title:"Powhatan Country",icon:"🤝",artifact:"Powhatan Trade Token",
- intro:"The English settlement exists within a homeland already governed and used by Native peoples.",
- questions:[
-  ["The Powhatan Confederacy was best described as what?",["A network of Native communities under Powhatan leadership","An English company","A Spanish mission","A Dutch colony"],0,"The Powhatan Confederacy included many Native communities.","Native societies had complex political systems."],
-  ["Why did early Jamestown colonists trade with Powhatan communities?",["They needed food and local knowledge","They wanted to end farming","They had no ships","They were already independent"],0,"Trade provided food and knowledge necessary for survival.","Colonists often depended on Native expertise."],
-  ["Which factor contributed to conflict between English settlers and Powhatan peoples?",["Competition over land and resources","Identical ideas about land ownership","A lack of waterways","No communication at all"],0,"Expansion created competition over land, food, and power.","Different cultural assumptions made disputes harder to resolve."],
-  ["What is the strongest way to evaluate a conflict between Native peoples and colonists?",["Use evidence from multiple perspectives","Use only the English account","Assume maps are complete","Ignore who held power"],0,"Multiple perspectives reveal different motives and experiences.","A source can be valuable and still be limited."],
-  ["Which action would most likely reduce misunderstanding during trade?",["Clarify terms and use interpreters","Make secret demands","Break agreements","Refuse to listen"],0,"Clear communication helps both sides understand expectations.","Diplomacy depends on trust and reliable agreements."],
-  ["Why is it inaccurate to describe North America as “empty land” before colonization?",["Millions of Native people lived in organized societies","No one knew how to farm","Only Europeans used land","Maps showed no rivers"],0,"Native nations had communities, governments, trade networks, and land-use systems.","What a European map omits may still be historically present."]
- ]
-},
-{
- title:"Colonial Regions",icon:"🧭",artifact:"Three-Region Colonial Map",
- intro:"Thirteen colonies develop into three broad regions shaped by geography, religion, labor, and economics.",
- questions:[
-  ["Which colonies formed the New England region?",["Massachusetts, Rhode Island, Connecticut, New Hampshire","Virginia, Maryland, Georgia, Carolina","New York, Pennsylvania, New Jersey, Delaware","Florida, Texas, California, Arizona"],0,"New England included Massachusetts, Rhode Island, Connecticut, and New Hampshire.","Regional groupings help reveal patterns."],
-  ["What economic activity was especially important in New England?",["Shipbuilding and trade","Large rice plantations","Gold mining","Cattle ranching"],0,"Ports, forests, and rocky soil encouraged trade, fishing, and shipbuilding.","Geography influenced economic choices."],
-  ["Why were the Middle Colonies called the “breadbasket” colonies?",["They produced large amounts of grain","They imported all food","They grew only tobacco","They had no farms"],0,"Fertile soil supported wheat and other grains.","The Middle Colonies combined farming, trade, and cities."],
-  ["Which region was especially known for ethnic and religious diversity?",["Middle Colonies","Southern Colonies only","New England only","No region"],0,"The Middle Colonies attracted varied religious and ethnic groups.","Tolerance was imperfect but comparatively broader."],
-  ["Which cash crops were important in the Southern Colonies?",["Tobacco, rice, and indigo","Corn, potatoes, and apples only","Wheat and oats only","Tea and coffee"],0,"Warm climate and long growing seasons supported plantation crops.","Cash-crop agriculture shaped labor systems."],
-  ["Which colony was founded partly as a refuge for debtors and as a buffer against Spanish Florida?",["Georgia","Rhode Island","New York","Massachusetts"],0,"James Oglethorpe founded Georgia with several goals, including defense.","Colonies could serve social, economic, and military purposes."],
-  ["Which colony was founded by William Penn?",["Pennsylvania","Virginia","Maryland","Connecticut"],0,"William Penn founded Pennsylvania as a Quaker colony.","Religious beliefs influenced settlement and government."],
-  ["Which statement best compares colonial regions?",["They shared English influence but developed distinct economies and cultures","They were exactly alike","Geography had no effect","All used the same labor system"],0,"The regions shared features but developed meaningful differences.","Strong comparisons include both similarity and difference."]
- ]
-},
-{
- title:"Colony Council",icon:"📜",artifact:"Colony Council Charter",
- intro:"The final council must connect labor, religion, government, and colonial purpose into one lasting plan.",
- questions:[
-  ["What was the Mayflower Compact?",["An agreement for self-government signed by Pilgrims","A Spanish trade law","A tobacco contract","A treaty ending slavery"],0,"The Mayflower Compact established a framework for self-government.","Written agreements can create political legitimacy."],
-  ["Why did many Puritans migrate to New England?",["To build a religious community","To find gold mines","To join Spanish missions","To grow rice"],0,"Puritans sought to create a society shaped by their religious beliefs.","Seeking freedom for oneself did not always mean extending it to others."],
-  ["Why was Rhode Island founded?",["To support greater religious freedom","To expand tobacco plantations","To defend Spanish Florida","To create royal absolutism"],0,"Roger Williams supported separation of church and government and broader religious liberty.","Dissent helped create new colonies."],
-  ["How did slavery differ from indentured servitude?",["Slavery became lifelong, hereditary, and race-based","Indentured servants served for life","Slavery was always voluntary","There was no difference"],0,"Colonial slavery developed into a permanent, hereditary system based on race.","Labor systems changed over time and were reinforced by law."],
-  ["Which principle appears in both the House of Burgesses and Mayflower Compact?",["Self-government","Absolute monarchy","No written rules","Spanish control"],0,"Both reflected forms of colonial self-government.","Representative government remained limited to certain groups."],
-  ["Which final colony plan best reflects Unit I evidence?",["Match settlement to geography, create representative rules, secure resources, and honor agreements","Search only for gold","Ignore Native land use","Build the same economy everywhere"],0,"A strong colony plan combines geography, survival, economics, government, and diplomacy.","Historical reasoning connects evidence across topics rather than treating facts separately."]
- ]
-}
-];
-
+const CHAPTERS=[{"title": "Royal Harbor", "icon": "⚓", "artifact": "Royal Charter Fragment", "intro": "The Crown prepares an expedition. Before anyone sails, the council must understand why European nations explored and colonized.", "questions": [["Which three motives are commonly summarized as the main reasons for European exploration?", ["Gold, God, and Glory", "Food, Farming, and Freedom", "Peace, Prosperity, and Privacy", "Weather, Water, and Work"], 0, "European powers sought wealth, spread Christianity, and competed for national power.", "Motives often overlap; one voyage could serve economic, religious, and political goals."], ["Which nation sponsored Christopher Columbus’s 1492 voyage?", ["England", "Spain", "France", "Portugal"], 1, "Spain sponsored Columbus’s westward voyage across the Atlantic.", "Sponsorship linked exploration to royal competition."], ["Why did European nations search for new sea routes to Asia?", ["To avoid all trade", "To gain direct access to valuable goods", "To escape cold weather", "To end shipbuilding"], 1, "Direct sea routes promised access to spices, silk, and other valuable goods.", "Economic competition encouraged investment in exploration."], ["Which statement best describes mercantilism?", ["Colonies existed partly to benefit the mother country", "Colonies were fully independent", "Governments avoided trade", "Native nations controlled European kings"], 0, "Mercantilism treated colonies as sources of raw materials and markets.", "Economic rules tied colonial development to European power."], ["Which European nation established St. Augustine in 1565?", ["France", "Spain", "England", "Netherlands"], 1, "Spain established St. Augustine in present-day Florida.", "Spanish colonization began before Jamestown and Plymouth."]]}, {"title": "Atlantic Crossing", "icon": "🌊", "artifact": "Mariner’s Compass", "intro": "The ship leaves Europe. Maps, winds, exchange, and disease reshape both sides of the Atlantic.", "questions": [["What was the Columbian Exchange?", ["The exchange of plants, animals, diseases, and ideas between hemispheres", "A peace treaty between England and France", "A colonial tax law", "A route used only by Spain"], 0, "The Columbian Exchange connected the Eastern and Western Hemispheres.", "Exchange brought opportunity and devastating consequences."], ["Which item traveled from the Americas to Europe?", ["Horses", "Wheat", "Potatoes", "Smallpox"], 2, "Potatoes originated in the Americas and spread to Europe.", "American crops changed diets and population patterns."], ["Which item traveled from Europe to the Americas?", ["Corn", "Tomatoes", "Horses", "Cacao"], 2, "Horses were brought by Europeans to the Americas.", "Introduced animals changed transportation, warfare, and daily life."], ["Why were Native populations especially vulnerable to European diseases?", ["They had no prior exposure or immunity to many diseases", "They lived only in cities", "They refused all medicine", "They had stronger immune systems"], 0, "Many Native communities lacked immunity to diseases such as smallpox.", "Disease caused catastrophic population loss."], ["Which tool most directly helped sailors determine direction?", ["Compass", "Printing press", "Plow", "Musket"], 0, "The compass helped sailors maintain direction at sea.", "Navigation combined instruments, observation, and written records."], ["What was one major effect of improved navigation technology?", ["Long-distance ocean voyages became more reliable", "European nations stopped competing", "Colonies became independent immediately", "Trade ended"], 0, "Improved ships, maps, and instruments made long-distance voyages more practical.", "Technology can change the scale of human movement."]]}, {"title": "Jamestown Shore", "icon": "🏕️", "artifact": "Jamestown Settlement Plan", "intro": "It is 1607. The first permanent English settlement must survive disease, hunger, poor planning, and conflict.", "questions": [["Why is Jamestown historically significant?", ["It was the first permanent English settlement in North America", "It was the first Spanish mission", "It ended the Revolution", "It wrote the Constitution"], 0, "Jamestown became the first permanent English settlement in 1607.", "Permanent does not mean successful from the beginning."], ["What was a major problem with Jamestown’s location?", ["Brackish water and disease", "No access to ships", "Frozen soil year-round", "No nearby rivers"], 0, "The marshy location and brackish water contributed to disease.", "A defensible site can still be unhealthy."], ["Which crop helped Jamestown become profitable?", ["Tobacco", "Rice", "Cotton", "Wheat"], 0, "Tobacco became Virginia’s major cash crop.", "Profit encouraged expansion and increased demand for labor."], ["Who helped make tobacco profitable in Virginia?", ["John Rolfe", "Roger Williams", "William Penn", "James Oglethorpe"], 0, "John Rolfe developed a profitable tobacco crop.", "Individual actions can reshape an entire economy."], ["What was the House of Burgesses?", ["An elected representative assembly in Virginia", "A Spanish fort", "A Puritan church", "A French trading company"], 0, "The House of Burgesses was an early representative assembly.", "Colonial self-government developed gradually and unevenly."], ["What was an indentured servant?", ["A person who worked for a set number of years in exchange for passage", "An elected governor", "A Native diplomat", "A wealthy plantation owner"], 0, "Indentured servants traded years of labor for passage and opportunity.", "Indentured servitude was harsh but legally different from racial slavery."], ["What did the “Starving Time” reveal?", ["The colony was poorly prepared for survival", "The colony had too much food", "Spain supplied Jamestown", "Tobacco had ended"], 0, "The winter of 1609–1610 exposed severe weaknesses in food, leadership, and planning.", "Colonies could fail when economic goals outweighed basic needs."]]}, {"title": "Powhatan Country", "icon": "🤝", "artifact": "Powhatan Trade Token", "intro": "The English settlement exists within a homeland already governed and used by Native peoples.", "questions": [["The Powhatan Confederacy was best described as what?", ["A network of Native communities under Powhatan leadership", "An English company", "A Spanish mission", "A Dutch colony"], 0, "The Powhatan Confederacy included many Native communities.", "Native societies had complex political systems."], ["Why did early Jamestown colonists trade with Powhatan communities?", ["They needed food and local knowledge", "They wanted to end farming", "They had no ships", "They were already independent"], 0, "Trade provided food and knowledge necessary for survival.", "Colonists often depended on Native expertise."], ["Which factor contributed to conflict between English settlers and Powhatan peoples?", ["Competition over land and resources", "Identical ideas about land ownership", "A lack of waterways", "No communication at all"], 0, "Expansion created competition over land, food, and power.", "Different cultural assumptions made disputes harder to resolve."], ["What is the strongest way to evaluate a conflict between Native peoples and colonists?", ["Use evidence from multiple perspectives", "Use only the English account", "Assume maps are complete", "Ignore who held power"], 0, "Multiple perspectives reveal different motives and experiences.", "A source can be valuable and still be limited."], ["Which action would most likely reduce misunderstanding during trade?", ["Clarify terms and use interpreters", "Make secret demands", "Break agreements", "Refuse to listen"], 0, "Clear communication helps both sides understand expectations.", "Diplomacy depends on trust and reliable agreements."], ["Why is it inaccurate to describe North America as “empty land” before colonization?", ["Millions of Native people lived in organized societies", "No one knew how to farm", "Only Europeans used land", "Maps showed no rivers"], 0, "Native nations had communities, governments, trade networks, and land-use systems.", "What a European map omits may still be historically present."]]}, {"title": "Colonial Regions", "icon": "🧭", "artifact": "Three-Region Colonial Map", "intro": "Thirteen colonies develop into three broad regions shaped by geography, religion, labor, and economics.", "questions": [["Which colonies formed the New England region?", ["Massachusetts, Rhode Island, Connecticut, New Hampshire", "Virginia, Maryland, Georgia, Carolina", "New York, Pennsylvania, New Jersey, Delaware", "Florida, Texas, California, Arizona"], 0, "New England included Massachusetts, Rhode Island, Connecticut, and New Hampshire.", "Regional groupings help reveal patterns."], ["What economic activity was especially important in New England?", ["Shipbuilding and trade", "Large rice plantations", "Gold mining", "Cattle ranching"], 0, "Ports, forests, and rocky soil encouraged trade, fishing, and shipbuilding.", "Geography influenced economic choices."], ["Why were the Middle Colonies called the “breadbasket” colonies?", ["They produced large amounts of grain", "They imported all food", "They grew only tobacco", "They had no farms"], 0, "Fertile soil supported wheat and other grains.", "The Middle Colonies combined farming, trade, and cities."], ["Which region was especially known for ethnic and religious diversity?", ["Middle Colonies", "Southern Colonies only", "New England only", "No region"], 0, "The Middle Colonies attracted varied religious and ethnic groups.", "Tolerance was imperfect but comparatively broader."], ["Which cash crops were important in the Southern Colonies?", ["Tobacco, rice, and indigo", "Corn, potatoes, and apples only", "Wheat and oats only", "Tea and coffee"], 0, "Warm climate and long growing seasons supported plantation crops.", "Cash-crop agriculture shaped labor systems."], ["Which colony was founded partly as a refuge for debtors and as a buffer against Spanish Florida?", ["Georgia", "Rhode Island", "New York", "Massachusetts"], 0, "James Oglethorpe founded Georgia with several goals, including defense.", "Colonies could serve social, economic, and military purposes."], ["Which colony was founded by William Penn?", ["Pennsylvania", "Virginia", "Maryland", "Connecticut"], 0, "William Penn founded Pennsylvania as a Quaker colony.", "Religious beliefs influenced settlement and government."], ["Which statement best compares colonial regions?", ["They shared English influence but developed distinct economies and cultures", "They were exactly alike", "Geography had no effect", "All used the same labor system"], 0, "The regions shared features but developed meaningful differences.", "Strong comparisons include both similarity and difference."]]}, {"title": "Colony Council", "icon": "📜", "artifact": "Colony Council Charter", "intro": "The final council must connect labor, religion, government, and colonial purpose into one lasting plan.", "questions": [["What was the Mayflower Compact?", ["An agreement for self-government signed by Pilgrims", "A Spanish trade law", "A tobacco contract", "A treaty ending slavery"], 0, "The Mayflower Compact established a framework for self-government.", "Written agreements can create political legitimacy."], ["Why did many Puritans migrate to New England?", ["To build a religious community", "To find gold mines", "To join Spanish missions", "To grow rice"], 0, "Puritans sought to create a society shaped by their religious beliefs.", "Seeking freedom for oneself did not always mean extending it to others."], ["Why was Rhode Island founded?", ["To support greater religious freedom", "To expand tobacco plantations", "To defend Spanish Florida", "To create royal absolutism"], 0, "Roger Williams supported separation of church and government and broader religious liberty.", "Dissent helped create new colonies."], ["How did slavery differ from indentured servitude?", ["Slavery became lifelong, hereditary, and race-based", "Indentured servants served for life", "Slavery was always voluntary", "There was no difference"], 0, "Colonial slavery developed into a permanent, hereditary system based on race.", "Labor systems changed over time and were reinforced by law."], ["Which principle appears in both the House of Burgesses and Mayflower Compact?", ["Self-government", "Absolute monarchy", "No written rules", "Spanish control"], 0, "Both reflected forms of colonial self-government.", "Representative government remained limited to certain groups."], ["Which final colony plan best reflects Unit I evidence?", ["Match settlement to geography, create representative rules, secure resources, and honor agreements", "Search only for gold", "Ignore Native land use", "Build the same economy everywhere"], 0, "A strong colony plan combines geography, survival, economics, government, and diplomacy.", "Historical reasoning connects evidence across topics rather than treating facts separately."]]}];
+const UNIT2_HTML="<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<meta name=\"theme-color\" content=\"#17130e\">\n<title>American Quest — Unit 2: Road to Revolution</title>\n<style>\n:root{\n  --ink:#2c2419;--cream:#f8efd8;--paper:#ead7aa;--paper2:#f7ecd0;\n  --gold:#b88a37;--gold2:#dfbf70;--red:#7d3027;--navy:#283d50;\n  --forest:#38503e;--dark:#17130e;--shadow:rgba(0,0,0,.42)\n}\n*{box-sizing:border-box}\nhtml{scroll-behavior:smooth}\nbody{\n  margin:0;min-height:100vh;color:var(--cream);\n  font-family:Georgia,\"Times New Roman\",serif;\n  background:\n    linear-gradient(rgba(10,9,7,.72),rgba(10,9,7,.93)),\n    radial-gradient(circle at top,#5a4d34 0,#252016 48%,#100e0b 100%);\n}\nbutton{font:inherit;cursor:pointer}\n.hidden{display:none!important}\n.screen{min-height:100vh}\n#start{\n  display:grid;place-items:center;padding:24px;position:relative;overflow:hidden\n}\n#start:before{\n  content:\"\";position:absolute;inset:-20%;background:\n  radial-gradient(circle at 30% 20%,rgba(223,191,112,.13),transparent 25%),\n  radial-gradient(circle at 80% 70%,rgba(66,91,110,.13),transparent 28%);\n  animation:drift 10s ease-in-out infinite alternate\n}\n@keyframes drift{to{transform:translate3d(2%,-2%,0) scale(1.04)}}\n.start-card{\n  position:relative;z-index:1;width:min(1050px,100%);padding:28px;border-radius:26px;\n  background:linear-gradient(rgba(31,25,18,.88),rgba(18,15,11,.95));\n  border:1px solid rgba(223,191,112,.28);box-shadow:0 28px 70px var(--shadow)\n}\n.kicker{letter-spacing:.18em;text-transform:uppercase;color:var(--gold2);font-size:.82rem}\nh1{font-size:clamp(2.4rem,6vw,5rem);line-height:.95;margin:10px 0;color:#fff8e8}\n.lead{font-size:1.14rem;line-height:1.65;color:#eadfc8;max-width:66ch}\n.start-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:center}\n.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}\n.feature{padding:12px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}\n.primary,.secondary,.small{\n  border:none;border-radius:999px;padding:13px 18px;transition:.2s transform,.2s filter\n}\n.primary{background:linear-gradient(var(--gold2),var(--gold));color:#241b10;font-weight:bold}\n.secondary,.small{background:rgba(255,255,255,.08);color:var(--cream);border:1px solid rgba(255,255,255,.1)}\nbutton:hover{transform:translateY(-2px);filter:brightness(1.05)}\n.poster{\n  background:linear-gradient(var(--paper2),var(--paper));color:var(--ink);\n  border-radius:20px;padding:18px;border:1px solid rgba(89,67,34,.18)\n}\n.poster h3{margin:0;color:var(--red)}\n.poster p{line-height:1.55}\n.hud{\n  position:sticky;top:0;z-index:20;padding:12px 16px;\n  background:rgba(15,12,9,.86);backdrop-filter:blur(12px);\n  border-bottom:1px solid rgba(223,191,112,.18)\n}\n.hud-inner{max-width:1450px;margin:auto;display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}\n.brand small{display:block;text-transform:uppercase;letter-spacing:.12em;color:#cdbf9f}\n.brand strong{font-size:1.3rem}\n.stats{display:flex;gap:8px;flex-wrap:wrap;align-items:center}\n.pill{padding:9px 11px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}\n.layout{max-width:1450px;margin:18px auto;padding:0 12px;display:grid;grid-template-columns:360px 1fr;gap:18px}\n.panel{\n  border-radius:20px;overflow:hidden;background:linear-gradient(rgba(33,27,20,.9),rgba(20,17,13,.97));\n  border:1px solid rgba(223,191,112,.16);box-shadow:0 18px 45px rgba(0,0,0,.28)\n}\n.panel-head{padding:17px;border-bottom:1px solid rgba(223,191,112,.12)}\n.panel-head h2{margin:0;font-size:1.22rem}\n.panel-head p{margin:7px 0 0;color:#d8cbb0;line-height:1.45}\n.map-body,.detail{padding:15px}\n.mission-list{display:grid;gap:10px}\n.mission{\n  padding:13px;border-radius:15px;background:rgba(255,255,255,.05);\n  border:1px solid rgba(255,255,255,.07);transition:.2s;cursor:pointer\n}\n.mission:hover{transform:translateY(-2px)}\n.mission.selected{border-color:rgba(223,191,112,.55);background:rgba(223,191,112,.11)}\n.mission.complete{border-color:rgba(106,168,116,.45);background:rgba(56,80,62,.22)}\n.mission.locked{opacity:.48;cursor:not-allowed}\n.mission-top{display:flex;align-items:center;gap:10px}\n.num{\n  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;\n  color:#231a0f;font-weight:bold;background:linear-gradient(var(--gold2),var(--gold))\n}\n.mission.locked .num{background:#746958;color:#eee2c9}\n.mission-title{flex:1}\n.mission-title strong,.mission-title span{display:block}\n.mission-title span{font-size:.85rem;color:#d8cbb0;margin-top:3px}\n.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;padding:5px 7px;border-radius:999px;background:rgba(255,255,255,.07)}\n.progress{margin-top:8px;font-size:.84rem;color:#d9ccb0}\n.vault{margin-top:15px;padding:13px;border-radius:15px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}\n.vault h3{margin:0 0 9px}\n.artifacts{display:flex;flex-wrap:wrap;gap:7px}\n.artifact,.chip{padding:7px 9px;border-radius:999px;background:rgba(223,191,112,.12);border:1px solid rgba(223,191,112,.2);font-size:.85rem}\n.hero{display:grid;grid-template-columns:1fr 330px;gap:16px;margin-bottom:16px}\n.brief{\n  background:linear-gradient(var(--paper2),var(--paper));color:var(--ink);\n  border-radius:18px;padding:18px;border:1px solid rgba(89,67,34,.18)\n}\n.brief .over{color:var(--red);text-transform:uppercase;letter-spacing:.12em;font-size:.78rem}\n.brief h2{font-size:2rem;margin:6px 0 8px}\n.brief p{line-height:1.62}\n.art{\n  background:linear-gradient(var(--paper2),var(--paper));border-radius:18px;padding:8px;\n  animation:float 5s ease-in-out infinite;box-shadow:0 14px 28px rgba(0,0,0,.18)\n}\n.art svg{width:100%;height:auto;display:block}\n@keyframes float{50%{transform:translateY(-6px)}}\n.block{padding:15px;border-radius:17px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);margin-bottom:15px}\n.block h3{margin:0 0 10px}\n.targets{line-height:1.55}\n.people-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:11px}\n.person{\n  background:linear-gradient(var(--paper2),var(--paper));color:var(--ink);\n  border-radius:15px;padding:12px;border:1px solid rgba(89,67,34,.18)\n}\n.portrait{\n  height:110px;border-radius:12px;margin-bottom:9px;display:grid;place-items:center;\n  background:linear-gradient(135deg,#536c7e,#2d4050);overflow:hidden\n}\n.person strong{display:block}\n.role{color:var(--red);font-weight:bold;font-size:.88rem;margin:4px 0}\n.person p{margin:0;line-height:1.43;font-size:.9rem}\n.q-card{padding:14px;border-radius:14px;background:rgba(10,8,6,.18);border:1px solid rgba(255,255,255,.07);margin-bottom:12px}\n.q-head{display:flex;gap:10px;justify-content:space-between;align-items:flex-start}\n.q-head strong{line-height:1.45}\n.focus{font-size:.74rem;white-space:nowrap;padding:5px 7px;border-radius:999px;background:rgba(223,191,112,.12)}\n.choices{display:grid;gap:8px;margin-top:10px}\n.choice{text-align:left;border-radius:11px;padding:11px;background:rgba(255,255,255,.06);color:var(--cream);border:1px solid rgba(255,255,255,.08)}\n.choice.correct{background:rgba(65,111,73,.35);border-color:rgba(126,190,136,.45)}\n.choice.wrong{background:rgba(126,47,40,.34);border-color:rgba(200,113,104,.4)}\n.choice.dim{opacity:.65}\n.feedback{margin-top:10px;padding:10px;border-radius:11px;background:rgba(255,255,255,.06);line-height:1.5}\n.complete-box{background:rgba(56,80,62,.22);border-color:rgba(126,190,136,.33)}\n.final-box{background:rgba(223,191,112,.12);border-color:rgba(223,191,112,.3)}\n.toast{\n  position:fixed;right:18px;bottom:18px;z-index:50;max-width:330px;\n  padding:12px 14px;border-radius:14px;background:#17130f;border:1px solid rgba(223,191,112,.3);\n  opacity:0;transform:translateY(12px);transition:.25s;pointer-events:none\n}\n.toast.show{opacity:1;transform:none}\n@media(max-width:1000px){.layout{grid-template-columns:1fr}.hero{grid-template-columns:1fr}.start-grid{grid-template-columns:1fr}}\n@media(max-width:650px){.feature-grid{grid-template-columns:1fr}.people-grid{grid-template-columns:1fr}}\n</style>\n</head>\n<body>\n\n<section id=\"start\" class=\"screen\">\n  <div class=\"start-card\">\n    <div class=\"start-grid\">\n      <div>\n        <div class=\"kicker\">American Quest • Unit 2</div>\n        <h1>Road to Revolution</h1>\n        <p class=\"lead\">Taxes rise. Protests spread. War approaches. Travel through seven missions packed with TEKS-based content, important people, animated visuals, music, artifacts, and historian ranks.</p>\n        <div class=\"feature-grid\">\n          <div class=\"feature\">🎵 Built-in optional music</div>\n          <div class=\"feature\">🖼️ Illustrated mission scenes</div>\n          <div class=\"feature\">👤 22 Revolution figures</div>\n          <div class=\"feature\">📚 TEKS-based questions</div>\n        </div>\n        <button id=\"begin\" class=\"primary\">Begin the Journey</button>\n        <button id=\"preview\" class=\"secondary\">Preview Music</button>\n      </div>\n      <div class=\"poster\">\n        <h3>Mission Brief</h3>\n        <p><strong>Goal:</strong> trace the causes, leaders, documents, battles, alliances, and results of the American Revolution.</p>\n        <p><strong>Reward:</strong> collect seven artifacts and earn the Keeper of Liberty badge.</p>\n        <p><strong>Teacher note:</strong> everything is contained in this one file—no external images or audio required.</p>\n      </div>\n    </div>\n  </div>\n</section>\n\n<div id=\"app\" class=\"hidden\">\n<header class=\"hud\">\n  <div class=\"hud-inner\">\n    <div class=\"brand\"><small>American Quest</small><strong>Unit 2 • Road to Revolution</strong></div>\n    <div class=\"stats\">\n      <div class=\"pill\">🪙 <span id=\"coins\">0</span></div>\n      <div class=\"pill\">🏅 <span id=\"rank\">New Recruit</span></div>\n      <div class=\"pill\">📦 <span id=\"artifactCount\">0</span>/7</div>\n      <div class=\"pill\">📍 <span id=\"overall\">0%</span></div>\n      <button id=\"music\" class=\"small\">🎵 Music: Off</button>\n      <button id=\"reset\" class=\"small\">↺ Reset</button>\n    </div>\n  </div>\n</header>\n\n<main class=\"layout\">\n  <aside class=\"panel\">\n    <div class=\"panel-head\"><h2>Expedition Map</h2><p>Complete each mission to unlock the next stop.</p></div>\n    <div class=\"map-body\">\n      <div id=\"missionList\" class=\"mission-list\"></div>\n      <div class=\"vault\"><h3>Artifact Vault</h3><div id=\"artifacts\" class=\"artifacts\"></div></div>\n    </div>\n  </aside>\n  <section class=\"panel\">\n    <div class=\"panel-head\"><h2>Mission Details</h2><p>Read the briefing, study the visuals, and answer the challenges.</p></div>\n    <div id=\"detail\" class=\"detail\"></div>\n  </section>\n</main>\n</div>\n\n<div id=\"toast\" class=\"toast\"></div>\n\n<script>\nconst PEOPLE=[\n[\"George Washington\",\"Commander of the Continental Army\",\"Led the Continental Army and became a symbol of endurance and unity.\"],\n[\"Thomas Jefferson\",\"Principal author of the Declaration\",\"Wrote most of the Declaration of Independence.\"],\n[\"Benjamin Franklin\",\"Diplomat\",\"Helped persuade France to support the American cause.\"],\n[\"John Adams\",\"Patriot leader\",\"Strongly supported independence and helped guide the Continental Congress.\"],\n[\"Samuel Adams\",\"Organizer of resistance\",\"Helped organize colonial protest and resistance in Massachusetts.\"],\n[\"Patrick Henry\",\"Speaker\",\"Known for the demand, “Give me liberty, or give me death!”\"],\n[\"Paul Revere\",\"Messenger\",\"Warned that British troops were moving toward Lexington and Concord.\"],\n[\"Thomas Paine\",\"Political writer\",\"Wrote Common Sense to persuade colonists to support independence.\"],\n[\"King George III\",\"British monarch\",\"His actions and policies were listed as grievances in the Declaration.\"],\n[\"Mercy Otis Warren\",\"Writer\",\"Used plays and political writing to support the patriot cause.\"],\n[\"Abigail Adams\",\"Influential voice\",\"Urged leaders to “remember the ladies.”\"],\n[\"Crispus Attucks\",\"Boston Massacre victim\",\"Often remembered as the first martyr of the Revolution.\"],\n[\"Marquis de Lafayette\",\"French ally\",\"Served with Washington and strengthened French-American cooperation.\"],\n[\"Bernardo de Gálvez\",\"Spanish governor\",\"Attacked British positions along the Gulf Coast and Mississippi region.\"],\n[\"John Hancock\",\"Congress leader\",\"President of the Continental Congress and famous signer of the Declaration.\"],\n[\"George Rogers Clark\",\"Western commander\",\"Captured British posts in the West.\"],\n[\"Nathanael Greene\",\"Continental general\",\"Used strategy to wear down British forces in the South.\"],\n[\"Charles Cornwallis\",\"British general\",\"Surrendered at Yorktown in 1781.\"],\n[\"Benedict Arnold\",\"Turncoat\",\"An American officer who betrayed the patriot cause.\"],\n[\"Molly Pitcher\",\"Patriotic legend\",\"Remembered for helping soldiers during battle.\"],\n[\"Phillis Wheatley\",\"Poet\",\"An enslaved African American poet known throughout the revolutionary era.\"],\n[\"John Paul Jones\",\"Naval hero\",\"A daring American naval commander.\"]\n];\n\nconst MISSIONS=[\n{\nid:1,title:\"Seeds of Conflict\",sub:\"French and Indian War & Proclamation of 1763\",artifact:\"Map Fragment\",art:\"map\",\nbrief:[\n\"The French and Indian War ended in 1763 with Britain defeating France in North America. Britain gained land, but the war created enormous debt.\",\n\"To control the frontier and reduce conflict, Britain issued the Proclamation of 1763, limiting settlement west of the Appalachian Mountains.\",\n\"Many colonists believed they had fought for western land and resented Britain’s growing control.\"\n],\nteks:[\"Explain how the French and Indian War changed relations between Britain and the colonies.\",\"Identify the purpose and impact of the Proclamation of 1763.\",\"Trace cause-and-effect between war debt and new British policies.\"],\nvocab:[\"French and Indian War\",\"war debt\",\"Proclamation of 1763\",\"frontier\"],\nqs:[\n[\"Why did Britain tighten control after the French and Indian War?\",[\"It wanted France to rule again\",\"It faced heavy war debt and new land-management costs\",\"It planned to abandon North America\",\"It wanted every colonist to move west\"],1,\"Britain needed revenue and tighter control after an expensive war.\",\"Cause & Effect\"],\n[\"What did the Proclamation of 1763 do?\",[\"Ended all colonial trade\",\"Limited settlement west of the Appalachians\",\"Created the Continental Congress\",\"Declared independence\"],1,\"It tried to stop colonists from settling west of the Appalachian Mountains.\",\"Policy\"],\n[\"Why were colonists angry about the proclamation?\",[\"They wanted access to western lands\",\"They wanted higher taxes\",\"They supported French rule\",\"They opposed farming\"],0,\"Many colonists believed western land represented opportunity they had helped win.\",\"Colonial Response\"],\n[\"What was the long-term importance of the war?\",[\"It ended colonial resentment\",\"It began a chain of events that increased tension with Britain\",\"It created the Constitution\",\"It made Britain leave immediately\"],1,\"War debt and new policies helped set the Revolution in motion.\",\"Significance\"]\n]},\n{\nid:2,title:\"Taxation Without Representation\",sub:\"Acts, protests & boycotts\",artifact:\"Stamped Broadside\",art:\"tax\",\nbrief:[\n\"Parliament passed taxes such as the Sugar Act, Stamp Act, and Townshend Acts.\",\n\"Colonists argued that Parliament should not tax people who had no elected representatives there.\",\n\"They organized petitions, protests, and boycotts through groups such as the Sons of Liberty.\"\n],\nteks:[\"Explain why British taxation caused colonial protest.\",\"Identify the meaning of no taxation without representation.\",\"Describe petitions, protests, and boycotts as forms of resistance.\"],\nvocab:[\"Stamp Act\",\"Townshend Acts\",\"boycott\",\"Sons of Liberty\",\"representation\"],\nqs:[\n[\"What did 'no taxation without representation' mean?\",[\"Only kings should pay taxes\",\"Colonists wanted a voice in the government taxing them\",\"Colonists wanted no laws at all\",\"Parliament should move to Boston\"],1,\"Colonists objected to taxes imposed by a legislature in which they had no elected members.\",\"Political Ideas\"],\n[\"Which act taxed newspapers, licenses, and legal documents?\",[\"Tea Act\",\"Stamp Act\",\"Quartering Act\",\"Intolerable Acts\"],1,\"The Stamp Act required official stamps on printed materials.\",\"Key Acts\"],\n[\"What is a boycott?\",[\"A refusal to buy goods to create pressure\",\"A military drill\",\"A royal speech\",\"A colonial court\"],0,\"Boycotts used economic pressure to protest British policies.\",\"Civic Action\"],\n[\"Which group organized major protests?\",[\"Sons of Liberty\",\"Loyalist Assembly\",\"French Guard\",\"Royal Congress\"],0,\"The Sons of Liberty helped organize resistance.\",\"Resistance\"],\n[\"What did the Townshend Acts tax?\",[\"Imported goods such as glass, paper, paint, lead, and tea\",\"Only farmland\",\"Church attendance\",\"Military uniforms\"],0,\"The Townshend duties targeted commonly imported goods.\",\"British Policy\"]\n]},\n{\nid:3,title:\"Boston in Revolt\",sub:\"Massacre, Tea Party & first battles\",artifact:\"Liberty Lantern\",art:\"boston\",\nbrief:[\n\"The Boston Massacre became powerful patriot propaganda.\",\n\"The Boston Tea Party protested British control and taxation. Britain answered with the Intolerable Acts.\",\n\"Colonial leaders met in the First Continental Congress. Fighting began at Lexington and Concord in April 1775.\"\n],\nteks:[\"Describe key events that pushed the colonies toward war.\",\"Explain the significance of the Tea Party and Intolerable Acts.\",\"Identify Lexington and Concord as the first battles.\"],\nvocab:[\"Boston Massacre\",\"Boston Tea Party\",\"Intolerable Acts\",\"Continental Congress\",\"minutemen\"],\nqs:[\n[\"Why did colonists dump tea into Boston Harbor?\",[\"To celebrate Britain\",\"To protest the Tea Act and British control\",\"To help merchants\",\"To end all trade\"],1,\"The Tea Party protested taxation and Parliament’s authority.\",\"Protest\"],\n[\"What were the Intolerable Acts?\",[\"Punishments aimed at Massachusetts\",\"Peace terms with France\",\"A colonial bill of rights\",\"A military alliance\"],0,\"Britain punished Massachusetts after the Tea Party.\",\"British Response\"],\n[\"Why did the First Continental Congress meet?\",[\"To coordinate a colonial response\",\"To elect a king\",\"To join France\",\"To write the Constitution\"],0,\"Delegates worked toward a united response to British policies.\",\"Unity\"],\n[\"Paul Revere is remembered because he\",[\"wrote the Declaration\",\"warned of approaching British troops\",\"signed the peace treaty\",\"led the British navy\"],1,\"His ride warned patriots before Lexington and Concord.\",\"Important People\"],\n[\"Why are Lexington and Concord important?\",[\"They ended the war\",\"They were the first battles\",\"They created the Bill of Rights\",\"They defeated France\"],1,\"They marked the beginning of armed conflict.\",\"Turning Point\"]\n]},\n{\nid:4,title:\"Voices of the Revolution\",sub:\"22 important people\",artifact:\"Patriot Ledger\",art:\"people\",people:true,\nbrief:[\n\"The Revolution was shaped by writers, speakers, diplomats, soldiers, allies, protestors, and political leaders.\",\n\"Study the 22 people below. Their roles connect directly to TEKS expectations for the American Revolution.\"\n],\nteks:[\"Identify important individuals of the Revolution.\",\"Describe political, military, diplomatic, and cultural contributions.\",\"Compare patriot, British, and allied roles.\"],\nvocab:[\"patriot\",\"loyalist\",\"diplomat\",\"delegate\",\"ally\",\"turncoat\"],\nqs:[\n[\"Who wrote Common Sense?\",[\"John Hancock\",\"Thomas Paine\",\"Benedict Arnold\",\"Nathanael Greene\"],1,\"Thomas Paine’s pamphlet argued for independence.\",\"Writers\"],\n[\"Who urged leaders to 'remember the ladies'?\",[\"Mercy Otis Warren\",\"Phillis Wheatley\",\"Abigail Adams\",\"Molly Pitcher\"],2,\"Abigail Adams made the request in a letter to John Adams.\",\"Women\"],\n[\"Which Spanish official helped from Louisiana?\",[\"Cornwallis\",\"Bernardo de Gálvez\",\"George Rogers Clark\",\"John Paul Jones\"],1,\"Gálvez attacked British positions in the Gulf region.\",\"Allies\"],\n[\"Who commanded the Continental Army?\",[\"George Washington\",\"Samuel Adams\",\"King George III\",\"Patrick Henry\"],0,\"Washington served as commander in chief.\",\"Military\"],\n[\"Who betrayed the patriot cause?\",[\"John Adams\",\"Paul Revere\",\"Benedict Arnold\",\"John Hancock\"],2,\"Benedict Arnold defected to the British.\",\"Loyalty\"],\n[\"Who is often called the first martyr of the Revolution?\",[\"Crispus Attucks\",\"Phillis Wheatley\",\"Thomas Jefferson\",\"John Paul Jones\"],0,\"Attucks died in the Boston Massacre.\",\"Symbols\"]\n]},\n{\nid:5,title:\"A Nation Declares\",sub:\"Declaration of Independence\",artifact:\"Quill of Independence\",art:\"declaration\",\nbrief:[\n\"In 1776 the Second Continental Congress chose Thomas Jefferson to draft the Declaration of Independence.\",\n\"The Declaration described natural rights and stated that government gains power from the consent of the governed.\",\n\"It also listed grievances against King George III and explained why separation was necessary.\"\n],\nteks:[\"Explain the purpose and ideas of the Declaration.\",\"Identify Thomas Jefferson’s role.\",\"Interpret natural rights and grievances.\"],\nvocab:[\"unalienable rights\",\"grievances\",\"consent of the governed\",\"independence\"],\nqs:[\n[\"Who was the principal author?\",[\"Thomas Jefferson\",\"George Washington\",\"Benjamin Franklin\",\"King George III\"],0,\"Jefferson wrote most of the Declaration.\",\"Important People\"],\n[\"What was the Declaration’s main purpose?\",[\"Create the Constitution\",\"Explain separation from Britain\",\"End the Civil War\",\"Elect a president\"],1,\"It announced and justified independence.\",\"Purpose\"],\n[\"Which rights are named in the Declaration?\",[\"Life, liberty, and the pursuit of happiness\",\"Speech, trial, and worship\",\"Trade, property, and voting\",\"Peace, power, and order\"],0,\"Those are the document’s best-known natural rights.\",\"Political Ideas\"],\n[\"The grievances were directed mainly against\",[\"France\",\"Native peoples\",\"King George III\",\"Spain\"],2,\"The document listed complaints against the king.\",\"Evidence\"]\n]},\n{\nid:6,title:\"Turning Points & Allies\",sub:\"Saratoga, Valley Forge & Yorktown\",artifact:\"Alliance Medal\",art:\"battle\",\nbrief:[\n\"At Valley Forge, the Continental Army survived a brutal winter and became more disciplined.\",\n\"The victory at Saratoga convinced France to officially support the American cause.\",\n\"American and French forces trapped Cornwallis at Yorktown, effectively ending major fighting.\"\n],\nteks:[\"Identify major turning points.\",\"Explain why French support mattered.\",\"Describe Yorktown’s significance.\"],\nvocab:[\"Saratoga\",\"Valley Forge\",\"French alliance\",\"Yorktown\",\"Cornwallis\"],\nqs:[\n[\"Why was Saratoga a turning point?\",[\"It ended the war instantly\",\"It persuaded France to support the Americans\",\"It gave Britain the Mississippi\",\"It wrote the Declaration\"],1,\"The victory convinced France the American cause could succeed.\",\"Turning Point\"],\n[\"What is Valley Forge remembered for?\",[\"A quick victory\",\"A harsh winter camp where the army endured and improved\",\"The peace treaty\",\"A British capital\"],1,\"Valley Forge symbolizes hardship, endurance, and training.\",\"Military Hardship\"],\n[\"Who surrendered at Yorktown?\",[\"George Rogers Clark\",\"Charles Cornwallis\",\"John Hancock\",\"Samuel Adams\"],1,\"Cornwallis surrendered in 1781.\",\"Major Battles\"],\n[\"Why was French support crucial?\",[\"France replaced Congress\",\"France gave Britain supplies\",\"France provided troops, money, supplies, and naval power\",\"France ended the Stamp Act\"],2,\"French aid strengthened the American war effort.\",\"Foreign Alliances\"],\n[\"Who is closely tied to French-American cooperation?\",[\"Marquis de Lafayette\",\"King George III\",\"Benedict Arnold\",\"Patrick Henry\"],0,\"Lafayette served with Washington and symbolized French support.\",\"Important People\"]\n]},\n{\nid:7,title:\"Victory & Peace\",sub:\"Treaty of Paris, 1783\",artifact:\"Treaty Seal\",art:\"treaty\",\nbrief:[\n\"The Treaty of Paris of 1783 ended the Revolution and recognized United States independence.\",\n\"The new nation gained land extending west to the Mississippi River.\",\n\"Independence created new opportunities, but liberty remained limited for women, enslaved people, free African Americans, and Native Americans.\"\n],\nteks:[\"Identify the Treaty of Paris and its effects.\",\"Explain the new nation’s geographic gains.\",\"Recognize that revolutionary ideals were applied unevenly.\"],\nvocab:[\"Treaty of Paris 1783\",\"independence\",\"Mississippi River\",\"republic\"],\nqs:[\n[\"What officially ended the Revolution?\",[\"Mayflower Compact\",\"Treaty of Paris of 1783\",\"House of Burgesses\",\"Northwest Ordinance\"],1,\"The Treaty of Paris formally ended the war.\",\"Peace\"],\n[\"The United States gained land west to the\",[\"Pacific Ocean\",\"Rocky Mountains\",\"Appalachians\",\"Mississippi River\"],3,\"The treaty established the Mississippi as the western boundary.\",\"Geography\"],\n[\"What challenge remained after independence?\",[\"Building an effective government\",\"Choosing a British king\",\"Joining France\",\"Ending all disagreement\"],0,\"The new nation still needed a workable government.\",\"New Nation\"],\n[\"Which statement is most accurate?\",[\"Everyone gained equality immediately\",\"Revolutionary ideals expanded, but many groups still faced limits\",\"Only soldiers were affected\",\"The Revolution ended all debate over rights\"],1,\"The language of liberty did not immediately create equal rights for all.\",\"Perspective\"]\n]}\n];\n\nconst KEY=\"AQ_UNIT2_V2\";\nconst BASE={started:false,coins:0,unlocked:1,completed:{},answers:{},artifacts:[]};\nlet state=load(),selected=1,musicOn=false,audioCtx=null,timer=null;\n\nfunction load(){try{return {...BASE,...JSON.parse(localStorage.getItem(KEY)||\"{}\")}}catch(e){return {...BASE}}}\nfunction save(){localStorage.setItem(KEY,JSON.stringify(state));render()}\nfunction mission(id){return MISSIONS.find(m=>m.id===id)}\nfunction akey(mid,qi){return `${mid}-${qi}`}\nfunction answered(m){return m.qs.filter((q,i)=>state.answers[akey(m.id,i)]!==undefined).length}\nfunction correct(m){return m.qs.filter((q,i)=>state.answers[akey(m.id,i)]===q[2]).length}\nfunction completeAll(){return MISSIONS.every(m=>state.completed[m.id])}\nfunction rank(){\n  if(state.coins>=300)return\"Master Historian\";\n  if(state.coins>=220)return\"Revolution Scholar\";\n  if(state.coins>=150)return\"Liberty Agent\";\n  if(state.coins>=90)return\"Patriot Scout\";\n  if(state.coins>=40)return\"Colony Courier\";\n  return\"New Recruit\"\n}\nfunction toast(t){const el=document.getElementById(\"toast\");el.textContent=t;el.classList.add(\"show\");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove(\"show\"),2300)}\nfunction answer(mid,qi,ci){\n  const m=mission(mid),q=m.qs[qi],k=akey(mid,qi);\n  if(state.answers[k]!==undefined)return;\n  state.answers[k]=ci;\n  if(ci===q[2]){state.coins+=10;toast(\"Correct! +10 coins\")}else toast(\"Answer recorded. Read the explanation.\");\n  if(answered(m)===m.qs.length&&!state.completed[mid]){\n    state.completed[mid]=true;state.coins+=25;state.artifacts.push(m.artifact);state.unlocked=Math.max(state.unlocked,mid+1);\n    toast(`Mission complete! ${m.artifact} earned.`);\n  }\n  save()\n}\nfunction svg(type){\nconst s={\nmap:`<svg viewBox=\"0 0 380 250\"><rect width=\"380\" height=\"250\" rx=\"18\" fill=\"#ead7aa\"/><rect x=\"18\" y=\"18\" width=\"344\" height=\"214\" rx=\"14\" fill=\"#f5e8c8\" stroke=\"#8b6a38\" stroke-width=\"2\"/><path d=\"M42 170c45-42 90-60 142-60s93 18 152 50\" fill=\"none\" stroke=\"#765a31\" stroke-width=\"4\" stroke-dasharray=\"8 7\"/><path d=\"M52 196c28-16 52-18 76-5 18 10 35 9 54-2 24-15 52-10 72 5 25 18 48 14 76 1\" fill=\"none\" stroke=\"#4f7568\" stroke-width=\"7\" stroke-linecap=\"round\"/><circle cx=\"305\" cy=\"72\" r=\"28\" fill=\"none\" stroke=\"#8b6a38\" stroke-width=\"3\"/><path d=\"M305 40v64M273 72h64M282 49l46 46M328 49l-46 46\" stroke=\"#8b6a38\" stroke-width=\"2\"/><text x=\"40\" y=\"55\" font-family=\"Georgia\" font-size=\"22\" fill=\"#6a4b28\">1763</text></svg>`,\ntax:`<svg viewBox=\"0 0 380 250\"><rect width=\"380\" height=\"250\" rx=\"18\" fill=\"#ead7aa\"/><rect x=\"35\" y=\"35\" width=\"135\" height=\"170\" rx=\"12\" fill=\"#f8eed8\" stroke=\"#8b6a38\" stroke-width=\"3\"/><text x=\"56\" y=\"70\" font-family=\"Georgia\" font-size=\"20\" fill=\"#7d3027\">STAMP ACT</text><rect x=\"62\" y=\"90\" width=\"80\" height=\"42\" rx=\"7\" fill=\"#cda75f\"/><text x=\"77\" y=\"116\" font-family=\"Georgia\" font-size=\"15\" fill=\"#4c351d\">REVENUE</text><circle cx=\"255\" cy=\"100\" r=\"38\" fill=\"#d8b65d\" stroke=\"#8b6a38\" stroke-width=\"4\"/><circle cx=\"300\" cy=\"148\" r=\"38\" fill=\"#d8b65d\" stroke=\"#8b6a38\" stroke-width=\"4\"/><text x=\"243\" y=\"108\" font-size=\"24\" fill=\"#4c351d\">£</text><text x=\"289\" y=\"156\" font-size=\"24\" fill=\"#4c351d\">£</text><text x=\"87\" y=\"230\" font-family=\"Georgia\" font-size=\"17\" fill=\"#7d3027\">No Taxation Without Representation</text></svg>`,\nboston:`<svg viewBox=\"0 0 380 250\"><rect width=\"380\" height=\"250\" rx=\"18\" fill=\"#ead7aa\"/><rect y=\"160\" width=\"380\" height=\"90\" fill=\"#50748c\"/><rect x=\"28\" y=\"128\" width=\"95\" height=\"32\" rx=\"7\" fill=\"#6c4b2b\"/><line x1=\"74\" y1=\"128\" x2=\"74\" y2=\"70\" stroke=\"#5e4327\" stroke-width=\"4\"/><path d=\"M74 70l45 25H74z\" fill=\"#f1e4c2\"/><path d=\"M250 127l-10 28h24zM278 127l-10 28h24zM306 127l-10 28h24z\" fill=\"#4f7252\"/><path d=\"M188 45c16 8 18 29 18 47h-36c0-18 3-39 18-47z\" fill=\"#7d3027\"/><rect x=\"177\" y=\"90\" width=\"22\" height=\"48\" rx=\"6\" fill=\"#cda75f\"/><ellipse cx=\"188\" cy=\"44\" rx=\"10\" ry=\"14\" fill=\"#ffd785\"/><text x=\"120\" y=\"215\" font-family=\"Georgia\" font-size=\"20\" fill=\"#fff4dc\">Boston Harbor</text></svg>`,\npeople:`<svg viewBox=\"0 0 380 250\"><rect width=\"380\" height=\"250\" rx=\"18\" fill=\"#ead7aa\"/><rect x=\"22\" y=\"22\" width=\"336\" height=\"206\" rx=\"15\" fill=\"#f7ecd0\" stroke=\"#8b6a38\" stroke-width=\"2\"/><g fill=\"#e7cf9d\"><circle cx=\"80\" cy=\"90\" r=\"26\"/><circle cx=\"160\" cy=\"90\" r=\"26\"/><circle cx=\"240\" cy=\"90\" r=\"26\"/><circle cx=\"320\" cy=\"90\" r=\"26\"/></g><g fill=\"#617689\"><path d=\"M40 175c8-40 28-58 40-58s34 16 40 58\"/><path d=\"M120 175c8-40 28-58 40-58s34 16 40 58\"/><path d=\"M200 175c8-40 28-58 40-58s34 16 40 58\"/><path d=\"M280 175c8-40 28-58 40-58s34 16 40 58\"/></g><text x=\"106\" y=\"210\" font-family=\"Georgia\" font-size=\"23\" fill=\"#6b4a26\">Voices of Liberty</text></svg>`,\ndeclaration:`<svg viewBox=\"0 0 380 250\"><rect width=\"380\" height=\"250\" rx=\"18\" fill=\"#ead7aa\"/><rect x=\"48\" y=\"22\" width=\"245\" height=\"202\" rx=\"14\" fill=\"#f8eed8\" stroke=\"#8b6a38\" stroke-width=\"2\"/><text x=\"80\" y=\"55\" font-family=\"Georgia\" font-size=\"20\" fill=\"#7d3027\">IN CONGRESS</text>${[78,96,114,132,150,168].map(y=>`<line x1=\"78\" y1=\"${y}\" x2=\"260\" y2=\"${y}\" stroke=\"#8b6a38\" stroke-width=\"2\"/>`).join(\"\")}<path d=\"M310 62c20 8 34 25 38 45-19 8-40 8-58 0 4-22 7-34 20-45z\" fill=\"#7d3027\"/><path d=\"M306 145c11-6 33-21 38-44-17 3-35 16-45 31-9 13-20 25-30 34l-12-4 8-13c15-2 27-3 41-4z\" fill=\"#5b3c20\"/><circle cx=\"312\" cy=\"190\" r=\"23\" fill=\"#a53f33\"/></svg>`,\nbattle:`<svg viewBox=\"0 0 380 250\"><rect width=\"380\" height=\"250\" rx=\"18\" fill=\"#ead7aa\"/><rect y=\"150\" width=\"380\" height=\"100\" fill=\"#7e9278\"/><path d=\"M0 184c45-35 85-30 120 0 42-28 80-26 120 0 42-32 90-25 140 8v58H0z\" fill=\"#65765d\"/><circle cx=\"86\" cy=\"142\" r=\"20\" fill=\"#474747\"/><rect x=\"95\" y=\"134\" width=\"58\" height=\"15\" rx=\"7\" fill=\"#5b432e\"/><circle cx=\"292\" cy=\"142\" r=\"20\" fill=\"#474747\"/><rect x=\"235\" y=\"134\" width=\"58\" height=\"15\" rx=\"7\" fill=\"#5b432e\"/><path d=\"M188 48v72\" stroke=\"#5b432e\" stroke-width=\"4\"/><path d=\"M188 48l55 20-55 20z\" fill=\"#7d3027\"/><text x=\"75\" y=\"225\" font-family=\"Georgia\" font-size=\"18\" fill=\"#fff4dc\">Saratoga • Valley Forge • Yorktown</text></svg>`,\ntreaty:`<svg viewBox=\"0 0 380 250\"><rect width=\"380\" height=\"250\" rx=\"18\" fill=\"#ead7aa\"/><rect x=\"52\" y=\"25\" width=\"276\" height=\"195\" rx=\"14\" fill=\"#f8eed8\" stroke=\"#8b6a38\" stroke-width=\"2\"/><text x=\"104\" y=\"58\" font-family=\"Georgia\" font-size=\"20\" fill=\"#7d3027\">Treaty of Paris, 1783</text>${[82,100,118,136,154].map(y=>`<line x1=\"88\" y1=\"${y}\" x2=\"294\" y2=\"${y}\" stroke=\"#8b6a38\" stroke-width=\"2\"/>`).join(\"\")}<path d=\"M138 188c20-8 34-19 48-34 8-9 22-9 31 0 8 8 7 18-1 25-18 17-37 26-52 33-14 6-22-8-26-24z\" fill=\"#d4b176\"/><path d=\"M242 188c-20-8-34-19-48-34-8-9-22-9-31 0-8 8-7 18 1 25 18 17 37 26 52 33 14 6 22-8 26-24z\" fill=\"#c69d67\"/><circle cx=\"290\" cy=\"188\" r=\"20\" fill=\"#a53f33\"/></svg>`\n};return s[type]||s.map\n}\nfunction portrait(i){\n  const cols=[[\"#5c7484\",\"#2f4656\"],[\"#7b6753\",\"#4c3d31\"],[\"#6e5f7f\",\"#423650\"],[\"#758772\",\"#42503f\"]];\n  const c=cols[i%cols.length];\n  return `<svg viewBox=\"0 0 220 110\"><rect width=\"220\" height=\"110\" fill=\"${c[0]}\"/><circle cx=\"110\" cy=\"38\" r=\"23\" fill=\"#e8d0a1\"/><path d=\"M67 110c8-34 28-50 43-50s38 13 45 50\" fill=\"#e8d0a1\"/><rect x=\"20\" y=\"92\" width=\"180\" height=\"8\" rx=\"4\" fill=\"${c[1]}\" opacity=\".5\"/></svg>`\n}\nfunction render(){\n  coins.textContent=state.coins;rank.textContent=window.rank();artifactCount.textContent=state.artifacts.length;overall.textContent=Math.round(MISSIONS.filter(m=>state.completed[m.id]).length/MISSIONS.length*100)+\"%\";\n  music.textContent=musicOn?\"🎵 Music: On\":\"🎵 Music: Off\";\n  missionList.innerHTML=MISSIONS.map(m=>{\n    const open=m.id<=state.unlocked,done=!!state.completed[m.id];\n    return `<div class=\"mission ${selected===m.id?\"selected\":\"\"} ${done?\"complete\":\"\"} ${!open?\"locked\":\"\"}\" data-m=\"${m.id}\">\n      <div class=\"mission-top\"><div class=\"num\">${m.id}</div><div class=\"mission-title\"><strong>${m.title}</strong><span>${m.sub}</span></div><div class=\"tag\">${done?\"Complete\":open?\"Open\":\"Locked\"}</div></div>\n      <div class=\"progress\">${answered(m)}/${m.qs.length} questions</div>\n    </div>`\n  }).join(\"\");\n  artifacts.innerHTML=state.artifacts.length?state.artifacts.map(a=>`<div class=\"artifact\">${a}</div>`).join(\"\"):`<span style=\"color:#cfc1a4\">No artifacts yet.</span>`;\n  const m=mission(selected);\n  if(selected>state.unlocked){detail.innerHTML=`<div class=\"block\"><h3>Mission Locked</h3><p>Complete the previous stop first.</p></div>`;return}\n  detail.innerHTML=`\n  <div class=\"hero\">\n    <div class=\"brief\"><div class=\"over\">Mission ${m.id}</div><h2>${m.title}</h2><p><strong>${m.sub}</strong></p>${m.brief.map(x=>`<p>${x}</p>`).join(\"\")}</div>\n    <div class=\"art\">${svg(m.art)}</div>\n  </div>\n  <div class=\"block\"><h3>TEKS Learning Targets</h3><ul class=\"targets\">${m.teks.map(x=>`<li>${x}</li>`).join(\"\")}</ul><div class=\"artifacts\">${m.vocab.map(v=>`<span class=\"chip\">${v}</span>`).join(\"\")}</div></div>\n  ${m.people?`<div class=\"block\"><h3>Important People Gallery</h3><p>Study all 22 figures before beginning the challenge.</p><div class=\"people-grid\">${PEOPLE.map((p,i)=>`<div class=\"person\"><div class=\"portrait\">${portrait(i)}</div><strong>${p[0]}</strong><div class=\"role\">${p[1]}</div><p>${p[2]}</p></div>`).join(\"\")}</div></div>`:\"\"}\n  <div class=\"block\"><h3>TEKS-Based Challenges</h3>${m.qs.map((q,qi)=>{\n    const k=akey(m.id,qi),chosen=state.answers[k],done=chosen!==undefined;\n    return `<div class=\"q-card\"><div class=\"q-head\"><strong>${qi+1}. ${q[0]}</strong><span class=\"focus\">${q[4]}</span></div><div class=\"choices\">${q[1].map((c,ci)=>{\n      let cl=\"choice\";if(done){if(ci===q[2])cl+=\" correct\";else if(ci===chosen)cl+=\" wrong\";else cl+=\" dim\"}\n      return `<button class=\"${cl}\" data-a=\"${m.id}|${qi}|${ci}\" ${done?\"disabled\":\"\"}>${c}</button>`\n    }).join(\"\")}</div>${done?`<div class=\"feedback\"><strong>${chosen===q[2]?\"Correct!\":\"Not quite.\"}</strong> ${q[3]}</div>`:\"\"}</div>`\n  }).join(\"\")}</div>\n  ${state.completed[m.id]?`<div class=\"block complete-box\"><h3>Mission Complete</h3><p>You earned the <strong>${m.artifact}</strong>.</p>${m.id<MISSIONS.length?`<button class=\"primary\" data-next=\"${m.id+1}\">Go to Next Mission</button>`:\"\"}</div>`:\"\"}\n  ${completeAll()?`<div class=\"block final-box\"><h3>🏆 Keeper of Liberty Badge Unlocked</h3><p>You completed every mission and earned the rank <strong>${rank()}</strong>.</p></div>`:\"\"}`\n}\ndocument.addEventListener(\"click\",e=>{\n  const mm=e.target.closest(\"[data-m]\");if(mm){const id=+mm.dataset.m;if(id<=state.unlocked){selected=id;render();scrollTo({top:0,behavior:\"smooth\"})}}\n  const aa=e.target.closest(\"[data-a]\");if(aa){const [m,q,c]=aa.dataset.a.split(\"|\").map(Number);answer(m,q,c)}\n  const nn=e.target.closest(\"[data-next]\");if(nn){selected=+nn.dataset.next;render();scrollTo({top:0,behavior:\"smooth\"})}\n});\nbegin.onclick=()=>{state.started=true;start.classList.add(\"hidden\");app.classList.remove(\"hidden\");save();startMusic()}\nreset.onclick=()=>{if(confirm(\"Reset all Unit 2 progress?\")){state={...BASE,started:true,completed:{},answers:{},artifacts:[]};selected=1;save()}}\nmusic.onclick=()=>musicOn?stopMusic():startMusic();\npreview.onclick=()=>musicOn?stopMusic():startMusic();\n\nfunction tone(freq,start,dur,vol=.035,type=\"triangle\"){\n  const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.setValueAtTime(freq,start);\n  g.gain.setValueAtTime(.0001,start);g.gain.exponentialRampToValueAtTime(vol,start+.04);g.gain.exponentialRampToValueAtTime(.0001,start+dur);\n  o.connect(g);g.connect(audioCtx.destination);o.start(start);o.stop(start+dur+.05)\n}\nfunction schedule(){\n  if(!audioCtx)return;const notes=[293.66,329.63,369.99,392,440,392,369.99,329.63,293.66,329.63,392,440,392,369.99,329.63,293.66];\n  const t=audioCtx.currentTime+.05,b=.38;notes.forEach((n,i)=>{tone(n,t+i*b,.32,.025);if(i%4===0)tone(n/2,t+i*b,.75,.016,\"sine\")})\n}\nfunction startMusic(){\n  try{if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state===\"suspended\")audioCtx.resume();schedule();clearInterval(timer);timer=setInterval(schedule,6100);musicOn=true;render();toast(\"Music on.\")}catch(e){toast(\"Tap the music button again.\")}\n}\nfunction stopMusic(){clearInterval(timer);timer=null;musicOn=false;render();toast(\"Music off.\")}\nif(state.started){start.classList.add(\"hidden\");app.classList.remove(\"hidden\")}\nrender();\n</script>\n</body>\n</html>\n";
 const TOTAL_QUESTIONS=CHAPTERS.reduce((n,c)=>n+c.questions.length,0);
 const saved=JSON.parse(localStorage.getItem("aqV3")||"null");
-const state=saved||{
- coins:0,role:"",colony:"",completed:0,artifacts:[],journal:[],
- chapterScores:{},answered:{},currentChapter:0,currentQuestion:0,music:false
-};
-let selectedRole=state.role;
-let currentAnswered=false;
-let audioContext=null;
+const state=saved||{coins:0,role:"",colony:"",completed:0,artifacts:[],journal:[],chapterScores:{},answered:{},currentChapter:0,currentQuestion:0,music:false};
+let selectedRole=state.role,currentAnswered=false,audioContext=null;
 
 function save(){localStorage.setItem("aqV3",JSON.stringify(state))}
-function beginJourney(){startScreen.classList.add("hidden");app.classList.remove("hidden");render()}
+function beginJourney(){startScreen.classList.add("hidden");hub.classList.remove("hidden")}
+function openUnit1(){hub.classList.add("hidden");unit1App.classList.remove("hidden");render()}
+function backToHub(){unit1App.classList.add("hidden");hub.classList.remove("hidden")}
+function openUnit2(){hub.classList.add("hidden");unit2Screen.classList.remove("hidden");if(!unit2Frame.srcdoc)unit2Frame.srcdoc=UNIT2_HTML}
+function closeUnit2(){unit2Screen.classList.add("hidden");hub.classList.remove("hidden")}
 function getRank(){return state.coins>=330?"Master Historian":state.coins>=250?"Expedition Scholar":state.coins>=170?"Evidence Keeper":state.coins>=80?"Archive Scout":"Apprentice"}
 function render(){
- coinCount.textContent=state.coins;rankName.textContent=getRank();unitProgress.textContent=state.completed>=6?"Complete":state.completed+"/6";
- mapFill.style.width=Math.min(state.completed/6*100,100)+"%";
- journey.innerHTML=CHAPTERS.map((c,i)=>{
-   const status=i<state.completed?"Complete":i===state.completed?"Current Stop":"Locked";
-   const cls=i<state.completed?"complete":i===state.completed?"current":"locked";
-   return `<article class="node ${cls}" onclick="openChapter(${i})">
-     <span class="node-count">${c.questions.length} challenges</span>
-     <div class="icon">${c.icon}</div><h4>${i+1}. ${c.title}</h4>
-     <p>${c.intro.split(".")[0]}.</p><span class="node-status">${status}</span>
-   </article>`;
- }).join("");
- continueButton.textContent=state.completed===0?"Begin Unit I":state.completed<6?`Continue at Stop ${state.completed+1}`:"View Unit Completion";
+coinCount.textContent=state.coins;rankName.textContent=getRank();unitProgress.textContent=state.completed>=6?"Complete":state.completed+"/6";mapFill.style.width=Math.min(state.completed/6*100,100)+"%";
+journey.innerHTML=CHAPTERS.map((c,i)=>{const status=i<state.completed?"Complete":i===state.completed?"Current Stop":"Locked",cls=i<state.completed?"complete":i===state.completed?"current":"locked";return `<article class="node ${cls}" onclick="openChapter(${i})"><span class="node-count">${c.questions.length} challenges</span><div class="icon">${c.icon}</div><h4>${i+1}. ${c.title}</h4><p>${c.intro.split(".")[0]}.</p><span class="node-status">${status}</span></article>`}).join("");
+continueButton.textContent=state.completed===0?"Begin Unit I":state.completed<6?`Continue at Stop ${state.completed+1}`:"View Unit Completion";
 }
-function continueFromMap(){
- if(!state.role||!state.colony){openSetup();return}
- if(state.completed>=6){showUnitComplete();return}
- openChapter(state.completed)
-}
-function openSetup(){
- colonyInput.value=state.colony;
- document.querySelectorAll(".role").forEach(b=>b.classList.toggle("selected",b.dataset.role===state.role));
- showModal("setupModal")
-}
-function selectRole(btn){
- document.querySelectorAll(".role").forEach(b=>b.classList.remove("selected"));
- btn.classList.add("selected");selectedRole=btn.dataset.role
-}
-function saveSetup(){
- const name=colonyInput.value.trim();
- if(!name){alert("Name your colony before beginning.");return}
- if(!selectedRole){alert("Choose a role before beginning.");return}
- state.colony=name;state.role=selectedRole;save();closeModal("setupModal");openChapter(0)
-}
-function openChapter(index){
- if(index>state.completed)return;
- if(!state.role||!state.colony){openSetup();return}
- state.currentChapter=index;
- if(index<state.completed){state.currentQuestion=0}else{state.currentQuestion=Math.min(state.currentQuestion,CHAPTERS[index].questions.length-1)}
- currentAnswered=false;save();showQuestionScreen();showModal("questModal")
-}
-function showQuestionScreen(){
- questionScreen.classList.remove("hidden");chapterCompleteScreen.classList.add("hidden");unitCompleteScreen.classList.add("hidden");renderQuestion()
-}
-function renderQuestion(){
- const c=CHAPTERS[state.currentChapter],q=c.questions[state.currentQuestion],key=`${state.currentChapter}-${state.currentQuestion}`;
- currentAnswered=false;
- chapterEyebrow.textContent=`Stop ${state.currentChapter+1} of 6 · ${state.currentQuestion+1} of ${c.questions.length}`;
- chapterTitle.textContent=c.title;metaColony.textContent=`Colony: ${state.colony}`;metaRole.textContent=`Role: ${state.role}`;metaScore.textContent=`Coins: ${state.coins}`;
- questionFill.style.width=((state.currentQuestion+1)/c.questions.length*100)+"%";
- const roleFlavor={
-  Navigator:"Read the evidence carefully and chart the strongest course.",
-  Builder:"Study how resources, labor, and planning shape survival.",
-  Diplomat:"Consider power, perspective, and the consequences of each choice."
- };
- chapterIntro.innerHTML=`<strong>${state.role} Briefing:</strong> ${roleFlavor[state.role]}<br><br>${c.intro}`;
- questionNumber.textContent=`Challenge ${state.currentQuestion+1} of ${c.questions.length}`;
- questionPrompt.textContent=q[0];
- answerChoices.innerHTML=q[1].map((choice,i)=>`<button class="choice" onclick="answerQuestion(${i})">${String.fromCharCode(65+i)}. ${choice}</button>`).join("");
- answerFeedback.classList.add("hidden");
- if(state.answered[key]!==undefined){
-   revealAnswer(state.answered[key],true)
- }
-}
-function answerQuestion(index){
- if(currentAnswered)return;
- const key=`${state.currentChapter}-${state.currentQuestion}`;
- state.answered[key]=index;revealAnswer(index,false);save()
-}
-function revealAnswer(index,review){
- currentAnswered=true;
- const c=CHAPTERS[state.currentChapter],q=c.questions[state.currentQuestion],correct=q[2],buttons=[...answerChoices.children];
- buttons.forEach((b,i)=>{b.disabled=true;if(i===correct)b.classList.add("correct");else if(i===index)b.classList.add("incorrect")});
- const isCorrect=index===correct,key=`score-${state.currentChapter}-${state.currentQuestion}`;
- if(!review&&!state.answered[key]){
-   const earned=isCorrect?10:3;state.coins+=earned;state.answered[key]=true;
-   if(!state.chapterScores[state.currentChapter])state.chapterScores[state.currentChapter]={correct:0,coins:0};
-   if(isCorrect)state.chapterScores[state.currentChapter].correct++;
-   state.chapterScores[state.currentChapter].coins+=earned;
- }
- answerResult.innerHTML=isCorrect?`<strong>Correct.</strong> ${q[3]}`:`<strong>Not quite.</strong> The strongest answer is <em>${q[1][correct]}</em>. ${q[3]}`;
- historianNote.innerHTML=`<strong>Historian’s Note:</strong> ${q[4]}`;
- nextQuestionButton.textContent=state.currentQuestion===c.questions.length-1?"Complete This Map Stop":"Next Challenge";
- answerFeedback.classList.remove("hidden");metaScore.textContent=`Coins: ${state.coins}`;save();render()
-}
-function nextQuestion(){
- const c=CHAPTERS[state.currentChapter];
- if(state.currentQuestion<c.questions.length-1){state.currentQuestion++;save();renderQuestion();return}
- completeChapter()
-}
-function completeChapter(){
- const c=CHAPTERS[state.currentChapter],score=state.chapterScores[state.currentChapter]||{correct:0,coins:0};
- if(state.currentChapter===state.completed){
-   state.completed++;
-   if(!state.artifacts.includes(c.artifact))state.artifacts.push(c.artifact);
-   state.journal.unshift({title:c.title,text:`Completed ${c.questions.length} challenges and recovered the ${c.artifact}.`,date:new Date().toLocaleDateString()});
-   state.currentQuestion=0;
- }
- save();render();
- if(state.completed>=6){showUnitComplete();return}
- questionScreen.classList.add("hidden");chapterCompleteScreen.classList.remove("hidden");
- chapterCompleteTitle.textContent=`${c.title} Complete`;
- chapterSeal.textContent=c.icon;chapterCompleteText.textContent=`${state.colony} has completed this expedition stop and unlocked the next chapter.`;
- chapterCorrect.textContent=`${score.correct}/${c.questions.length}`;chapterCoins.textContent=score.coins;chapterArtifact.textContent=c.artifact
-}
+function continueFromMap(){if(!state.role||!state.colony){openSetup();return}if(state.completed>=6){showUnitComplete();return}openChapter(state.completed)}
+function openSetup(){colonyInput.value=state.colony;document.querySelectorAll(".role").forEach(b=>b.classList.toggle("selected",b.dataset.role===state.role));showModal("setupModal")}
+function selectRole(btn){document.querySelectorAll(".role").forEach(b=>b.classList.remove("selected"));btn.classList.add("selected");selectedRole=btn.dataset.role}
+function saveSetup(){const name=colonyInput.value.trim();if(!name){alert("Name your colony before beginning.");return}if(!selectedRole){alert("Choose a role before beginning.");return}state.colony=name;state.role=selectedRole;save();closeModal("setupModal");openChapter(0)}
+function openChapter(index){if(index>state.completed)return;if(!state.role||!state.colony){openSetup();return}state.currentChapter=index;if(index<state.completed)state.currentQuestion=0;else state.currentQuestion=Math.min(state.currentQuestion,CHAPTERS[index].questions.length-1);currentAnswered=false;save();showQuestionScreen();showModal("questModal")}
+function showQuestionScreen(){questionScreen.classList.remove("hidden");chapterCompleteScreen.classList.add("hidden");unitCompleteScreen.classList.add("hidden");renderQuestion()}
+function renderQuestion(){const c=CHAPTERS[state.currentChapter],q=c.questions[state.currentQuestion],key=`${state.currentChapter}-${state.currentQuestion}`;currentAnswered=false;chapterEyebrow.textContent=`Stop ${state.currentChapter+1} of 6 · ${state.currentQuestion+1} of ${c.questions.length}`;chapterTitle.textContent=c.title;metaColony.textContent=`Colony: ${state.colony}`;metaRole.textContent=`Role: ${state.role}`;metaScore.textContent=`Coins: ${state.coins}`;questionFill.style.width=((state.currentQuestion+1)/c.questions.length*100)+"%";const rf={Navigator:"Read the evidence carefully and chart the strongest course.",Builder:"Study how resources, labor, and planning shape survival.",Diplomat:"Consider power, perspective, and the consequences of each choice."};chapterIntro.innerHTML=`<strong>${state.role} Briefing:</strong> ${rf[state.role]}<br><br>${c.intro}`;questionNumber.textContent=`Challenge ${state.currentQuestion+1} of ${c.questions.length}`;questionPrompt.textContent=q[0];answerChoices.innerHTML=q[1].map((choice,i)=>`<button class="choice" onclick="answerQuestion(${i})">${String.fromCharCode(65+i)}. ${choice}</button>`).join("");answerFeedback.classList.add("hidden");if(state.answered[key]!==undefined)revealAnswer(state.answered[key],true)}
+function answerQuestion(index){if(currentAnswered)return;const key=`${state.currentChapter}-${state.currentQuestion}`;state.answered[key]=index;revealAnswer(index,false);save()}
+function revealAnswer(index,review){currentAnswered=true;const c=CHAPTERS[state.currentChapter],q=c.questions[state.currentQuestion],correct=q[2],buttons=[...answerChoices.children],isCorrect=index===correct,scoreKey=`score-${state.currentChapter}-${state.currentQuestion}`;buttons.forEach((b,i)=>{b.disabled=true;if(i===correct)b.classList.add("correct");else if(i===index)b.classList.add("incorrect")});if(!review&&!state.answered[scoreKey]){const earned=isCorrect?10:3;state.coins+=earned;state.answered[scoreKey]=true;if(!state.chapterScores[state.currentChapter])state.chapterScores[state.currentChapter]={correct:0,coins:0};if(isCorrect)state.chapterScores[state.currentChapter].correct++;state.chapterScores[state.currentChapter].coins+=earned}answerResult.innerHTML=isCorrect?`<strong>Correct.</strong> ${q[3]}`:`<strong>Not quite.</strong> The strongest answer is <em>${q[1][correct]}</em>. ${q[3]}`;historianNote.innerHTML=`<strong>Historian’s Note:</strong> ${q[4]}`;nextQuestionButton.textContent=state.currentQuestion===c.questions.length-1?"Complete This Map Stop":"Next Challenge";answerFeedback.classList.remove("hidden");metaScore.textContent=`Coins: ${state.coins}`;save();render()}
+function nextQuestion(){const c=CHAPTERS[state.currentChapter];if(state.currentQuestion<c.questions.length-1){state.currentQuestion++;save();renderQuestion();return}completeChapter()}
+function completeChapter(){const c=CHAPTERS[state.currentChapter],score=state.chapterScores[state.currentChapter]||{correct:0,coins:0};if(state.currentChapter===state.completed){state.completed++;if(!state.artifacts.includes(c.artifact))state.artifacts.push(c.artifact);state.journal.unshift({title:c.title,text:`Completed ${c.questions.length} challenges and recovered the ${c.artifact}.`,date:new Date().toLocaleDateString()});state.currentQuestion=0}save();render();if(state.completed>=6){showUnitComplete();return}questionScreen.classList.add("hidden");chapterCompleteScreen.classList.remove("hidden");chapterCompleteTitle.textContent=`${c.title} Complete`;chapterSeal.textContent=c.icon;chapterCompleteText.textContent=`${state.colony} has completed this expedition stop and unlocked the next chapter.`;chapterCorrect.textContent=`${score.correct}/${c.questions.length}`;chapterCoins.textContent=score.coins;chapterArtifact.textContent=c.artifact}
 function finishChapter(){closeModal("questModal");render();document.querySelector(".map").scrollIntoView({behavior:"smooth"})}
-function showUnitComplete(){
- showModal("questModal");questionScreen.classList.add("hidden");chapterCompleteScreen.classList.add("hidden");unitCompleteScreen.classList.remove("hidden");
- if(!state.artifacts.includes("Founders’ Expedition Badge"))state.artifacts.push("Founders’ Expedition Badge");
- unitCompleteText.innerHTML=`<strong>${escapeHTML(state.colony)}</strong> completed all ${TOTAL_QUESTIONS} challenges. As the expedition’s <strong>${state.role}</strong>, you investigated exploration, exchange, Jamestown, Native-English relations, colonial regions, labor, religion, and self-government.`;
- finalCoins.textContent=state.coins;finalArtifacts.textContent=state.artifacts.length;finalRank.textContent=getRank();save();render()
-}
-function finishUnit(){closeModal("questModal");render();document.querySelector(".map").scrollIntoView({behavior:"smooth"})}
-function openMuseum(){
- museumContents.innerHTML=state.artifacts.length?state.artifacts.map((a,i)=>`<div class="artifact"><strong>${["⚓","🧭","🏕️","🤝","🗺️","📜","🏅"][i%7]} Recovered Artifact:</strong> ${escapeHTML(a)}</div>`).join(""):'<div class="artifact">No artifacts recovered yet.</div>';
- showModal("museumModal")
-}
-function openJournal(){
- journalContents.innerHTML=state.journal.length?state.journal.map(e=>`<div class="journal-entry"><strong>${escapeHTML(e.title)}</strong><br>${escapeHTML(e.text)}<br><small>${escapeHTML(e.date)}</small></div>`).join(""):'<div class="journal-entry">Your journal is empty.</div>';
- showModal("journalModal")
-}
-function resetProgress(){
- if(!confirm("Reset all American Quest progress, coins, artifacts, and journal entries?"))return;
- localStorage.removeItem("aqV3");location.reload()
-}
+function showUnitComplete(){showModal("questModal");questionScreen.classList.add("hidden");chapterCompleteScreen.classList.add("hidden");unitCompleteScreen.classList.remove("hidden");if(!state.artifacts.includes("Founders’ Expedition Badge"))state.artifacts.push("Founders’ Expedition Badge");unitCompleteText.innerHTML=`<strong>${escapeHTML(state.colony)}</strong> completed all ${TOTAL_QUESTIONS} challenges. As the expedition’s <strong>${state.role}</strong>, you investigated exploration, exchange, Jamestown, Native-English relations, colonial regions, labor, religion, and self-government.`;finalCoins.textContent=state.coins;finalArtifacts.textContent=state.artifacts.length;finalRank.textContent=getRank();save();render()}
+function finishUnit(){closeModal("questModal");render()}
+function openMuseum(){museumContents.innerHTML=state.artifacts.length?state.artifacts.map((a,i)=>`<div class="artifact"><strong>${["⚓","🧭","🏕️","🤝","🗺️","📜","🏅"][i%7]} Recovered Artifact:</strong> ${escapeHTML(a)}</div>`).join(""):'<div class="artifact">No artifacts recovered yet.</div>';showModal("museumModal")}
+function openJournal(){journalContents.innerHTML=state.journal.length?state.journal.map(e=>`<div class="journal-entry"><strong>${escapeHTML(e.title)}</strong><br>${escapeHTML(e.text)}<br><small>${escapeHTML(e.date)}</small></div>`).join(""):'<div class="journal-entry">Your journal is empty.</div>';showModal("journalModal")}
+function resetProgress(){if(!confirm("Reset Unit I progress, coins, artifacts, and journal entries?"))return;localStorage.removeItem("aqV3");location.reload()}
 function showModal(id){document.getElementById(id).classList.remove("hidden");document.body.classList.add("locked")}
 function closeModal(id){document.getElementById(id).classList.add("hidden");document.body.classList.remove("locked")}
 function escapeHTML(v){return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-function toggleMusic(){
- if(!audioContext){
-  const A=window.AudioContext||window.webkitAudioContext;audioContext=new A();
-  const master=audioContext.createGain();master.gain.value=.025;master.connect(audioContext.destination);
-  [196,293.66,392].forEach((f,i)=>{const o=audioContext.createOscillator(),g=audioContext.createGain();o.type=i===1?"triangle":"sine";o.frequency.value=f;g.gain.value=i===1?.17:.1;o.connect(g);g.connect(master);o.start()})
- }
- if(audioContext.state==="suspended"){audioContext.resume();state.music=true}else if(state.music){audioContext.suspend();state.music=false}else{audioContext.resume();state.music=true}
- musicButton.textContent=state.music?"♫ Music: On":"♫ Music: Off";save()
-}
+function toggleMusic(){if(!audioContext){const A=window.AudioContext||window.webkitAudioContext;audioContext=new A();const master=audioContext.createGain();master.gain.value=.025;master.connect(audioContext.destination);[196,293.66,392].forEach((f,i)=>{const o=audioContext.createOscillator(),g=audioContext.createGain();o.type=i===1?"triangle":"sine";o.frequency.value=f;g.gain.value=i===1?.17:.1;o.connect(g);g.connect(master);o.start()})}if(audioContext.state==="suspended"){audioContext.resume();state.music=true}else if(state.music){audioContext.suspend();state.music=false}else{audioContext.resume();state.music=true}musicButton.textContent=state.music?"♫ Music: On":"♫ Music: Off";save()}
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.querySelectorAll(".modal").forEach(m=>m.classList.add("hidden"));document.body.classList.remove("locked")}});
 render();
 </script>
