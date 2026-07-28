@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#14130f">
+  <title>American Quest — Unit II: Revolution</title>
+  <style>
+    :root{
+      --ink:#241d14;
+      --cream:#f7edcf;
+      --paper:#e8d1a2;
+      --paper-light:#f7e9c5;
+      --paper-dark:#b78d50;
+      --gold:#c59a45;
+      --gold-light:#e1c77f;
+      --red:#7d2f2c;
+      --blue:#334f63;
+      --forest:#33483c;
+      --night:#151712;
+      --shadow:rgba(0,0,0,.52);
+      --success:#3f6849;
+      --danger:#8a3d35;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--cream);
+      font-family:Georgia,"Times New Roman",serif;
+      background:
+        linear-gradient(rgba(12,13,10,.72),rgba(12,13,10,.92)),
+        radial-gradient(circle at 20% 10%,#5d5543 0%,#2a3129 38%,#151712 78%);
+      background-attachment:fixed;
+      overflow-x:hidden;
+    }
+
+    button,input{font:inherit}
+    button{cursor:pointer}
+    .hidden{display:none!important}
+
+    .grain{
+      position:fixed; inset:0; pointer-events:none; opacity:.13; z-index:99;
+      background-image:
+        repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 4px),
+        repeating-linear-gradient(90deg,rgba(0,0,0,.04) 0 1px,transparent 1px 5px);
+      mix-blend-mode:overlay;
+    }
+
+    .start-screen{
+      position:fixed; inset:0; z-index:50;
+      display:grid; place-items:center; padding:24px;
+      background:
+        linear-gradient(rgba(11,12,9,.54),rgba(11,12,9,.88)),
+        radial-gradient(circle at 50% 22%,rgba(205,171,101,.22),transparent 35%),
+        linear-gradient(135deg,#4f4939,#172019 58%,#0e100d);
+      overflow:hidden;
+    }
+    .start-screen::before,
+    .start-screen::after{
+      content:"";
+      position:absolute; border:1px solid rgba(225,199,127,.18);
+      width:74vw; height:74vw; max-width:760px; max-height:760px;
+      border-radius:50%; animation:spin 38s linear infinite;
+    }
+    .start-screen::after{
+      width:56vw;height:56vw;animation-direction:reverse;animation-duration:26s;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .start-card{
+      width:min(760px,94vw);
+      text-align:center;
+      position:relative; z-index:2;
+      padding:34px 24px 30px;
+      border:1px solid rgba(225,199,127,.38);
+      border-radius:24px;
+      background:linear-gradient(rgba(27,24,18,.82),rgba(19,20,16,.94));
+      box-shadow:0 28px 80px rgba(0,0,0,.65),inset 0 0 60px rgba(197,154,69,.06);
+      backdrop-filter:blur(7px);
+    }
+    .eyebrow{
+      letter-spacing:.22em;text-transform:uppercase;font-size:.76rem;color:var(--gold-light);
+    }
+    .start-card h1{
+      margin:10px 0 3px;font-size:clamp(2.5rem,9vw,5.8rem);
+      line-height:.92;text-shadow:0 4px 20px #000;
+    }
+    .start-card h2{
+      margin:12px 0 18px;font-weight:normal;font-size:clamp(1.15rem,4.4vw,2rem);
+      color:#e6d39d;
+    }
+    .start-card p{max-width:580px;margin:0 auto 22px;line-height:1.65;color:#eee3c6}
+    .seal{
+      width:92px;height:92px;border-radius:50%;margin:0 auto 18px;
+      display:grid;place-items:center;
+      background:radial-gradient(circle,#d7b664 0 20%,#a77b2e 21% 55%,#5d431d 56% 100%);
+      border:3px double #ead294;box-shadow:0 6px 22px #000;
+      font-size:2.5rem; animation:pulse 2.7s ease-in-out infinite;
+    }
+    @keyframes pulse{50%{transform:scale(1.045);box-shadow:0 8px 30px rgba(225,199,127,.22)}}
+
+    .primary,.secondary,.choice,.person-card,.mission-card{
+      border:0;border-radius:14px;transition:.22s ease;
+    }
+    .primary{
+      padding:14px 24px;background:linear-gradient(#d7b65e,#9f7429);
+      color:#1f170c;font-weight:bold;box-shadow:0 6px 0 #624719,0 12px 24px rgba(0,0,0,.34);
+    }
+    .primary:hover{transform:translateY(-2px);filter:brightness(1.08)}
+    .primary:active{transform:translateY(3px);box-shadow:0 3px 0 #624719}
+    .secondary{
+      padding:10px 14px;color:var(--cream);background:#2c332c;border:1px solid #66705f;
+    }
+
+    header{
+      position:sticky;top:0;z-index:20;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:11px 14px;
+      background:rgba(17,18,14,.94);border-bottom:1px solid rgba(225,199,127,.28);
+      backdrop-filter:blur(10px);
+    }
+    .brand{display:flex;gap:10px;align-items:center}
+    .brand-mark{
+      width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
+      background:#a6782c;border:1px solid #e1c77f;color:#1b150b;font-weight:bold;
+    }
+    .brand strong{display:block}
+    .brand small{color:#cdbf9c}
+    .header-actions{display:flex;gap:8px;align-items:center}
+    .sound-btn{min-width:44px}
+
+    .progress-wrap{
+      background:#0f100d;padding:8px 14px 10px;border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .progress-line{
+      height:9px;border-radius:99px;background:#35362e;overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+    }
+    #progressBar{
+      height:100%;width:0;background:linear-gradient(90deg,#8f6727,#e1c77f);
+      transition:width .5s ease;
+    }
+    .progress-copy{display:flex;justify-content:space-between;font-size:.74rem;color:#cbbf9e;margin-top:5px}
+
+    main{width:min(1120px,94vw);margin:0 auto;padding:28px 0 80px}
+
+    .hero{
+      display:grid;grid-template-columns:1.25fr .75fr;gap:20px;align-items:center;
+      padding:24px;border:1px solid rgba(225,199,127,.25);border-radius:22px;
+      background:
+        linear-gradient(120deg,rgba(71,49,29,.82),rgba(22,26,21,.92)),
+        radial-gradient(circle at 80% 10%,rgba(197,154,69,.18),transparent 28%);
+      box-shadow:0 18px 50px rgba(0,0,0,.34);
+    }
+    .hero h1{font-size:clamp(2rem,6vw,4rem);margin:6px 0}
+    .hero p{line-height:1.65;color:#e6dcc2}
+    .hero-art{
+      min-height:260px;border-radius:18px;position:relative;overflow:hidden;
+      background:
+        linear-gradient(rgba(16,18,15,.2),rgba(16,18,15,.76)),
+        linear-gradient(145deg,#7c6650,#31463f 55%,#1a211d);
+      border:1px solid rgba(225,199,127,.25);
+    }
+    .hero-art .moon{
+      position:absolute;width:86px;height:86px;border-radius:50%;right:28px;top:23px;
+      background:#e8d59d;box-shadow:0 0 45px rgba(232,213,157,.36);
+    }
+    .hero-art .hill{
+      position:absolute;left:-8%;right:-8%;bottom:-22%;height:65%;
+      background:#151b17;border-radius:50% 50% 0 0;
+    }
+    .hero-art .flag{
+      position:absolute;left:43%;bottom:22%;width:8px;height:128px;background:#2a2116;
+      transform:rotate(-4deg);
+    }
+    .hero-art .flag::before{
+      content:"";position:absolute;left:8px;top:7px;width:104px;height:58px;
+      background:
+        linear-gradient(#7e2f2b 0 14%,#eee0bd 14% 28%,#7e2f2b 28% 42%,#eee0bd 42% 56%,#7e2f2b 56% 70%,#eee0bd 70% 84%,#7e2f2b 84%);
+      clip-path:polygon(0 0,100% 10%,90% 88%,0 100%);
+      animation:wave 2.2s ease-in-out infinite alternate;
+      transform-origin:left center;
+    }
+    @keyframes wave{to{transform:skewY(4deg) scaleX(.96)}}
+    .silhouette{
+      position:absolute;bottom:8%;width:16px;height:58px;background:#10130f;border-radius:8px 8px 2px 2px;
+    }
+    .silhouette::before{content:"";position:absolute;top:-14px;left:1px;width:14px;height:14px;border-radius:50%;background:#10130f}
+    .s1{left:26%}.s2{left:34%;height:67px}.s3{left:62%}.s4{left:70%;height:63px}
+
+    .stats{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0 24px;
+    }
+    .stat{
+      padding:14px;border-radius:14px;text-align:center;background:rgba(28,30,24,.82);
+      border:1px solid rgba(225,199,127,.18);
+    }
+    .stat strong{display:block;font-size:1.4rem;color:var(--gold-light)}
+    .stat span{font-size:.76rem;color:#d5c9aa}
+
+    .section-title{margin:32px 0 14px}
+    .section-title h2{margin:0;font-size:clamp(1.65rem,4vw,2.5rem)}
+    .section-title p{margin:6px 0;color:#d5c9aa}
+
+    .mission-grid{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+    }
+    .mission-card{
+      text-align:left;padding:18px;color:var(--cream);
+      background:linear-gradient(145deg,rgba(61,54,41,.96),rgba(24,27,22,.96));
+      border:1px solid rgba(225,199,127,.22);
+      box-shadow:0 10px 26px rgba(0,0,0,.26);
+      position:relative;overflow:hidden;
+    }
+    .mission-card::after{
+      content:"";position:absolute;inset:auto -30% -70% 25%;height:130px;
+      background:radial-gradient(circle,rgba(197,154,69,.15),transparent 65%);
+    }
+    .mission-card:hover{transform:translateY(-4px);border-color:rgba(225,199,127,.56)}
+    .mission-card.done{outline:2px solid rgba(78,128,89,.72)}
+    .mission-num{font-size:.74rem;letter-spacing:.16em;color:var(--gold-light);text-transform:uppercase}
+    .mission-card h3{margin:8px 0 7px;font-size:1.25rem}
+    .mission-card p{margin:0;color:#d8cfb8;line-height:1.45;font-size:.9rem}
+    .card-foot{display:flex;justify-content:space-between;margin-top:15px;font-size:.76rem;color:#bdb08f}
+
+    .panel{
+      margin-top:18px;padding:20px;border-radius:20px;
+      background:linear-gradient(rgba(232,209,162,.98),rgba(207,177,120,.98));
+      color:var(--ink);border:1px solid #ebd39e;box-shadow:0 18px 55px rgba(0,0,0,.42);
+    }
+    .panel-top{display:flex;justify-content:space-between;gap:12px;align-items:start}
+    .panel h2{margin:0 0 8px}
+    .panel p{line-height:1.58}
+    .close{background:#3c2d1e;color:#f7edcf;border:0;border-radius:10px;padding:8px 11px}
+    .lesson-box{
+      background:rgba(255,249,231,.64);border-left:5px solid #76562b;
+      padding:14px;border-radius:10px;margin:13px 0;
+    }
+    .lesson-box h3{margin:0 0 7px}
+    .lesson-box ul{padding-left:20px;line-height:1.5}
+
+    .question{
+      margin-top:16px;padding:15px;border-radius:14px;background:rgba(255,250,235,.72);
+      border:1px solid rgba(73,50,24,.24);
+    }
+    .question h4{margin:0 0 12px;font-size:1rem}
+    .choices{display:grid;gap:8px}
+    .choice{
+      text-align:left;padding:11px 12px;background:#f7edcf;color:#2b2115;
+      border:1px solid #a8874d;
+    }
+    .choice:hover{background:#fff8e7;transform:translateX(3px)}
+    .choice.correct{background:#cde1cc;border-color:#3f6849}
+    .choice.wrong{background:#ecc8bf;border-color:#8a3d35}
+    .feedback{font-weight:bold;margin:8px 0 0;min-height:1.2em}
+
+    .people-grid{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+    }
+    .person-card{
+      padding:15px;text-align:left;color:var(--cream);
+      background:linear-gradient(150deg,#463e31,#20241e);
+      border:1px solid rgba(225,199,127,.23);
+      min-height:155px;
+    }
+    .person-card:hover{transform:translateY(-3px);border-color:#d3b66e}
+    .portrait{
+      width:54px;height:54px;border-radius:50%;display:grid;place-items:center;
+      background:linear-gradient(#d7c08b,#8c7046);color:#241d14;font-size:1.45rem;
+      border:2px solid #ead49d;margin-bottom:10px;
+    }
+    .person-card h3{font-size:1rem;margin:0 0 4px}
+    .person-card p{font-size:.79rem;line-height:1.4;color:#d8cfb8;margin:0}
+    .tag{
+      display:inline-block;margin-top:9px;padding:4px 7px;border-radius:99px;
+      background:#7d2f2c;font-size:.67rem;
+    }
+
+    .timeline{
+      position:relative;margin-top:15px;padding-left:25px;
+    }
+    .timeline::before{
+      content:"";position:absolute;left:7px;top:0;bottom:0;width:2px;background:#8a682f;
+    }
+    .event{position:relative;margin:0 0 18px;padding:12px 14px;background:rgba(255,249,231,.65);border-radius:12px}
+    .event::before{
+      content:"";position:absolute;left:-24px;top:16px;width:12px;height:12px;border-radius:50%;
+      background:#7d2f2c;border:2px solid #ead49d;
+    }
+    .event strong{color:#6e2b28}
+
+    .artifact-shelf{
+      display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:14px;
+    }
+    .artifact{
+      min-height:112px;border-radius:13px;padding:12px;text-align:center;
+      background:rgba(20,22,18,.86);border:1px solid rgba(225,199,127,.2);
+      display:grid;place-items:center;
+    }
+    .artifact.locked{filter:grayscale(1);opacity:.45}
+    .artifact-icon{font-size:2rem}
+    .artifact span{font-size:.74rem;color:#d9cba8}
+
+    .finale{
+      margin-top:34px;padding:25px;text-align:center;border-radius:22px;
+      background:linear-gradient(135deg,rgba(124,47,44,.82),rgba(35,42,35,.94));
+      border:1px solid rgba(225,199,127,.28);
+    }
+    .badge{
+      width:120px;height:120px;border-radius:50%;margin:0 auto 14px;
+      display:grid;place-items:center;font-size:3rem;
+      background:radial-gradient(circle,#e6cf8c 0 24%,#b58937 25% 57%,#60451d 58%);
+      border:4px double #f0dda5;box-shadow:0 12px 30px rgba(0,0,0,.45);
+    }
+
+    footer{text-align:center;color:#aa9e80;padding:30px 12px;font-size:.8rem}
+
+    .toast{
+      position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);
+      background:#171914;color:#f7edcf;padding:12px 18px;border-radius:99px;
+      border:1px solid #d1b56e;z-index:80;transition:.35s;
+      box-shadow:0 8px 30px rgba(0,0,0,.5);
+    }
+    .toast.show{transform:translateX(-50%) translateY(0)}
+
+    @media(max-width:850px){
+      .hero{grid-template-columns:1fr}
+      .mission-grid{grid-template-columns:1fr 1fr}
+      .people-grid{grid-template-columns:1fr 1fr}
+      .stats{grid-template-columns:1fr 1fr}
+      .artifact-shelf{grid-template-columns:repeat(3,1fr)}
+    }
+    @media(max-width:560px){
+      header{align-items:flex-start}
+      .brand small{display:none}
+      .mission-grid,.people-grid{grid-template-columns:1fr}
+      .artifact-shelf{grid-template-columns:1fr 1fr}
+      .hero{padding:18px}
+      .panel{padding:16px}
+      .start-card{padding:26px 18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="grain"></div>
+
+  <section class="start-screen" id="startScreen">
+    <div class="start-card">
+      <div class="seal">⚔</div>
+      <div class="eyebrow">American Quest · Unit II</div>
+      <h1>REVOLUTION</h1>
+      <h2>From Protest to Independence</h2>
+      <p>
+        The colonies are divided. Parliament is tightening control. Your mission is to uncover
+        the causes, people, turning points, ideas, and consequences that created a new nation.
+      </p>
+      <button class="primary" id="beginBtn">Begin the Revolution</button>
+    </div>
+  </section>
+
+  <header>
+    <div class="brand">
+      <div class="brand-mark">AQ</div>
+      <div><strong>American Quest</strong><small>Unit II · American Revolution</small></div>
+    </div>
+    <div class="header-actions">
+      <button class="secondary sound-btn" id="soundBtn" aria-label="Toggle music">♫</button>
+      <button class="secondary" onclick="resetProgress()">Reset</button>
+    </div>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-line"><div id="progressBar"></div></div>
+    <div class="progress-copy"><span id="rankText">Rank: Witness</span><span id="progressText">0% complete</span></div>
+  </div>
+
+  <main>
+    <section class="hero">
+      <div>
+        <div class="eyebrow">1775–1783</div>
+        <h1>A Nation Is Forged</h1>
+        <p>
+          Complete six missions, investigate more than twenty revolutionary figures, master the
+          timeline, and earn the <strong>Liberty Historian Badge</strong>. Every stop combines
+          historical evidence with TEKS-aligned thinking: cause and effect, chronology, government,
+          geography, economics, and the influence of individuals.
+        </p>
+      </div>
+      <div class="hero-art" aria-label="Animated revolutionary landscape">
+        <div class="moon"></div>
+        <div class="hill"></div>
+        <div class="flag"></div>
+        <div class="silhouette s1"></div><div class="silhouette s2"></div>
+        <div class="silhouette s3"></div><div class="silhouette s4"></div>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="stat"><strong>6</strong><span>Major Missions</span></div>
+      <div class="stat"><strong>24</strong><span>Revolutionary Figures</span></div>
+      <div class="stat"><strong>30</strong><span>Knowledge Challenges</span></div>
+      <div class="stat"><strong>1</strong><span>Historian Badge</span></div>
+    </section>
+
+    <div class="section-title">
+      <h2>Mission Map</h2>
+      <p>Open each mission. Read the intelligence report, then answer every challenge.</p>
+    </div>
+
+    <section class="mission-grid" id="missionGrid"></section>
+
+    <section id="missionPanel" class="panel hidden"></section>
+
+    <div class="section-title">
+      <h2>Faces of the Revolution</h2>
+      <p>Tap a figure to reveal why that person mattered.</p>
+    </div>
+    <section class="people-grid" id="peopleGrid"></section>
+
+    <section id="personPanel" class="panel hidden"></section>
+
+    <div class="section-title">
+      <h2>Historian’s Museum</h2>
+      <p>Artifacts unlock as missions are completed.</p>
+    </div>
+    <section class="artifact-shelf" id="artifactShelf"></section>
+
+    <section class="finale">
+      <div class="badge" id="badge">🔒</div>
+      <h2 id="finalTitle">Liberty Historian Badge Locked</h2>
+      <p id="finalCopy">Complete all six missions to prove your mastery of the American Revolution.</p>
+    </section>
+  </main>
+
+  <footer>American Quest · Unit II · Built for historical thinking, curiosity, and courage.</footer>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const missions = [
+      {
+        id:1,
+        title:"The Road to Rebellion",
+        subtitle:"French and Indian War, debt, taxation, protest",
+        artifact:"📜",
+        artifactName:"Protest Broadside",
+        lesson:`
+          <h3>Intelligence Report</h3>
+          <p>The French and Indian War expanded British territory, but it also left Britain deeply in debt.
+          Parliament expected colonists to help pay imperial costs. New taxes and enforcement policies
+          challenged the tradition of colonial self-government.</p>
+          <ul>
+            <li><strong>Proclamation of 1763:</strong> restricted settlement west of the Appalachian Mountains.</li>
+            <li><strong>Stamp Act:</strong> taxed printed materials and inspired organized resistance.</li>
+            <li><strong>Townshend Acts:</strong> taxed imported goods such as glass, paper, paint, lead, and tea.</li>
+            <li><strong>Colonial response:</strong> petitions, boycotts, nonimportation, committees, and protest.</li>
+          </ul>`,
+        questions:[
+          {q:"Which event most directly increased Britain’s debt and encouraged Parliament to tax the colonies?",a:["The Great Awakening","The French and Indian War","The Mayflower Compact","The Salem witch trials"],c:1},
+          {q:"Why did many colonists object to the Stamp Act?",a:["It ended all colonial trade","It taxed land west of the Appalachians","They lacked elected representation in Parliament","It forced colonists to join the British army"],c:2},
+          {q:"Which colonial action used economic pressure against British policy?",a:["Boycotting imported goods","Moving west immediately","Closing colonial assemblies","Joining the French army"],c:0},
+          {q:"The Proclamation of 1763 was intended mainly to—",a:["encourage western settlement","reduce conflict on the frontier","create an independent colonial nation","abolish slavery in the colonies"],c:1},
+          {q:"Which statement best shows cause and effect?",a:["The colonies had coastlines, so Parliament formed militias","British war debt led Parliament to impose new colonial taxes","Colonial assemblies caused the French and Indian War","The Stamp Act caused the Mayflower Compact"],c:1}
+        ]
+      },
+      {
+        id:2,
+        title:"Liberty in the Streets",
+        subtitle:"Boston Massacre, Tea Party, Intolerable Acts",
+        artifact:"🫖",
+        artifactName:"Crushed Tea Crate",
+        lesson:`
+          <h3>Intelligence Report</h3>
+          <p>Tension rose as British troops enforced imperial policy. Patriots used newspapers, engravings,
+          speeches, and public demonstrations to shape opinion.</p>
+          <ul>
+            <li><strong>Boston Massacre:</strong> a deadly confrontation used as Patriot propaganda.</li>
+            <li><strong>Boston Tea Party:</strong> protest against the Tea Act and Parliament’s authority.</li>
+            <li><strong>Intolerable Acts:</strong> punished Massachusetts and united many colonies in opposition.</li>
+            <li><strong>First Continental Congress:</strong> coordinated a colonial response.</li>
+          </ul>`,
+        questions:[
+          {q:"Why was the Boston Massacre important to the Patriot cause?",a:["It immediately ended British rule","It was used to build opposition to British troops","It created the Declaration of Independence","It ended taxation"],c:1},
+          {q:"The Boston Tea Party was primarily a protest against—",a:["religious freedom","the Tea Act and parliamentary authority","western settlement","French military power"],c:1},
+          {q:"What was one major effect of the Intolerable Acts?",a:["Colonial unity increased","The colonies surrendered","France attacked Boston","The Stamp Act returned"],c:0},
+          {q:"Which organization coordinated colonial resistance in 1774?",a:["The Constitutional Convention","The First Continental Congress","The House of Burgesses","The Albany Congress"],c:1},
+          {q:"Paul Revere’s engraving of the Boston Massacre is best understood as—",a:["a neutral scientific record","Patriot propaganda","a British military order","a peace treaty"],c:1}
+        ]
+      },
+      {
+        id:3,
+        title:"The Shot Heard Round the World",
+        subtitle:"Lexington, Concord, militias, Second Congress",
+        artifact:"🔔",
+        artifactName:"Alarm Bell",
+        lesson:`
+          <h3>Intelligence Report</h3>
+          <p>In April 1775, British troops marched toward Concord to seize colonial weapons.
+          Riders warned the countryside. Fighting at Lexington and Concord began the armed conflict.</p>
+          <ul>
+            <li><strong>Minutemen:</strong> colonial militia members prepared to respond quickly.</li>
+            <li><strong>Lexington and Concord:</strong> first battles of the Revolution.</li>
+            <li><strong>Second Continental Congress:</strong> managed the war effort and selected George Washington.</li>
+            <li><strong>Olive Branch Petition:</strong> final colonial attempt at reconciliation with the king.</li>
+          </ul>`,
+        questions:[
+          {q:"What were British troops trying to seize at Concord?",a:["Colonial tax records","Weapons and military supplies","French ships","The Liberty Bell"],c:1},
+          {q:"Why were minutemen important?",a:["They could assemble rapidly for defense","They collected British taxes","They wrote the Constitution","They served only in the British navy"],c:0},
+          {q:"What was a major action of the Second Continental Congress?",a:["Selecting George Washington to lead the army","Approving the Stamp Act","Writing the Mayflower Compact","Ending all colonial government"],c:0},
+          {q:"The Olive Branch Petition showed that—",a:["all colonists already wanted independence","some colonists still hoped for reconciliation","France controlled Congress","Washington opposed the Patriot cause"],c:1},
+          {q:"Lexington and Concord are remembered as—",a:["the final battles of the war","the first military clashes of the Revolution","the location of the Constitution","a British victory that ended resistance"],c:1}
+        ]
+      },
+      {
+        id:4,
+        title:"Ideas Become Independence",
+        subtitle:"Common Sense, natural rights, Declaration",
+        artifact:"🪶",
+        artifactName:"Declaration Quill",
+        lesson:`
+          <h3>Intelligence Report</h3>
+          <p>Political ideas transformed resistance into a movement for independence.
+          Enlightenment principles helped colonists explain why government exists and when it may be changed.</p>
+          <ul>
+            <li><strong>Thomas Paine:</strong> argued in <em>Common Sense</em> that independence was practical and necessary.</li>
+            <li><strong>Natural rights:</strong> life, liberty, and rights that government must protect.</li>
+            <li><strong>Social contract:</strong> government receives authority from the consent of the governed.</li>
+            <li><strong>Declaration of Independence:</strong> listed principles and grievances against King George III.</li>
+          </ul>`,
+        questions:[
+          {q:"What was the central purpose of Thomas Paine’s Common Sense?",a:["Defend monarchy","Encourage independence","Support new British taxes","Promote settlement in Canada"],c:1},
+          {q:"According to the Declaration, government gets its power from—",a:["hereditary kings","the consent of the governed","foreign armies","wealthy merchants only"],c:1},
+          {q:"Which Enlightenment idea appears in the Declaration of Independence?",a:["Divine right of kings","Natural rights","Mercantilism","Salutary neglect"],c:1},
+          {q:"Why did the Declaration include grievances?",a:["To explain why the colonies believed separation was justified","To request a new tax","To invite Britain to write a constitution","To surrender colonial militias"],c:0},
+          {q:"Which person served as the principal author of the Declaration?",a:["Thomas Jefferson","John Burgoyne","Benedict Arnold","Charles Cornwallis"],c:0}
+        ]
+      },
+      {
+        id:5,
+        title:"The War for Independence",
+        subtitle:"Saratoga, Valley Forge, Yorktown, alliances",
+        artifact:"🗡️",
+        artifactName:"Continental Sword",
+        lesson:`
+          <h3>Intelligence Report</h3>
+          <p>The Continental Army faced shortages, defeats, and a powerful empire. Geography,
+          foreign assistance, leadership, and persistence helped turn the war.</p>
+          <ul>
+            <li><strong>Saratoga:</strong> major turning point that encouraged a formal French alliance.</li>
+            <li><strong>Valley Forge:</strong> winter hardship and military training strengthened the army.</li>
+            <li><strong>Frontier and sea:</strong> George Rogers Clark and John Paul Jones expanded the struggle.</li>
+            <li><strong>Yorktown:</strong> American and French forces trapped Cornwallis, leading to the war’s end.</li>
+          </ul>`,
+        questions:[
+          {q:"Why is Saratoga considered a turning point?",a:["It caused Britain to tax tea","It convinced France to openly support the Americans","It ended the Constitution","It gave Britain control of New England"],c:1},
+          {q:"What happened at Valley Forge?",a:["The Declaration was signed","The army endured hardship and improved its training","The British surrendered the entire empire","The French withdrew support"],c:1},
+          {q:"Which geographic factor helped the Patriot cause?",a:["Britain fought close to home","The Atlantic made British supply and communication difficult","The colonies had no coastline","The Appalachians prevented all movement"],c:1},
+          {q:"Who trained Continental soldiers at Valley Forge?",a:["Baron von Steuben","King George III","Thomas Gage","Samuel Adams"],c:0},
+          {q:"The British surrender at Yorktown was made possible largely by—",a:["American and French cooperation","the Stamp Act Congress","Spanish control of Boston","the Proclamation of 1763"],c:0}
+        ]
+      },
+      {
+        id:6,
+        title:"The Price and Promise of Victory",
+        subtitle:"Treaty of Paris, republicanism, unfinished freedom",
+        artifact:"🕊️",
+        artifactName:"Treaty Seal",
+        lesson:`
+          <h3>Intelligence Report</h3>
+          <p>The Treaty of Paris of 1783 recognized American independence. The Revolution spread
+          ideals of liberty and republican government, but those ideals were applied unevenly.</p>
+          <ul>
+            <li><strong>Treaty of Paris:</strong> Britain recognized the United States and its boundaries.</li>
+            <li><strong>Republicanism:</strong> citizens choose representatives and place the public good above private interest.</li>
+            <li><strong>Women:</strong> contributed through boycotts, farms, businesses, intelligence, and military support.</li>
+            <li><strong>African Americans and Native nations:</strong> pursued freedom and security amid competing promises and threats.</li>
+          </ul>`,
+        questions:[
+          {q:"What did the Treaty of Paris of 1783 accomplish?",a:["It began the French and Indian War","It recognized American independence","It created Parliament","It restored the Stamp Act"],c:1},
+          {q:"Republicanism is based on the idea that—",a:["citizens participate through representative government","kings inherit all political power","colonies must remain dependent","military leaders rule for life"],c:0},
+          {q:"Which statement best describes women during the Revolution?",a:["They had no role in the conflict","They supported the cause through many economic, political, and military activities","They served as members of Parliament","They all supported Britain"],c:1},
+          {q:"Why is the Revolution sometimes described as unfinished?",a:["No battles occurred","Liberty and equality were not fully extended to everyone","Britain kept every colony","The Declaration was never published"],c:1},
+          {q:"Which was an economic effect of the Revolution?",a:["The new nation had to manage war debts and disrupted trade","All taxes disappeared forever","The United States stopped farming","Britain paid every American debt"],c:0}
+        ]
+      }
+    ];
+
+    const people = [
+      ["George Washington","Commander of the Continental Army; leadership helped hold the army together.","Military","GW"],
+      ["Thomas Jefferson","Principal author of the Declaration of Independence.","Ideas","TJ"],
+      ["John Adams","Advocated independence and helped secure foreign support.","Government","JA"],
+      ["Benjamin Franklin","Diplomat whose work helped win the French alliance.","Diplomacy","BF"],
+      ["Samuel Adams","Organizer of resistance and a leader of the Sons of Liberty.","Protest","SA"],
+      ["John Hancock","Patriot leader and president of the Second Continental Congress.","Government","JH"],
+      ["Thomas Paine","Author of Common Sense and The American Crisis.","Ideas","TP"],
+      ["Patrick Henry","Powerful Virginia orator who demanded colonial rights.","Speech","PH"],
+      ["George III","British king during the imperial crisis and Revolution.","British","GIII"],
+      ["Charles Cornwallis","British general whose army surrendered at Yorktown.","British","CC"],
+      ["William Howe","British commander during major early campaigns.","British","WH"],
+      ["John Burgoyne","British general defeated at Saratoga.","British","JB"],
+      ["Marquis de Lafayette","French volunteer and officer who aided the Patriot cause.","Alliance","ML"],
+      ["Baron von Steuben","Prussian officer who trained troops at Valley Forge.","Training","BS"],
+      ["Thaddeus Kosciuszko","Polish engineer who designed American defenses.","Engineering","TK"],
+      ["Bernardo de Gálvez","Spanish governor who attacked British positions along the Gulf Coast.","Alliance","BG"],
+      ["Haym Salomon","Helped finance the Patriot war effort.","Finance","HS"],
+      ["James Armistead Lafayette","Enslaved spy whose intelligence aided the Yorktown campaign.","Intelligence","JAL"],
+      ["Crispus Attucks","Killed in the Boston Massacre and remembered as an early martyr.","Protest","CA"],
+      ["Mercy Otis Warren","Writer who used plays and political works to support the Patriot cause.","Writing","MW"],
+      ["Abigail Adams","Advocated greater rights for women and supported the revolutionary effort.","Ideas","AA"],
+      ["Molly Pitcher","Traditional name connected to women who carried water and aided artillery crews.","Home Front","MP"],
+      ["Deborah Sampson","Disguised herself as a man and served in the Continental Army.","Military","DS"],
+      ["Sybil Ludington","Remembered for carrying warnings of a British attack.","Messenger","SL"]
+    ];
+
+    const state = JSON.parse(localStorage.getItem("aqUnit2Progress") || '{"done":[],"answers":{}}');
+    let audioCtx, musicOn=false, musicTimer;
+
+    function save(){localStorage.setItem("aqUnit2Progress",JSON.stringify(state));updateUI();}
+    function toast(msg){
+      const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");
+      setTimeout(()=>t.classList.remove("show"),2200);
+    }
+
+    function renderMissions(){
+      const grid=document.getElementById("missionGrid");
+      grid.innerHTML=missions.map(m=>`
+        <button class="mission-card ${state.done.includes(m.id)?'done':''}" onclick="openMission(${m.id})">
+          <div class="mission-num">Mission ${m.id}</div>
+          <h3>${m.title}</h3>
+          <p>${m.subtitle}</p>
+          <div class="card-foot"><span>5 challenges</span><span>${state.done.includes(m.id)?'✓ Complete':'Open →'}</span></div>
+        </button>`).join("");
+    }
+
+    function openMission(id){
+      const m=missions.find(x=>x.id===id);
+      const panel=document.getElementById("missionPanel");
+      panel.classList.remove("hidden");
+      panel.innerHTML=`
+        <div class="panel-top">
+          <div><div class="eyebrow" style="color:#6f5128">Mission ${m.id}</div><h2>${m.title}</h2></div>
+          <button class="close" onclick="closePanel('missionPanel')">Close</button>
+        </div>
+        <div class="lesson-box">${m.lesson}</div>
+        <div id="questions-${m.id}">
+          ${m.questions.map((q,i)=>renderQuestion(m.id,i,q)).join("")}
+        </div>`;
+      panel.scrollIntoView({behavior:"smooth",block:"start"});
+    }
+
+    function renderQuestion(mid,qi,q){
+      const key=`${mid}-${qi}`;
+      const answered=state.answers[key];
+      return `<div class="question">
+        <h4>${qi+1}. ${q.q}</h4>
+        <div class="choices">
+          ${q.a.map((choice,idx)=>`<button class="choice ${answered!==undefined?(idx===q.c?'correct':idx===answered?'wrong':''):''}"
+          ${answered!==undefined?'disabled':''} onclick="answer(${mid},${qi},${idx},${q.c})">${choice}</button>`).join("")}
+        </div>
+        <div class="feedback">${answered!==undefined?(answered===q.c?'Correct — evidence secured.':'Review the report and try the idea again next time.'):""}</div>
+      </div>`;
+    }
+
+    function answer(mid,qi,selected,correct){
+      const key=`${mid}-${qi}`;
+      if(state.answers[key]!==undefined)return;
+      state.answers[key]=selected;
+      const mission=missions.find(m=>m.id===mid);
+      const allAnswered=mission.questions.every((_,i)=>state.answers[`${mid}-${i}`]!==undefined);
+      if(allAnswered && !state.done.includes(mid)){
+        state.done.push(mid);
+        toast(`Mission ${mid} complete — artifact unlocked!`);
+      } else {
+        toast(selected===correct?"Correct!":"Evidence reviewed.");
+      }
+      save();
+      openMission(mid);
+    }
+
+    function renderPeople(){
+      document.getElementById("peopleGrid").innerHTML=people.map((p,i)=>`
+        <button class="person-card" onclick="openPerson(${i})">
+          <div class="portrait">${p[3]}</div>
+          <h3>${p[0]}</h3>
+          <p>${p[1]}</p>
+          <span class="tag">${p[2]}</span>
+        </button>`).join("");
+    }
+
+    function openPerson(i){
+      const p=people[i];
+      const panel=document.getElementById("personPanel");
+      panel.classList.remove("hidden");
+      panel.innerHTML=`
+        <div class="panel-top">
+          <div><div class="eyebrow" style="color:#6f5128">${p[2]}</div><h2>${p[0]}</h2></div>
+          <button class="close" onclick="closePanel('personPanel')">Close</button>
+        </div>
+        <div class="lesson-box">
+          <h3>Why this person matters</h3>
+          <p>${p[1]}</p>
+          <p><strong>Historian’s move:</strong> Connect this person to a larger category—military leadership,
+          political ideas, protest, diplomacy, finance, intelligence, or the home front.</p>
+        </div>`;
+      panel.scrollIntoView({behavior:"smooth",block:"center"});
+    }
+
+    function closePanel(id){document.getElementById(id).classList.add("hidden")}
+
+    function renderArtifacts(){
+      document.getElementById("artifactShelf").innerHTML=missions.map(m=>`
+        <div class="artifact ${state.done.includes(m.id)?'':'locked'}">
+          <div><div class="artifact-icon">${state.done.includes(m.id)?m.artifact:'🔒'}</div>
+          <span>${state.done.includes(m.id)?m.artifactName:`Mission ${m.id} locked`}</span></div>
+        </div>`).join("");
+    }
+
+    function updateUI(){
+      renderMissions();renderArtifacts();
+      const pct=Math.round((state.done.length/missions.length)*100);
+      document.getElementById("progressBar").style.width=pct+"%";
+      document.getElementById("progressText").textContent=pct+"% complete";
+      const ranks=["Witness","Pamphleteer","Courier","Patriot","Delegate","Revolutionary Historian","Liberty Historian"];
+      document.getElementById("rankText").textContent="Rank: "+ranks[state.done.length];
+      const badge=document.getElementById("badge");
+      if(state.done.length===6){
+        badge.textContent="★";
+        document.getElementById("finalTitle").textContent="Liberty Historian Badge Earned!";
+        document.getElementById("finalCopy").textContent="You traced the Revolution from imperial crisis to independence and evaluated its lasting promises.";
+      }else{
+        badge.textContent="🔒";
+        document.getElementById("finalTitle").textContent="Liberty Historian Badge Locked";
+        document.getElementById("finalCopy").textContent=`Complete ${6-state.done.length} more mission${6-state.done.length===1?'':'s'} to earn the badge.`;
+      }
+    }
+
+    function resetProgress(){
+      if(confirm("Reset all Unit II mission progress?")){
+        state.done=[];state.answers={};save();
+        document.getElementById("missionPanel").classList.add("hidden");
+        toast("Unit II progress reset.");
+      }
+    }
+
+    function playTone(freq,dur,when,vol=.035){
+      const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+      osc.type="triangle";osc.frequency.value=freq;
+      gain.gain.setValueAtTime(0,when);gain.gain.linearRampToValueAtTime(vol,when+.04);
+      gain.gain.exponentialRampToValueAtTime(.001,when+dur);
+      osc.connect(gain).connect(audioCtx.destination);osc.start(when);osc.stop(when+dur+.05);
+    }
+
+    function musicPhrase(){
+      if(!musicOn)return;
+      const now=audioCtx.currentTime+.05;
+      const notes=[146.83,174.61,196,220,196,174.61,164.81,146.83];
+      notes.forEach((n,i)=>playTone(n,1.5,now+i*.65,.022));
+      playTone(73.42,4.8,now,.012);
+      musicTimer=setTimeout(musicPhrase,5200);
+    }
+
+    async function toggleMusic(){
+      if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+      if(audioCtx.state==="suspended")await audioCtx.resume();
+      musicOn=!musicOn;
+      document.getElementById("soundBtn").textContent=musicOn?"♫ On":"♫";
+      if(musicOn){musicPhrase();toast("Background music on");}
+      else{clearTimeout(musicTimer);toast("Background music off");}
+    }
+
+    document.getElementById("beginBtn").addEventListener("click",()=>{
+      document.getElementById("startScreen").style.display="none";
+      toast("Mission map unlocked.");
+    });
+    document.getElementById("soundBtn").addEventListener("click",toggleMusic);
+
+    renderPeople();
+    updateUI();
+  </script>
+</body>
+</html>
